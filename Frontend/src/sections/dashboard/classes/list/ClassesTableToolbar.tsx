@@ -1,0 +1,97 @@
+import { Button, InputAdornment, MenuItem, Stack, TextField } from '@mui/material'
+import { FiSearch } from '@react-icons/all-files/fi/FiSearch'
+import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2'
+
+import { useTranslate } from '@/utils/translateHelper'
+
+interface Props {
+  filterName: string
+  filterRole?: string
+  optionsRole?: string[]
+  onResetFilter: VoidFunction
+  onFilterName: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onFilterRole?: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export default function ClassesTableToolbar({
+  filterName,
+  filterRole,
+  optionsRole,
+  onFilterName,
+  onFilterRole,
+  onResetFilter,
+}: Props): React.ReactElement | null {
+  const translate = useTranslate()
+
+  return (
+    <Stack
+      spacing={2}
+      alignItems='center'
+      direction={{
+        xs: 'column',
+        sm: 'row',
+      }}
+      sx={{ px: 2.5, py: 3 }}
+    >
+      {optionsRole ? (
+        <TextField
+          fullWidth
+          select
+          label={translate('role')}
+          value={filterRole}
+          onChange={onFilterRole}
+          SelectProps={{
+            MenuProps: {
+              PaperProps: {
+                sx: {
+                  maxHeight: 260,
+                },
+              },
+            },
+          }}
+          sx={{
+            maxWidth: { sm: 240 },
+            textTransform: 'capitalize',
+          }}
+        >
+          {optionsRole?.map((option) => (
+            <MenuItem
+              key={option}
+              value={option}
+              sx={{
+                mx: 1,
+                borderRadius: 0.75,
+                typography: 'body2',
+                textTransform: 'capitalize',
+              }}
+            >
+              {option}
+            </MenuItem>
+          ))}
+        </TextField>
+      ) : null}
+
+      <TextField
+        fullWidth
+        value={filterName}
+        onChange={onFilterName}
+        placeholder={translate('actions_search')}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position='start'>
+              <FiSearch style={{ color: 'text.disabled' }} />
+            </InputAdornment>
+          ),
+        }}
+      />
+      <Button
+        color='error'
+        sx={{ flexShrink: 0 }}
+        onClick={onResetFilter}
+        startIcon={<FiTrash2 />}
+      >
+        {translate('actions_clear')}
+      </Button>
+    </Stack>
+  )
+}

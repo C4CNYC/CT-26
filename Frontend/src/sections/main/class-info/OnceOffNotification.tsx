@@ -1,0 +1,114 @@
+import { useMemo, useState } from 'react'
+
+import { Box, Collapse, IconButton, Stack, Typography } from '@mui/material'
+import { useTheme } from '@mui/system'
+import { HiArrowUpTray } from '@react-icons/all-files/hi2/HiArrowUpTray'
+import { IoClose } from '@react-icons/all-files/io5/IoClose'
+import { useSnackbar } from 'notistack'
+
+import { useCopyToClipboard } from '@/hooks'
+import { IClass } from '@/redux/interfaces/class.interface'
+import { STUDENT_PATH_DASHBOARD } from '@/routes/student.paths'
+import { BaseResponseInterface, localStorageAvailable } from '@/utils'
+import { useTranslate } from '@root/src/utils/translateHelper'
+
+import {
+  LINK_TEXT_SX,
+  NOTIFICATION_CONTAINER_SX,
+  NOTIFICATION_LINK_SX,
+  getNotificationWrapperSx,
+} from './constants'
+
+const localStorageKey = 'IS_OPEN_NOTIFICATION'
+
+interface IOnceOffNotificationProps {
+  classData: IClass & BaseResponseInterface
+}
+
+export default function OnceOffNotification({
+  classData,
+}: IOnceOffNotificationProps): React.ReactElement {
+  const translate = useTranslate()
+  const theme = useTheme()
+  const notificationWrapperSx = useMemo(() => getNotificationWrapperSx(theme), [theme])
+  const storageAvailable = localStorageAvailable()
+  const { copy } = useCopyToClipboard()
+  const { enqueueSnackbar } = useSnackbar()
+  const getNotificationState = () => {
+    if (storageAvailable) {
+      const isOpen = JSON.parse(window.localStorage.getItem(localStorageKey) ?? 'true')
+      return isOpen
+    }
+    return true
+  }
+
+  const [isOpenNotification, setIsOpenNotification] = useState<boolean>(() =>
+    getNotificationState()
+  )
+
+  const closeNotification = (): void => {
+    setIsOpenNotification(false)
+    window.localStorage.setItem(localStorageKey, JSON.stringify(false))
+  }
+
+  const onCopy = (textToCopy: string) => {
+    if (textToCopy) {
+      copy(textToCopy)
+      enqueueSnackbar('Copied!')
+    }
+  }
+
+  const shareLink = `${
+    window.location.origin
+  }${STUDENT_PATH_DASHBOARD.joinTribe.id(classData?.setting.share_token)}`
+
+  return (
+    <Collapse in={isOpenNotification}>
+      <Stack
+        direction='row'
+        sx={notificationWrapperSx}
+      >
+        <Stack
+          direction='row'
+          sx={NOTIFICATION_CONTAINER_SX}
+        >
+          <Typography
+            variant='subtitle2'
+            sx={{ mx: 1 }}
+          >
+            {translate('class_page_popup_share_link_text_1')}
+          </Typography>
+          <Box
+            sx={NOTIFICATION_LINK_SX}
+            onClick={() => {
+              onCopy(shareLink)
+            }}
+          >
+            <HiArrowUpTray
+              size='18px'
+              color={theme.palette.mode === 'light' ? '#364954' : '#F6F9FC'}
+            />
+            <Typography
+              variant='body2'
+              sx={LINK_TEXT_SX}
+            >
+              {translate('class_page_popup_share_link_text_2')}
+            </Typography>
+          </Box>
+        </Stack>
+        <IconButton
+          onClick={() => {
+            closeNotification()
+          }}
+          sx={{ p: 0.5 }}
+          edge='end'
+        >
+          <IoClose
+            size='20px'
+            color={theme.palette.mode === 'light' ? '#364954' : '#F6F9FC'}
+          />
+        </IconButton>
+      </Stack>
+    </Collapse>
+  )
+}

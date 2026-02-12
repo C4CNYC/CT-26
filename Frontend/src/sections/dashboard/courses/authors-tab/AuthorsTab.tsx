@@ -1,0 +1,51 @@
+import { Button, Skeleton, Stack } from '@mui/material'
+
+import { EmptyContent } from '@/components'
+import { useTranslate } from '@/utils/translateHelper'
+import { useGetCourseAuthorsQuery } from '@root/src/redux/services/manager/course-author-manager'
+
+import AddAuthorDialog from './AddAuthorDialog'
+import AuthorsList from './AuthorsList'
+
+interface IAuthorsListProps {
+  courseId: string
+}
+
+export default function AuthorsTab({ courseId }: IAuthorsListProps): React.ReactElement {
+  const { data, isLoading } = useGetCourseAuthorsQuery({ course_id: courseId })
+  const translate = useTranslate()
+
+  return (
+    <Stack height='100%'>
+      {!data?.data.length && !isLoading ? (
+        <EmptyContent title={translate('messages_no_data')} />
+      ) : null}
+      {isLoading ? (
+        <Skeleton
+          variant='rounded'
+          animation='wave'
+          sx={{ height: '260px' }}
+        />
+      ) : (
+        <AuthorsList
+          authors={data?.data ?? []}
+          courseId={courseId}
+        />
+      )}
+      <Stack
+        direction='row'
+        justifyContent='flex-end'
+        mt='auto'
+      >
+        <AddAuthorDialog courseId={courseId}>
+          <Button
+            sx={{ mt: 4, mb: 1 }}
+            variant='contained'
+          >
+            {translate('actions_create_author')}
+          </Button>
+        </AddAuthorDialog>
+      </Stack>
+    </Stack>
+  )
+}

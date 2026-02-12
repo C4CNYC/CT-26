@@ -1,0 +1,6 @@
+test/**/**.ts
+**/**.spec.ts
+_ref/*
+**/_ref/*
+src/seed.ts
+scripts

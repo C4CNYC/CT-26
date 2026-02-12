@@ -1,0 +1,136 @@
+import { useState } from 'react'
+
+import { LoadingButton } from '@mui/lab'
+import { Divider, IconButton, InputAdornment, Stack, Typography } from '@mui/material'
+import { FaArrowRight } from '@react-icons/all-files/fa/FaArrowRight'
+import { FcGoogle } from '@react-icons/all-files/fc/FcGoogle'
+import { useGoogleLogin } from '@react-oauth/google'
+import { useRouter } from 'next/router'
+import { StepWizardChildProps } from 'react-step-wizard'
+
+import { useAuthContext } from '@/auth/useAuthContext'
+import { RHFTextField, useSnackbar } from '@/components'
+import { STUDENT_PATH_PAGE } from '@/routes/student.paths'
+import { styledRegisterInput } from '@/sections/on-boarding-register/styles'
+import { useTranslate } from '@/utils/translateHelper'
+import { useTenants } from '@root/src/hooks/useTenants'
+
+interface IProps {
+  isValid?: boolean
+  inviteData?: any
+}
+
+export default function SignInLogin({
+  isValid,
+  goToStep,
+  nextStep,
+  inviteData,
+}: Partial<StepWizardChildProps> & IProps): React.ReactElement {
+  const translate = useTranslate()
+  const router = useRouter()
+  const tenant = useTenants()
+
+  const { enqueueSnackbar } = useSnackbar()
+  const { loginWithGoogle } = useAuthContext()
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const onLoginWithGoogle = useGoogleLogin({
+    onSuccess: async ({ code }) => {
+      setIsLoading(true)
+      try {
+        await loginWithGoogle(code)
+        router.push(STUDENT_PATH_PAGE.home)
+      } catch (error: any) {
+        enqueueSnackbar(error.message, { variant: 'error' })
+      }
+      setIsLoading(false)
+    },
+    flow: 'auth-code',
+    ux_mode: 'popup',
+  })
+
+  return (
+    <>
+      <Stack
+        direction='row'
+        sx={{ alignItems: 'center', ml: { xs: 3, sm: 3, md: 0 }, mb: 3 }}
+      >
+        <Typography variant='h3'>{translate('sign_in')}</Typography>
+        <Typography
+          variant='h2'
+          sx={{ ml: 1 }}
+        >
+          🫶
+        </Typography>
+      </Stack>
+      <Stack sx={{ mt: 1 }}>
+        <RHFTextField
+          name='email'
+          label={translate('email')}
+          sx={(theme) => ({ ...styledRegisterInput(theme) })}
+          disabled={!!inviteData?.email}
+          InputLabelProps={{ shrink: inviteData ? true : undefined }}
+          onKeyDown={(e) => {
+            if (goToStep && isValid && e.code === 'Enter') {
+              goToStep(2)
+            }
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position='end'>
+                <IconButton
+                  edge='end'
+                  onClick={() => {
+                    if (nextStep && isValid) {
+                      nextStep()
+                    }
+                  }}
+                >
+                  <FaArrowRight color={isValid ? '#43D4DD' : ''} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        {!inviteData && tenant?.meta?.is_enabled_google_auth ? (
+          <>
+            <Divider
+              sx={{ my: 3 }}
+              flexItem
+            >
+              <Typography
+                sx={(theme) => ({ color: theme.palette.grey[500], mx: 1 })}
+                variant='body1'
+              >
+                {translate('login_or')}
+              </Typography>
+            </Divider>
+            <LoadingButton
+              onClick={() => {
+                onLoginWithGoogle()
+              }}
+              loading={isLoading}
+              sx={(theme) => ({
+                color: theme.palette.grey[600],
+                textTransform: 'none',
+                py: 1.5,
+                mb: 1,
+                gap: 2,
+                background: '#efefef',
+                fontWeight: 400,
+                fontSize: '1.3em',
+                '&:hover': {
+                  color: theme.palette.grey[900],
+                },
+              })}
+            >
+              <FcGoogle size='50px' />
+              {translate('login_with_google')}
+            </LoadingButton>
+          </>
+        ) : null}
+      </Stack>
+    </>
+  )
+}

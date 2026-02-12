@@ -1,0 +1,2 @@
+release: chmod u+x heroku-release.sh && ./heroku-release.sh
+web: npm run start:prod

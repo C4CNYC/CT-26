@@ -1,0 +1,227 @@
+import { useEffect } from 'react'
+
+import { Box, Button, IconButton, Stack, StackProps, Typography } from '@mui/material'
+import { alpha, styled } from '@mui/material/styles'
+import { IoClose } from '@react-icons/all-files/io5/IoClose'
+import { useDropzone } from 'react-dropzone'
+
+import { useTranslate } from '@/utils/translateHelper'
+
+import RejectionFiles from './errors/RejectionFiles'
+import { UploadIllustration } from './illustrations'
+import MultiFilePreview from './preview/MultiFilePreview'
+import { SingleFilePreview } from './preview/SingleFilePreview'
+import { UploadProps } from './types'
+
+const StyledDropZone = styled('div')(({ theme }) => ({
+  outline: 'none',
+  cursor: 'pointer',
+  overflow: 'hidden',
+  position: 'relative',
+  padding: theme.spacing(1),
+  borderRadius: theme.shape.borderRadius,
+  transition: theme.transitions.create('padding'),
+  backgroundColor: theme.palette.background.neutral,
+  border: `1px dashed ${alpha(theme.palette.grey[500], 0.32)}`,
+  '&:hover': {
+    opacity: 0.72,
+  },
+}))
+
+export function Upload({
+  disabled,
+  multiple = false,
+  error,
+  helperText,
+  //
+  file,
+  onDelete,
+  //
+  files,
+  thumbnail,
+  onUpload,
+  onRemove,
+  onRemoveAll,
+  sx,
+  onDrop,
+  ...other
+}: UploadProps): React.ReactElement | null {
+  const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
+    multiple,
+    disabled,
+    onDrop,
+    ...other,
+  })
+
+  const hasFile = !!file && !multiple
+
+  const hasFiles = files && multiple && files.length > 0
+
+  const isError = isDragReject || !!error
+
+  useEffect(() => {
+    const handlePaste = (event: ClipboardEvent) => {
+      let fileInputRef: File[] = []
+      const items = event.clipboardData?.items || []
+      for (let i = 0; i < items.length; i++) {
+        let item = items[i]
+        if (item.type.startsWith('image/')) {
+          const blob = item.getAsFile()
+          if (blob && fileInputRef) {
+            const dataTransfer = new DataTransfer()
+            dataTransfer.items.add(blob)
+            fileInputRef.push(blob)
+          }
+        }
+      }
+      if (onDrop && fileInputRef.length) onDrop(fileInputRef, [], new Event('drop'))
+    }
+    document.addEventListener('paste', handlePaste)
+    return () => {
+      document.removeEventListener('paste', handlePaste)
+    }
+  }, [])
+
+  return (
+    <Box sx={{ width: 1, position: 'relative', ...sx }}>
+      <StyledDropZone
+        {...getRootProps()}
+        sx={{
+          ...(isDragActive && {
+            opacity: 0.72,
+          }),
+          ...(isError && {
+            color: 'error.main',
+            bgcolor: 'error.lighter',
+            borderColor: 'error.light',
+          }),
+          ...(disabled && {
+            opacity: 0.48,
+            pointerEvents: 'none',
+          }),
+          ...(hasFile && {
+            padding: '12% 0',
+          }),
+        }}
+      >
+        <input {...getInputProps()} />
+
+        <Placeholder
+          sx={{
+            ...(hasFile && {
+              opacity: 0,
+            }),
+          }}
+        />
+
+        {hasFile && <SingleFilePreview file={file} />}
+      </StyledDropZone>
+
+      {helperText && helperText}
+
+      <RejectionFiles fileRejections={fileRejections} />
+
+      {hasFile && onDelete && (
+        <IconButton
+          size='small'
+          onClick={onDelete}
+          sx={{
+            top: 16,
+            right: 16,
+            zIndex: 9,
+            position: 'absolute',
+            color: (theme) => alpha(theme.palette.common.white, 0.8),
+            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+            '&:hover': {
+              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
+            },
+          }}
+        >
+          <IoClose size={18} />
+        </IconButton>
+      )}
+
+      {hasFiles && (
+        <>
+          <Box sx={{ my: 3 }}>
+            <MultiFilePreview
+              files={files}
+              thumbnail={thumbnail}
+              onRemove={onRemove}
+            />
+          </Box>
+
+          <Stack
+            direction='row'
+            justifyContent='flex-end'
+            spacing={1.5}
+          >
+            {onRemoveAll && (
+              <Button
+                color='inherit'
+                variant='outlined'
+                size='small'
+                onClick={onRemoveAll}
+              >
+                Remove all
+              </Button>
+            )}
+
+            {onUpload && (
+              <Button
+                size='small'
+                variant='contained'
+                onClick={onUpload}
+              >
+                Upload files
+              </Button>
+            )}
+          </Stack>
+        </>
+      )}
+    </Box>
+  )
+}
+
+function Placeholder({ sx, ...other }: StackProps): React.ReactElement | null {
+  const translate = useTranslate()
+  return (
+    <Stack
+      spacing={2}
+      alignItems='center'
+      justifyContent='center'
+      direction={{
+        xs: 'column',
+        md: 'row',
+      }}
+      sx={{
+        width: 1,
+        padding: 0,
+        textAlign: {
+          xs: 'center',
+          md: 'left',
+        },
+        ...sx,
+      }}
+      {...other}
+    >
+      <UploadIllustration sx={{ width: 120 }} />
+
+      <div>
+        <Typography
+          gutterBottom
+          variant='h5'
+        >
+          {translate('image_choose_image')}
+        </Typography>
+
+        <Typography
+          variant='body2'
+          sx={{ color: 'text.secondary', whiteSpace: 'pre-line' }}
+        >
+          {translate('image_drop_file')}
+        </Typography>
+      </div>
+    </Stack>
+  )
+}

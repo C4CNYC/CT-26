@@ -1,0 +1,334 @@
+import { useEffect, useMemo, useState } from 'react'
+
+import {
+  Box,
+  Button,
+  Dialog,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  Radio,
+  RadioGroup,
+  Switch,
+  Typography,
+  useTheme,
+} from '@mui/material'
+import { Stack } from '@mui/system'
+import { AiFillCloseSquare } from '@react-icons/all-files/ai/AiFillCloseSquare'
+import { AiOutlineArrowRight } from '@react-icons/all-files/ai/AiOutlineArrowRight'
+import { FaRegCopy } from '@react-icons/all-files/fa6/FaRegCopy'
+import { MdOutlineMail } from '@react-icons/all-files/md/MdOutlineMail'
+import { SiGoogleclassroom } from '@react-icons/all-files/si/SiGoogleclassroom'
+import { GoogleOAuthProvider } from '@react-oauth/google'
+import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
+
+import RoleBasedGuard from '@/auth/RoleBasedGuard'
+import { useCopyToClipboard } from '@/hooks'
+import { IClass } from '@/redux/interfaces/class.interface'
+import { Role } from '@/redux/services/enums/role.enum'
+import { useUpdateClassesSettingsMutation } from '@/redux/services/manager/classes-manager'
+import { STUDENT_PATH_DASHBOARD } from '@/routes/student.paths'
+import { BaseResponseInterface } from '@/utils/baseResponse.interface'
+import { useTranslate } from '@/utils/translateHelper'
+import OnlyAdmin from '@root/src/auth/OnlyAdmin'
+import { setReadyToStartMainTour } from '@root/src/redux/slices/tour'
+import { useDispatch } from '@root/src/redux/store'
+
+import ClassroomModal from '../classroom-modal'
+import EmailAddressModal from '../email-address-domain'
+
+import {
+  CLASS_ROOM_BTN_SX,
+  COPY_BIG,
+  COPY_BTN_SX,
+  DIVIDER_SX,
+  EMAIL_BTN_SX,
+  FORM_CONTROL_SX,
+  HEADER_TITLE_SX,
+  LINK_TEXT_SX,
+  RADIO_GROUP_SX,
+  RADIO_SX,
+  getCopySx,
+  getHeaderXs,
+  getSubtitleFooterSx,
+  getSubtitleSx,
+} from './constansts'
+
+interface IShareGroupModalProps {
+  children: React.ReactElement
+  schoolClass: IClass & BaseResponseInterface
+}
+
+export default function ShareGroupModal({
+  children,
+  schoolClass,
+}: IShareGroupModalProps): React.ReactElement {
+  const theme = useTheme()
+  const dispatch = useDispatch()
+  const isLight = theme.palette.mode === 'light'
+  const { query } = useRouter()
+  const { copy } = useCopyToClipboard()
+  const { enqueueSnackbar } = useSnackbar()
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState(schoolClass.setting.request_join_enable ? 'true' : 'false')
+  const translate = useTranslate()
+  const [updateClass, { isLoading }] = useUpdateClassesSettingsMutation()
+
+  const handleOpen = () => {
+    dispatch(setReadyToStartMainTour(false))
+    setOpen(true)
+  }
+  const handleClose = () => {
+    dispatch(setReadyToStartMainTour(true))
+    setOpen(false)
+  }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue((event.target as HTMLInputElement).value)
+  }
+
+  const onCopy = (textToCopy: string) => {
+    if (textToCopy) {
+      copy(textToCopy)
+      enqueueSnackbar(translate('messages_copied'))
+    }
+  }
+
+  const updateClassJoin = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      await updateClass({
+        schoolId: query.schoolId as string,
+        classId: query.id as string,
+        request_join_enable: (e.target as HTMLInputElement).value === 'true',
+      }).unwrap()
+      enqueueSnackbar(translate('messages_changes_updated'))
+    } catch (error: any) {
+      enqueueSnackbar(error.message, { variant: 'error' })
+    }
+  }
+
+  const shareLink = `${
+    window.location.origin
+  }${STUDENT_PATH_DASHBOARD.joinTribe.id(schoolClass.setting.share_token)}`
+
+  useEffect(() => {
+    if (query.onBoarding || localStorage.getItem('isClassCreated') === 'true') {
+      localStorage.removeItem('isClassCreated')
+      handleOpen()
+    }
+  }, [])
+
+  const subtitleSx = useMemo(() => getSubtitleSx(isLight), [isLight])
+  const copySx = useMemo(() => getCopySx(isLight, theme), [isLight, theme])
+  const subtitleFooterSx = useMemo(() => getSubtitleFooterSx(isLight), [isLight])
+  const headerSx = useMemo(() => getHeaderXs(schoolClass.cover), [schoolClass])
+
+  return (
+    <>
+      <Stack onClick={handleOpen}>{children}</Stack>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth
+        maxWidth='xs'
+        scroll='body'
+      >
+        <Box sx={headerSx}>
+          <Box
+            display='flex'
+            justifyContent='end'
+            alignItems='center'
+          >
+            <IconButton
+              onClick={handleClose}
+              sx={{ color: 'white' }}
+            >
+              <AiFillCloseSquare size={24} />
+            </IconButton>
+          </Box>
+          <Typography
+            sx={HEADER_TITLE_SX}
+            variant='h3'
+          >
+            {schoolClass?.name}
+          </Typography>
+        </Box>
+        <Box sx={{ p: { xs: 1, sm: 3 } }}>
+          <Box>
+            <Typography
+              fontSize='20px'
+              color={isLight ? '#292929' : ''}
+              variant='h4'
+              textAlign='center'
+            >
+              {translate('share_group')}
+            </Typography>
+            <Typography
+              sx={subtitleSx}
+              variant='body2'
+            >
+              {translate('share_send_link')}
+            </Typography>
+          </Box>
+          <Box sx={copySx}>
+            <Box
+              display='flex'
+              alignItems='center'
+              width='100%'
+            >
+              <Button sx={COPY_BTN_SX}>
+                <FaRegCopy size={18} />
+              </Button>
+              <Box ml='10px'>
+                <Typography>{translate('share_invite_link')}</Typography>
+                <Typography
+                  noWrap
+                  sx={LINK_TEXT_SX}
+                >
+                  {shareLink}
+                </Typography>
+              </Box>
+            </Box>
+            <Button
+              variant='contained'
+              onClick={() => {
+                onCopy(shareLink)
+              }}
+              sx={COPY_BIG}
+            >
+              {translate('actions_copy')}
+            </Button>
+          </Box>
+          <RoleBasedGuard
+            roles={[Role.Manager, Role.Editor, Role.Owner, Role.SuperAdmin, Role.Admin]}
+          >
+            <Stack
+              mt='20px'
+              ml='15px'
+              gap='20px'
+            >
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby='demo-controlled-radio-buttons-group'
+                  name='controlled-radio-buttons-group'
+                  value={value}
+                  onChange={(e) => {
+                    updateClassJoin(e)
+                    handleChange(e)
+                  }}
+                  sx={RADIO_GROUP_SX}
+                >
+                  <FormControlLabel
+                    value='true'
+                    sx={FORM_CONTROL_SX}
+                    control={
+                      <Radio
+                        disabled={isLoading}
+                        sx={RADIO_SX}
+                      />
+                    }
+                    label={
+                      <Typography
+                        color={isLight ? '#292929' : ''}
+                        variant='h6'
+                      >
+                        {translate('share_can_join')}
+                      </Typography>
+                    }
+                  />
+                  <FormControlLabel
+                    value='false'
+                    disabled={isLoading}
+                    control={<Radio sx={RADIO_SX} />}
+                    label={
+                      <Typography
+                        color={isLight ? '#292929' : ''}
+                        variant='h6'
+                      >
+                        {translate('share_only_people_approve')}
+                      </Typography>
+                    }
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Stack>
+            <Divider
+              variant='middle'
+              orientation='horizontal'
+              sx={DIVIDER_SX}
+            />
+            <Stack
+              pr={4}
+              alignItems='flex-start'
+            >
+              <FormControlLabel
+                sx={{ width: '100%', justifyContent: 'space-between' }}
+                control={<Switch />}
+                label={<Typography variant='h6'>{translate('send_welcome_emails')}</Typography>}
+                labelPlacement='start'
+              />
+            </Stack>
+            <Divider
+              variant='middle'
+              orientation='horizontal'
+              sx={DIVIDER_SX}
+            />
+            <Box
+              ml='15px'
+              mt='28px'
+              mb='28px'
+            >
+              <Typography
+                variant='h6'
+                sx={subtitleFooterSx}
+              >
+                {translate('share_other_ways_to_add')}
+              </Typography>
+              <OnlyAdmin>
+                <GoogleOAuthProvider
+                  clientId={process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID as string}
+                >
+                  <ClassroomModal schoolId={schoolClass?.school?.id ?? ''}>
+                    <Button
+                      fullWidth
+                      sx={CLASS_ROOM_BTN_SX}
+                    >
+                      <Box
+                        display='flex'
+                        alignItems='center'
+                      >
+                        <SiGoogleclassroom size={24} />
+                        <Typography ml={2}>{translate('share_google_classroom')}</Typography>
+                      </Box>
+                      <AiOutlineArrowRight />
+                    </Button>
+                  </ClassroomModal>
+                </GoogleOAuthProvider>
+              </OnlyAdmin>
+              <EmailAddressModal
+                schoolId={schoolClass?.school?.id ?? ''}
+                classId={schoolClass?.id}
+              >
+                <Button
+                  fullWidth
+                  sx={EMAIL_BTN_SX}
+                >
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                  >
+                    <MdOutlineMail size={24} />
+                    <Typography ml={2}>{translate('share_email_address')}</Typography>
+                  </Box>
+                  <AiOutlineArrowRight />
+                </Button>
+              </EmailAddressModal>
+            </Box>
+          </RoleBasedGuard>
+        </Box>
+      </Dialog>
+    </>
+  )
+}

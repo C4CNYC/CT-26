@@ -1,0 +1,236 @@
+import React from 'react'
+
+import {
+  Autocomplete,
+  AutocompleteChangeDetails,
+  AutocompleteChangeReason,
+  Avatar,
+  Box,
+  Chip,
+  Skeleton,
+  TextField,
+  alpha,
+} from '@mui/material'
+import { MdDone } from '@react-icons/all-files/md/MdDone'
+import match from 'autosuggest-highlight/match'
+import parse from 'autosuggest-highlight/parse'
+import { useSnackbar } from 'notistack'
+
+import { CustomAvatar, SearchNotFound } from '@/components'
+import { useFilters } from '@/hooks'
+import { ILesson } from '@/redux/services/interfaces/courseUnits.interface'
+import { useGetLessonsQuery, useGetOwnLessonsQuery } from '@/redux/services/manager/lessons-manager'
+import {
+  useAddLessonToModuleMutation,
+  useRemoveLessonFromModuleMutation,
+} from '@/redux/services/manager/modules-manager'
+import { BaseResponseInterface, voidFunction } from '@/utils'
+import { useTranslate } from '@/utils/translateHelper'
+import { useIsAdmin } from '@root/src/lib/use-is-admin'
+import { useGetAllAdminLessonsQuery } from '@root/src/redux/services/admin/lessons-admin'
+
+type LessonType = ILesson & BaseResponseInterface
+
+interface Props {
+  id: string
+}
+
+export default function ModuleLessonsAutocomplete({ id }: Props): React.ReactElement {
+  const { enqueueSnackbar } = useSnackbar()
+
+  const { filters, setFilter } = useFilters({ name: '', take: 50 })
+  const translate = useTranslate()
+  const { isAdmin } = useIsAdmin()
+
+  const [addLesson] = useAddLessonToModuleMutation()
+  const [removeLesson] = useRemoveLessonFromModuleMutation()
+  const { data: addedLessons } = useGetLessonsQuery({ module_id: id })
+  const { data: lessons } = useGetOwnLessonsQuery({ ...filters }, { skip: !id })
+  const { data: adminLessons } = useGetAllAdminLessonsQuery({ ...filters }, { skip: !isAdmin })
+  if (!lessons?.data || !addedLessons) {
+    return (
+      <Skeleton
+        animation='wave'
+        variant='rounded'
+        sx={{ width: '100%', height: '56px' }}
+      />
+    )
+  }
+
+  const onChange = async (
+    _event: React.SyntheticEvent<any>,
+    _newValue: LessonType[],
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<LessonType>
+  ): Promise<void> => {
+    try {
+      const payload = {
+        id,
+        lesson_id: details?.option.id as string,
+      }
+      switch (reason) {
+        case 'selectOption': {
+          await addLesson({
+            ...payload,
+            sort: Math.max(...addedLessons?.data.map((o) => o.sort ?? 0)),
+          }).unwrap()
+          enqueueSnackbar(
+            translate('courses_added_to_module', {
+              name: details?.option.name ?? '',
+            })
+          )
+          return
+        }
+        case 'removeOption': {
+          await removeLesson(payload).unwrap()
+          enqueueSnackbar(
+            translate('courses_removed_from_module', {
+              name: details?.option.name ?? '',
+            })
+          )
+        }
+      }
+    } catch {
+      enqueueSnackbar(translate('messages_error'), { variant: 'error' })
+    }
+  }
+
+  return (
+    <Autocomplete<LessonType, true, true>
+      multiple
+      id='add-user-input'
+      value={addedLessons?.data}
+      onChange={onChange}
+      options={isAdmin && adminLessons ? adminLessons.data : lessons.data}
+      popupIcon={null}
+      clearIcon={null}
+      onLoadStart={voidFunction}
+      disableClearable={true}
+      noOptionsText={
+        <SearchNotFound
+          sx={{ p: '20px 0' }}
+          query={filters.name}
+        />
+      }
+      onInputChange={(event, value) => {
+        setFilter('name', value)
+      }}
+      getOptionLabel={(option) => option.name}
+      renderTags={(tagValue, getTagProps) => (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            overflowY: 'auto',
+            maxWidth: '100%',
+            maxHeight: '16rem',
+            gap: 1,
+            p: 1,
+          }}
+        >
+          {tagValue.map((option, index) => (
+            <Chip
+              sx={{ direction: 'ltr !important' }}
+              avatar={
+                <CustomAvatar
+                  alt={option.name}
+                  src='/assets/icons/files/ic_file.svg'
+                />
+              }
+              label={option.name}
+              {...getTagProps({ index })}
+              key={option.name}
+            />
+          ))}
+        </Box>
+      )}
+      style={{ width: '100%' }}
+      renderInput={(params) => (
+        <TextField
+          style={{ width: '100%' }}
+          {...params}
+          placeholder={translate('modules_add_lesson_modal_placepolder')}
+          InputProps={{
+            ...params.InputProps,
+            sx: {
+              paddingRight: '0px !important',
+              '& .MuiAutocomplete-endAdornment': {
+                display: 'none',
+              },
+            },
+          }}
+        />
+      )}
+      renderOption={(props, recipient, { inputValue }) => {
+        const { id, name } = recipient
+        const matches = match(name, inputValue)
+        const parts = parse(name, matches)
+
+        const selected = addedLessons?.data.find((c) => c.id === id)
+
+        return (
+          <Box
+            component='li'
+            sx={{
+              p: '12px !important',
+              pointerEvents: selected ? 'none' : 'auto',
+              width: '100%',
+            }}
+            {...props}
+          >
+            <Box
+              sx={{
+                mr: 1.5,
+                width: 32,
+                height: 32,
+                overflow: 'hidden',
+                borderRadius: '50%',
+                position: 'relative',
+              }}
+            >
+              <Avatar
+                alt={id}
+                src='/assets/icons/files/ic_file.svg'
+              />
+
+              <Box
+                sx={{
+                  top: 0,
+                  opacity: 0,
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  position: 'absolute',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
+                  transition: (theme) =>
+                    theme.transitions.create('opacity', {
+                      easing: theme.transitions.easing.easeInOut,
+                      duration: theme.transitions.duration.shorter,
+                    }),
+                  ...(selected && {
+                    opacity: 1,
+                    color: 'primary.main',
+                  }),
+                }}
+              >
+                <MdDone />
+              </Box>
+            </Box>
+
+            {parts.map((part, index) => (
+              <span
+                key={part.text}
+                style={{ color: part.highlight ? 'green' : '' }}
+              >
+                {part.text}
+              </span>
+            ))}
+          </Box>
+        )
+      }}
+    />
+  )
+}

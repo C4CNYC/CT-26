@@ -1,0 +1,57 @@
+import { AnyAction, Dispatch, ThunkDispatch, configureStore } from '@reduxjs/toolkit'
+import {
+  TypedUseSelectorHook,
+  useDispatch as useAppDispatch,
+  useSelector as useAppSelector,
+} from 'react-redux'
+import { persistReducer, persistStore } from 'redux-persist'
+
+import rootReducer, { rootPersistConfig } from './rootReducer'
+import { adminApi } from './services/admin'
+import { authApi } from './services/auth'
+import { feedbackApi } from './services/feedback'
+import { managerApi } from './services/manager'
+import { superAdmin } from './services/manager/super-admin'
+import { publicApi } from './services/public/tribe-public'
+import { studentPublicApi } from './services/public-student'
+import { schoolSettingsApi } from './services/school-settings-manager'
+import { studentAuthApi } from './services/student-auth'
+import { tenantApi } from './services/tenant'
+import { tenantConfigApi } from './services/tenant-configs'
+import { tabListenerMiddleware } from './slices/mobile-tab-manager'
+
+export type RootState = ReturnType<typeof rootReducer>
+
+export type AppDispatch = typeof store.dispatch
+
+const store = configureStore({
+  reducer: persistReducer(rootPersistConfig, rootReducer),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+      immutableCheck: false,
+    })
+      .prepend(tabListenerMiddleware.middleware)
+      .concat(superAdmin.middleware)
+      .concat(authApi.middleware)
+      .concat(studentAuthApi.middleware)
+      .concat(schoolSettingsApi.middleware)
+      .concat(adminApi.middleware)
+      .concat(managerApi.middleware)
+      .concat(studentPublicApi.middleware)
+      .concat(publicApi.middleware)
+      .concat(feedbackApi.middleware)
+      .concat(tenantConfigApi.middleware)
+      .concat(tenantApi.middleware),
+})
+
+const persistor = persistStore(store)
+
+const { dispatch } = store
+
+const useSelector: TypedUseSelectorHook<RootState> = useAppSelector
+
+const useDispatch = (): ThunkDispatch<any, undefined, AnyAction> & Dispatch<AnyAction> =>
+  useAppDispatch<AppDispatch>()
+
+export { store, persistor, dispatch, useSelector, useDispatch }

@@ -1,0 +1,330 @@
+import React from 'react'
+import { useState } from 'react'
+
+import { yupResolver } from '@hookform/resolvers/yup'
+import { LoadingButton } from '@mui/lab'
+import { Box, Button, DialogActions, Tab, Tabs, Typography } from '@mui/material'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import { useRouter } from 'next/router'
+import { useForm } from 'react-hook-form'
+import * as Yup from 'yup'
+
+import { FormProvider, useSnackbar } from '@/components'
+import { useAddModuleToCourseMutation } from '@/redux/services/manager/courses-manager'
+import {
+  useCreateModuleMutation,
+  useUpdateModuleAvatarMutation,
+  useUpdateModuleMutation,
+  useUpdateBackgroundImageMutation,
+} from '@/redux/services/manager/modules-manager'
+import { useTranslate } from '@/utils/translateHelper'
+import ModuleLessonsAutocomplete from '@root/src/components/module-lessons-autocomplete/ModuleLessonAutocomplete'
+import { AGE, GRADING, LEVEL } from '@root/src/redux/services/interfaces/courseUnits.interface'
+import { TModuleMeta } from '@root/src/redux/services/interfaces/courseUnits.interface'
+
+import AuthorsTab from './authors-tab/AuthorsTab'
+import { DIALOG_ACTIONS_SX, TAB_SX } from './constants'
+import DetailsTab from './DetailsTab'
+import MainTab from './MainTab'
+import SettingsTab from './SettingsTab'
+
+interface FormValuesProps {
+  name: string
+  description: string
+  active: boolean
+  tips: string
+  duration: string
+  teacher_slides: string
+  teacher_forum: string
+  lesson_plans: string
+  initial_enrolled: number
+  initial_likes: number
+  initial_stars: number
+  level: LEVEL
+  customLevel: string
+  age: AGE
+  customAge: string
+  grading: GRADING
+  brief: string
+  audience: string
+  meta: TModuleMeta
+}
+
+interface Prop {
+  defaultValues?: FormValuesProps
+  children: React.ReactElement
+  isEdit?: boolean
+  id?: string
+  moduleTips?: string[] | []
+  refetch?: () => void
+}
+
+interface TabPanelProps {
+  children?: React.ReactNode
+  index: number
+  value: number
+}
+
+function TabPanel(props: TabPanelProps): React.ReactElement {
+  const { children, value, index, ...other } = props
+
+  return (
+    <div
+      role='tabpanel'
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={TAB_SX}>
+          <Typography
+            paragraph={false}
+            component='div'
+          >
+            {children}
+          </Typography>
+        </Box>
+      )}
+    </div>
+  )
+}
+
+function a11yProps(index: number): Record<string, string> {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  }
+}
+const durationRegexp =
+  /^(?!.*(second|minute|hour|day|week|month|year).*\1)\d+\s?(?:second|minute|hour|day|week|month|year)s?(?: ?\d+\s?(?:second|minute|hour|day|week|month|year)s?)*$/gm
+
+export default function CreateModuleDialog({
+  id,
+  isEdit,
+  children,
+  defaultValues,
+  moduleTips,
+  refetch,
+}: Prop): React.ReactElement {
+  const { query } = useRouter()
+  const { enqueueSnackbar } = useSnackbar()
+
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState(0)
+  const [uploadedFile, setUploadedFile] = useState<null | File>(null)
+  const [uploadedBackground, setUploadedBackground] = useState<null | File>(null)
+
+  const [addToCourse, { isLoading: isAddToCourseLoading }] = useAddModuleToCourseMutation()
+  const [editModule, { isLoading: isEditLoading }] = useUpdateModuleMutation()
+  const [createModule, { isLoading: isCreateLoading }] = useCreateModuleMutation()
+  const [updateAvatar] = useUpdateModuleAvatarMutation()
+  const [updateBackgroundImage] = useUpdateBackgroundImageMutation()
+  const translate = useTranslate()
+
+  const handleClickOpen = (): void => {
+    setOpen(true)
+  }
+
+  const handleClose = (): void => {
+    setOpen(false)
+  }
+
+  const handleChange = (_: React.SyntheticEvent, newValue: number): void => {
+    setValue(newValue)
+  }
+
+  const CreateCourseSchema = Yup.object().shape({
+    name: Yup.string().required(translate('required_name')),
+    description:
+      Yup.string().required(translate('required_description')) &&
+      Yup.string().max(100, translate('write_less_msg')),
+    duration: Yup.string()
+      .trim()
+      .nullable()
+      .transform((v, o) => (o === '' ? null : v))
+      .matches(durationRegexp, translate('use_key_words_msg')),
+    initial_likes: Yup.number().positive(),
+    initial_stars: Yup.number().positive(),
+    initial_enrolled: Yup.number().positive(),
+  })
+
+  const methods = useForm<FormValuesProps>({
+    resolver: yupResolver(CreateCourseSchema),
+    defaultValues,
+  })
+
+  const onSubmit = async (data: FormValuesProps): Promise<void> => {
+    try {
+      const file = new FormData()
+      const background = new FormData()
+      if (isEdit && id) {
+        await editModule({
+          id,
+          ...data,
+          tips: data.tips.trim() !== '' && moduleTips ? [...moduleTips, data.tips] : [],
+          duration: data.duration?.trim(),
+        }).unwrap()
+        if (uploadedFile) {
+          file.append('file', uploadedFile)
+          await updateAvatar({ id, file }).unwrap()
+        }
+        if (uploadedBackground) {
+          background.append('background', uploadedBackground)
+          await updateBackgroundImage({ id, background }).unwrap()
+        }
+        if (refetch) refetch()
+      } else {
+        const m = await createModule({
+          ...data,
+          duration: data?.duration?.trim() ?? '1 month',
+        }).unwrap()
+        if (query.course_id) {
+          await addToCourse({
+            id: query.course_id as string,
+            unit_id: m.id,
+          }).unwrap()
+        }
+        if (uploadedFile) {
+          file.append('file', uploadedFile)
+          await updateAvatar({ id: m.id, file }).unwrap()
+        }
+        if (uploadedBackground) {
+          background.append('background', uploadedBackground)
+          await updateBackgroundImage({ id: m.id, background }).unwrap()
+        }
+        if (refetch) refetch()
+      }
+      enqueueSnackbar(
+        !isEdit ? translate('messages_create_success') : translate('messages_update_success')
+      )
+      methods.reset(undefined, { keepDirtyValues: true })
+      handleClose()
+    } catch (error: any) {
+      enqueueSnackbar(error?.data?.message, {
+        variant: 'error',
+      })
+    }
+  }
+
+  return (
+    <>
+      <Box
+        onClick={() => {
+          handleClickOpen()
+        }}
+      >
+        {children}
+      </Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth
+        maxWidth='xs'
+      >
+        <DialogTitle>
+          {isEdit ? translate('modules_update_module') : translate('modules_create_module')}
+        </DialogTitle>
+        <DialogContent sx={{ p: 0, mt: '-10px' }}>
+          <FormProvider
+            methods={methods}
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', pl: 3 }}>
+              {isEdit ? (
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  aria-label='basic tabs example'
+                >
+                  <Tab
+                    label={translate('general')}
+                    {...a11yProps(0)}
+                  />
+                  <Tab
+                    label={translate('details')}
+                    {...a11yProps(1)}
+                  />
+                  <Tab
+                    label={translate('lessons')}
+                    {...a11yProps(2)}
+                  />
+                  <Tab
+                    label={translate('settings')}
+                    {...a11yProps(3)}
+                  />
+                  <Tab
+                    label={translate('courses_authors')}
+                    {...a11yProps(4)}
+                  />
+                </Tabs>
+              ) : null}
+            </Box>
+            <TabPanel
+              value={value}
+              index={0}
+            >
+              <MainTab
+                uploadedFile={uploadedFile}
+                setUploadedFile={setUploadedFile}
+                uploadedBackground={uploadedBackground}
+                setUploadedBackground={setUploadedBackground}
+              />
+            </TabPanel>
+            <TabPanel
+              value={value}
+              index={1}
+            >
+              <DetailsTab
+                handleClose={handleClose}
+                refetch={refetch}
+                id={id as string}
+                defaultValues={defaultValues}
+              />
+            </TabPanel>
+            <TabPanel
+              value={value}
+              index={2}
+            >
+              <ModuleLessonsAutocomplete id={id as string} />
+            </TabPanel>
+            <TabPanel
+              value={value}
+              index={3}
+            >
+              <SettingsTab />
+            </TabPanel>
+            <TabPanel
+              value={value}
+              index={4}
+            >
+              <AuthorsTab moduleId={id || ''} />
+            </TabPanel>
+            {value !== 1 ? (
+              <DialogActions>
+                <Box sx={DIALOG_ACTIONS_SX}>
+                  <Button
+                    color='error'
+                    variant='soft'
+                    onClick={handleClose}
+                  >
+                    {translate('actions_close')}
+                  </Button>
+                  <LoadingButton
+                    type='submit'
+                    variant='contained'
+                    loading={isEditLoading || isCreateLoading || isAddToCourseLoading}
+                  >
+                    {translate('actions_save')}
+                  </LoadingButton>
+                </Box>
+              </DialogActions>
+            ) : null}
+          </FormProvider>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}

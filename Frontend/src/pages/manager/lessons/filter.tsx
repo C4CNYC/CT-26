@@ -1,0 +1,135 @@
+import SearchOutlined from '@mui/icons-material/SearchOutlined'
+import { Autocomplete, Box } from '@mui/material'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
+import Stack from '@mui/system/Stack'
+
+import { SetFilterType, useFilters } from '@/hooks'
+import { useIsAdmin } from '@/lib/use-is-admin'
+import { useGetAdminModulesQuery } from '@/redux/services/admin/modules-admin'
+import {
+  ILessonSearchParams,
+  IModule,
+  IModulesSearchParams,
+} from '@/redux/services/interfaces/courseUnits.interface'
+import { useGetOwnModulesQuery } from '@/redux/services/manager/modules-manager'
+import SkeletonFilter from '@/sections/dashboard/skeleton/skeletonFilter'
+import { BaseResponseInterface } from '@/utils/baseResponse.interface'
+import { useTranslate } from '@/utils/translateHelper'
+import { useGetOrgMembersQuery } from '@root/src/redux/services/admin/members-admin'
+import { IUser } from '@root/src/redux/services/interfaces/user.interface'
+
+interface Props {
+  filters: ILessonSearchParams
+  setFilter: SetFilterType
+}
+
+export default function FilterLessons({ filters, setFilter }: Props): React.ReactElement {
+  const { filters: moduleFilters, setFilter: setModuleFilters } = useFilters<IModulesSearchParams>({
+    take: 50,
+    name: '',
+  })
+  const { isAdmin } = useIsAdmin()
+  const translate = useTranslate()
+  const { data: managerModules, isLoading } = useGetOwnModulesQuery(moduleFilters, {
+    skip: isAdmin,
+  })
+  const { data: admins } = useGetOrgMembersQuery({ name: '' }, { skip: !isAdmin })
+
+  const {
+    data: adminData,
+    isLoading: adminIsLoading,
+    isFetching: adminFetching,
+  } = useGetAdminModulesQuery(moduleFilters, { skip: !isAdmin })
+
+  const modules = isAdmin ? adminData : managerModules
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex' }}>
+        <SkeletonFilter />
+        <SkeletonFilter />
+      </Box>
+    )
+  }
+
+  return (
+    <>
+      <Stack
+        sx={{ mb: 4, gap: 2 }}
+        alignItems='center'
+        direction={{
+          xs: 'column',
+          sm: 'row',
+        }}
+      >
+        <TextField
+          sx={{
+            width: { xs: '100%', sm: '100%', md: '260px', lg: '260px' },
+          }}
+          placeholder={translate('name')}
+          type='text'
+          value={filters.name}
+          onChange={(event) => {
+            setFilter('name', event.target.value)
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment
+                position='end'
+                sx={{ cursor: 'pointer' }}
+              >
+                <SearchOutlined />
+              </InputAdornment>
+            ),
+          }}
+        ></TextField>
+        <Autocomplete<IModule & BaseResponseInterface>
+          options={modules?.data ?? []}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={translate('module')}
+            />
+          )}
+          onInputChange={(e, value) => {
+            setModuleFilters('name', value)
+          }}
+          defaultValue={modules?.data.filter((m) => m.id === filters.module_id)[0]}
+          onChange={(event, value, reason, details) => {
+            setFilter('module_id', details?.option.id ?? '')
+          }}
+          getOptionLabel={(option) => option.name}
+          sx={{
+            width: { xs: '100%', sm: '100%', md: '260px', lg: '260px' },
+            marginRight: 2,
+          }}
+        />
+        {admins ? (
+          <Autocomplete<IUser & BaseResponseInterface>
+            options={admins.data ?? []}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={translate('user')}
+              />
+            )}
+            onInputChange={(e, value) => {
+              setModuleFilters('user_id', value)
+            }}
+            onChange={(event, value, reason, details) => {
+              setFilter('teacherId', details?.option.id ?? '')
+            }}
+            getOptionLabel={(option) =>
+              option.first_name + ' ' + option.last_name + ' ' + option.role
+            }
+            sx={{
+              width: { xs: '100%', sm: '100%', md: '260px', lg: '260px' },
+              marginRight: 2,
+            }}
+          />
+        ) : null}
+      </Stack>
+    </>
+  )
+}

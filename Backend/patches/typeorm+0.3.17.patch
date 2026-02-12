@@ -1,0 +1,80 @@
+diff --git a/node_modules/typeorm/commands/MigrationCreateCommand.js b/node_modules/typeorm/commands/MigrationCreateCommand.js
+index 9e7ec11..4c39d44 100644
+--- a/node_modules/typeorm/commands/MigrationCreateCommand.js
++++ b/node_modules/typeorm/commands/MigrationCreateCommand.js
+@@ -57,13 +57,16 @@ class MigrationCreateCommand {
+      */
+     static getTemplate(name, timestamp) {
+         return `import { MigrationInterface, QueryRunner } from "typeorm"
++
+ 
+ export class ${(0, StringUtils_1.camelCase)(name, true)}${timestamp} implements MigrationInterface {
+ 
+     public async up(queryRunner: QueryRunner): Promise<void> {
++        const { schema } = queryRunner.connection.options as PostgresConnectionOptions
+     }
+ 
+     public async down(queryRunner: QueryRunner): Promise<void> {
++        const { schema } = queryRunner.connection.options as PostgresConnectionOptions
+     }
+ 
+ }
+diff --git a/node_modules/typeorm/commands/MigrationGenerateCommand.js b/node_modules/typeorm/commands/MigrationGenerateCommand.js
+index 5d29937..2b05f90 100644
+--- a/node_modules/typeorm/commands/MigrationGenerateCommand.js
++++ b/node_modules/typeorm/commands/MigrationGenerateCommand.js
+@@ -88,18 +88,24 @@ class MigrationGenerateCommand {
+                     });
+                 }
+                 sqlInMemory.upQueries.forEach((upQuery) => {
+-                    upSqls.push("        await queryRunner.query(`" +
+-                        upQuery.query.replace(new RegExp("`", "g"), "\\`") +
++                    let upQueryStr = upQuery.query.replace(new RegExp("`", "g"), "\\`");
++                    if (dataSource.options.schema) {
++                      upQueryStr.replace(new RegExp(dataSource.options.schema, "g"), `\${schema}`)
++                    }
++                    upSqls.push("        await queryRunner.query(`" + upQueryStr +
+                         "`" +
+                         MigrationGenerateCommand.queryParams(upQuery.parameters) +
+-                        ");");
++                        ")");
+                 });
+                 sqlInMemory.downQueries.forEach((downQuery) => {
+-                    downSqls.push("        await queryRunner.query(`" +
+-                        downQuery.query.replace(new RegExp("`", "g"), "\\`") +
++                  let downQueryStr = downQuery.query.replace(new RegExp("`", "g"), "\\`");
++                  if (dataSource.options.schema) {
++                    downQueryStr.replace(new RegExp(dataSource.options.schema, "g"), `\${schema}`)
++                  }
++                    downSqls.push("        await queryRunner.query(`" + downQueryStr +
+                         "`" +
+                         MigrationGenerateCommand.queryParams(downQuery.parameters) +
+-                        ");");
++                        ")");
+                 });
+             }
+             finally {
+@@ -158,17 +164,22 @@ class MigrationGenerateCommand {
+      */
+     static getTemplate(name, timestamp, upSqls, downSqls) {
+         const migrationName = `${(0, StringUtils_1.camelCase)(name, true)}${timestamp}`;
+-        return `import { MigrationInterface, QueryRunner } from "typeorm";
++        return `import { MigrationInterface, QueryRunner } from 'typeorm'
++
+ 
+ export class ${migrationName} implements MigrationInterface {
+     name = '${migrationName}'
+ 
+     public async up(queryRunner: QueryRunner): Promise<void> {
++        const { schema } = queryRunner.connection.options as PostgresConnectionOptions
++
+ ${upSqls.join(`
+ `)}
+     }
+ 
+     public async down(queryRunner: QueryRunner): Promise<void> {
++        const { schema } = queryRunner.connection.options as PostgresConnectionOptions
++
+ ${downSqls.join(`
+ `)}
+     }

@@ -1,0 +1,127 @@
+import { Box, Link, ListItemText, Tooltip } from '@mui/material'
+import { IoIosArrowDown } from '@react-icons/all-files/io/IoIosArrowDown'
+import { IoIosArrowForward } from '@react-icons/all-files/io/IoIosArrowForward'
+import NextLink from 'next/link'
+
+import RoleBasedGuard from '@/auth/RoleBasedGuard'
+import { useTranslate } from '@root/src/utils/translateHelper'
+
+import { Label } from '../../label'
+import { NavItemProps } from '../types'
+
+import { StyledDotIcon, StyledIcon, StyledItem } from './styles'
+
+export default function NavItem({
+  item,
+  depth,
+  open,
+  active,
+  isExternalLink,
+  ...other
+}: NavItemProps): React.ReactElement | null {
+  const translate = useTranslate()
+
+  const { title, path, icon, info, children, caption, roles, component } = item
+
+  const subItem = depth !== 1
+
+  const renderContent = (
+    <StyledItem
+      depth={depth}
+      active={active}
+      disabled={!!info}
+      caption={!!caption}
+      {...other}
+    >
+      {icon && <StyledIcon>{icon}</StyledIcon>}
+
+      {subItem && (
+        <StyledIcon>
+          <StyledDotIcon active={active && subItem} />
+        </StyledIcon>
+      )}
+
+      <ListItemText
+        primary={`${translate(title)}`}
+        secondary={
+          caption && (
+            <Tooltip
+              title={`${translate(caption)}`}
+              placement='top-start'
+            >
+              <span>{`${translate(caption)}`}</span>
+            </Tooltip>
+          )
+        }
+        primaryTypographyProps={{
+          noWrap: true,
+          component: 'span',
+          variant: active ? 'subtitle2' : 'body2',
+          fontSize: 18,
+        }}
+        secondaryTypographyProps={{
+          noWrap: true,
+          variant: 'caption',
+        }}
+      />
+
+      {info && (
+        <Box
+          component='span'
+          sx={{ lineHeight: 0 }}
+        >
+          <Label color='success'>{translate(`${info}`)}</Label>
+        </Box>
+      )}
+
+      {!!children &&
+        (open ? (
+          <IoIosArrowDown
+            size={16}
+            style={{ marginLeft: 1, flexShrink: 0 }}
+          />
+        ) : (
+          <IoIosArrowForward
+            size={16}
+            style={{ marginLeft: 1, flexShrink: 0 }}
+          />
+        ))}
+    </StyledItem>
+  )
+  const renderItem = (): React.ReactElement => {
+    // ExternalLink
+    if (isExternalLink) {
+      return (
+        <Link
+          href={path}
+          target='_blank'
+          rel='noopener'
+          underline='none'
+        >
+          {renderContent}
+        </Link>
+      )
+    }
+    // Has child
+    if (children || info) {
+      return renderContent
+    }
+
+    if (component) {
+      return component(renderContent)
+    }
+
+    // Default
+    return (
+      <Link
+        component={NextLink}
+        href={path}
+        underline='none'
+      >
+        {renderContent}
+      </Link>
+    )
+  }
+
+  return <RoleBasedGuard roles={roles}> {renderItem()} </RoleBasedGuard>
+}

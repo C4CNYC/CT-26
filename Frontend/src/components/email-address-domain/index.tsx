@@ -1,0 +1,195 @@
+import { useState } from 'react'
+
+import { yupResolver } from '@hookform/resolvers/yup'
+import { LoadingButton } from '@mui/lab'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  IconButton,
+  InputAdornment,
+  Typography,
+} from '@mui/material'
+import { AiFillPlusCircle } from '@react-icons/all-files/ai/AiFillPlusCircle'
+import { IoIosArrowBack } from '@react-icons/all-files/io/IoIosArrowBack'
+import { IoClose } from '@react-icons/all-files/io5/IoClose'
+import { useSnackbar } from 'notistack'
+import { useForm } from 'react-hook-form'
+import * as Yup from 'yup'
+
+import { useInviteStudentMutation } from '@/redux/services/manager/students-manager'
+import { useTranslate } from '@/utils/translateHelper'
+
+import { FormProvider, RHFTextField } from '../hook-form'
+
+interface FormValuesProps {
+  email: string
+}
+
+interface IEmailAddressModalProps {
+  children: React.ReactElement
+  schoolId: string
+  classId: string
+}
+
+export default function EmailAddressModal({
+  children,
+  schoolId,
+  classId,
+}: IEmailAddressModalProps) {
+  const { enqueueSnackbar } = useSnackbar()
+  const [open, setOpen] = useState(false)
+  const [inviteStudent, { isLoading }] = useInviteStudentMutation()
+  const translate = useTranslate()
+
+  const CreateEmailSchema = Yup.object().shape({
+    email: Yup.string()
+      .required(translate('required_email'))
+      .email(translate('must_be_valid_email')),
+  })
+  const methods = useForm<FormValuesProps>({
+    resolver: yupResolver(CreateEmailSchema),
+    mode: 'all',
+    defaultValues: { email: '' },
+  })
+
+  const onSubmit = async ({ email }: FormValuesProps) => {
+    try {
+      await inviteStudent({ schoolId, email, class_id: classId }).unwrap()
+      enqueueSnackbar(translate('messages_student_invited'))
+      methods.reset({ email: '' })
+    } catch (error: any) {
+      enqueueSnackbar(error.data.message, { variant: 'error' })
+    }
+  }
+
+  return (
+    <>
+      <Box
+        onClick={() => {
+          setOpen(true)
+        }}
+      >
+        {children}
+      </Box>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false)
+        }}
+        sx={{ minWidth: '70wh' }}
+      >
+        <Box
+          sx={{
+            justifyContent: 'end',
+            alignItems: 'flex-end',
+            display: 'flex',
+            p: 1,
+          }}
+        >
+          <IconButton
+            onClick={() => {
+              setOpen(false)
+            }}
+          >
+            <IoClose />
+          </IconButton>
+        </Box>
+        <FormProvider
+          methods={methods}
+          onSubmit={methods.handleSubmit(onSubmit)}
+        >
+          <Box
+            ml='30px'
+            mb='30px'
+            mr='30px'
+            mt='-20px'
+          >
+            <Box
+              display='flex'
+              alignItems='center'
+              ml='-20px'
+            >
+              <Button
+                sx={{
+                  color: 'inherit',
+                  background: 'none',
+                  p: '0px',
+                  '&:hover': {
+                    background: 'none',
+                    boxShadow: 'none',
+                  },
+                }}
+                onClick={() => {
+                  setOpen(false)
+                }}
+              >
+                <IoIosArrowBack size={24} />
+              </Button>
+              <Typography
+                variant='h4'
+                ml='-10px'
+              >
+                {translate('email_address')}
+              </Typography>
+            </Box>
+            <RHFTextField
+              name='email'
+              variant='outlined'
+              placeholder={translate('share_type_email')}
+              fullWidth
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <AiFillPlusCircle size={30} />
+                  </InputAdornment>
+                ),
+              }}
+              sx={(theme) => ({
+                borderRadius: '8px',
+                fontSize: '16px',
+                mt: '40px',
+                '& .MuiInputBase-root': {
+                  background: '#f0f0f0',
+                },
+                '& input:-webkit-autofill': {
+                  '-webkit-background-clip': 'text',
+                  '-webkit-text-fill-color': '#000',
+                  transition: 'background-color 5000s ease-in-out 0s',
+                  boxShadow: `inset 0 0 .1px .1px ${theme.palette.grey[200]}`,
+                },
+              })}
+            />
+            <LoadingButton
+              fullWidth
+              type='submit'
+              loading={isLoading}
+              loadingIndicator={
+                <CircularProgress
+                  size={22}
+                  thickness={5}
+                />
+              }
+              sx={{
+                mt: 5,
+                background: '#d1329e',
+                color: 'white',
+                '&:hover': {
+                  background: '#d1329e',
+                },
+                height: '54px',
+                fontSize: '20px',
+                '& .MuiCircularProgress-root': {
+                  color: '#fff',
+                },
+              }}
+            >
+              {translate('actions_confirm')}
+            </LoadingButton>
+          </Box>
+        </FormProvider>
+      </Dialog>
+    </>
+  )
+}

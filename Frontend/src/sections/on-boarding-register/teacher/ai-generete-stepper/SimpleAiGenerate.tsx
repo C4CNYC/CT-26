@@ -1,0 +1,166 @@
+import { useMemo, useState } from 'react'
+
+import {
+  Button,
+  IconButton,
+  Stack,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+  useTheme,
+} from '@mui/material'
+import { IoIosArrowBack } from '@react-icons/all-files/io/IoIosArrowBack'
+import { IoClose } from '@react-icons/all-files/io5/IoClose'
+
+import { RHFTextField } from '@root/src/components/hook-form/RHFTextField'
+import { useGenerateLessonMutation } from '@root/src/redux/services/manager/lessons-manager'
+import { useTranslate } from '@root/src/utils/translateHelper'
+
+import { useAiGenerateStepper } from './AiGenerateStepperContext'
+import {
+  BTN_CONTAINER_STYLES,
+  getNextBtnSx,
+  PROMTS_VARIANTS,
+  SIMPLE_GENERATE_TOGLE,
+  SIMPLE_GENERATE_TOGLE_GROUP,
+  STEP_CONTAINER_STYLES,
+  STEP_TYTLE_STYLES,
+} from './constants'
+import LoaderStep from './LoaderStep'
+
+type ISimpleAiGenerateProps = {
+  resetRoad: () => void
+  updateForm: (name: string, value: string) => void
+  getFormValue: (name: string) => string
+}
+
+const SimpleAiGenerate = ({ resetRoad, updateForm, getFormValue }: ISimpleAiGenerateProps) => {
+  const theme = useTheme()
+  const translate = useTranslate()
+
+  const { nextStep, isModal, closeModal } = useAiGenerateStepper()
+  const [textFieldValue, setTextFieldValue] = useState<string>(getFormValue('RpromptR'))
+
+  const [generateLesson, { isLoading: generateLessonLoading }] = useGenerateLessonMutation()
+
+  const nextBtnStyles = useMemo(
+    () => getNextBtnSx(theme.palette.mode === 'dark'),
+    [theme.palette.mode]
+  )
+
+  const handleChangeTextField = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setTextFieldValue(event.target.value)
+    updateForm('RpromptR', event.target.value)
+  }
+  const handlePresetChange = (event: React.MouseEvent<HTMLElement>, newPrompt: string) => {
+    setTextFieldValue(newPrompt)
+    updateForm('RpromptR', newPrompt)
+  }
+
+  return (
+    <Stack
+      sx={STEP_CONTAINER_STYLES}
+      justifyContent='space-between'
+    >
+      {generateLessonLoading ? (
+        <LoaderStep isLoading={generateLessonLoading} />
+      ) : (
+        <>
+          <Stack
+            direction='row'
+            sx={{ gap: 2, pl: isModal ? 1 : 0, alignItems: 'center' }}
+          >
+            {!isModal ? (
+              <IconButton onClick={resetRoad}>
+                <IoIosArrowBack size={28} />
+              </IconButton>
+            ) : null}
+            <Typography
+              variant='h3'
+              sx={STEP_TYTLE_STYLES}
+              color={theme.palette.mode === 'dark' ? '#B5B5B5' : '#333'}
+            >
+              {translate('ai_gen_simple_step_title')}
+            </Typography>
+            {isModal ? (
+              <IconButton
+                onClick={closeModal}
+                sx={{ position: 'absolute', top: '-12px', right: '-12px' }}
+              >
+                <IoClose size={20} />
+              </IconButton>
+            ) : null}
+          </Stack>
+          <Stack gap={{ xs: 2, sm: 2, md: 8 }}>
+            <Stack sx={{ gap: { xs: 1, sm: 1, md: 4 }, px: { xs: 0, sm: 0, md: 4 } }}>
+              <ToggleButtonGroup
+                size='large'
+                onChange={handlePresetChange}
+                aria-label='promt variants'
+                exclusive
+                sx={SIMPLE_GENERATE_TOGLE_GROUP}
+              >
+                {PROMTS_VARIANTS.map((el) => (
+                  <ToggleButton
+                    value={el.key}
+                    key={el.key}
+                    sx={SIMPLE_GENERATE_TOGLE}
+                  >
+                    {el.icon}
+
+                    {translate(el.text)}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+              <RHFTextField
+                placeholder={translate('ai_gen_simple_step_placeholder')}
+                multiline
+                name='RpromptR'
+                minRows={3}
+                required
+                onChange={(e) => {
+                  handleChangeTextField(e)
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: theme.palette.mode === 'dark' ? '#fff' : '#616161',
+                      borderWidth: '2px',
+                    },
+                    background: theme.palette.mode === 'dark' ? '#1a2029' : '',
+                  },
+                }}
+              />
+
+              <Typography sx={{ color: '#616161', pl: 2, mt: { xs: 0, md: -2 } }}>
+                {!textFieldValue ? translate('ai_gen_simple_step_error_text') : '\u00A0'}
+              </Typography>
+            </Stack>
+            <Stack sx={BTN_CONTAINER_STYLES}>
+              <Button
+                variant='contained'
+                sx={nextBtnStyles}
+                onClick={nextStep}
+                disabled={!textFieldValue}
+              >
+                {translate('ai_gen_advanced_btn')}
+              </Button>
+              <Button
+                type='submit'
+                variant='contained'
+                sx={nextBtnStyles}
+                disabled={!textFieldValue}
+              >
+                {translate('ai_gen_generate_btn')}
+              </Button>
+            </Stack>
+          </Stack>
+        </>
+      )}
+    </Stack>
+  )
+}
+
+export default SimpleAiGenerate

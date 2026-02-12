@@ -1,0 +1,148 @@
+import { useState, useEffect } from 'react'
+
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Stack } from '@mui/material'
+import { useRouter } from 'next/router'
+import { useForm } from 'react-hook-form'
+import * as Yup from 'yup'
+
+import { useAuthContext } from '@/auth/useAuthContext'
+import { FormProvider, useSnackbar } from '@/components'
+import { Role } from '@/redux/services/enums/role.enum'
+import { useGetInviteQuery } from '@/redux/services/manager/invite-system'
+import { useTranslate } from '@/utils/translateHelper'
+import { useTenants } from '@root/src/hooks/useTenants'
+import { PATH_AUTH } from '@root/src/routes/paths'
+import { generateRandomEmoji } from '@root/src/utils'
+
+import { RegisterStudentTeacher, SingLink } from '../../links'
+import SingUp from '../SingUp'
+
+import AddSchool from './AddSchool'
+import AddTeacher from './AddTeacher'
+import StepperProgress from './StepperProgress'
+
+interface FormValuesProps {
+  email: string
+  firstName: string
+  lastName: string
+  password: string
+}
+
+export default function LaunchCourseStepper() {
+  const { push, query } = useRouter()
+  const tenant = useTenants()
+  const inviteCode = query.inviteCode as string | undefined
+
+  const translate = useTranslate()
+
+  const { enqueueSnackbar } = useSnackbar()
+  const { register } = useAuthContext()
+  const { data: inviteData } = useGetInviteQuery(inviteCode as string, { skip: !inviteCode })
+
+  const [activeStep, setActiveStep] = useState(0)
+
+  const CreateEmailSchema = Yup.object().shape({
+    email: Yup.string()
+      .required(translate('required_email'))
+      .email(translate('must_be_valid_email')),
+    firstName: Yup.string().required(translate('enter_name')),
+    lastName: Yup.string().required(translate('enter_surname')),
+    password: Yup.string().min(8, translate('required_password_length')),
+  })
+
+  const nextStep = () => {
+    setActiveStep(activeStep + 1)
+  }
+  const prevStep = () => {
+    setActiveStep(activeStep - 1)
+  }
+  const goToStep = (step: number) => {
+    setActiveStep(step)
+  }
+
+  const methods = useForm<FormValuesProps>({
+    resolver: yupResolver(CreateEmailSchema),
+    mode: 'all',
+  })
+
+  const onSubmit = async (data: FormValuesProps) => {
+    const randomEmoji = generateRandomEmoji(true)
+    try {
+      await register({
+        email: data.email,
+        password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        role: Role.Manager,
+        emojiAvatar: randomEmoji,
+      })
+    } catch (error: any) {
+      methods.setError('root', {
+        ...error,
+        message: error.message,
+      })
+      enqueueSnackbar(error ?? 'Error', { variant: 'error' })
+    }
+  }
+
+  useEffect(() => {
+    if (inviteCode && inviteData) {
+      methods.setValue('email', inviteData?.email || '', {
+        shouldDirty: true,
+      })
+    }
+  }, [inviteCode, inviteData])
+
+  return (
+    <Stack
+      sx={{
+        minHeight: !inviteCode && tenant?.meta?.is_enabled_google_auth ? '460px' : '300px',
+        justifyContent: 'center',
+        position: 'relative',
+        width: '100%',
+      }}
+    >
+      {!inviteCode && !inviteData ? (
+        <>{activeStep === 0 || activeStep === 1 ? <RegisterStudentTeacher isTeacher /> : null}</>
+      ) : null}
+
+      <FormProvider
+        methods={methods}
+        onSubmit={methods.handleSubmit(onSubmit)}
+      >
+        {activeStep === 0 && (
+          <SingUp
+            goToStep={goToStep}
+            nextStep={nextStep}
+            resetRoad={() => push(PATH_AUTH.onBoardingTeacher.root)}
+            isValid={!methods.formState.errors.email && methods.formState.dirtyFields.email}
+            isTeacher={true}
+            inviteData={inviteData}
+          />
+        )}
+        {(activeStep === 1 || activeStep === 2) && (
+          <StepperProgress
+            prevStep={prevStep}
+            activeStep={activeStep}
+          />
+        )}
+        {activeStep === 1 && (
+          <AddTeacher
+            nextStep={nextStep}
+            isSubmitting={methods.formState.isSubmitting}
+            isSubmitSuccessful={methods.formState.isSubmitSuccessful}
+            inviteData={inviteData}
+          />
+        )}
+      </FormProvider>
+
+      {!inviteData && (
+        <>
+          {activeStep === 2 && <AddSchool />}
+          <SingLink />
+        </>
+      )}
+    </Stack>
+  )
+}

@@ -1,0 +1,92 @@
+import {
+    BadRequestException,
+    Injectable,
+    MisdirectedException,
+    NotFoundException,
+} from '@nestjs/common'
+
+import { OnEvent } from '@nestjs/event-emitter'
+
+import { Lesson } from '../../tenanted/lesson/lesson.entity'
+import { User } from '../../tenanted/user/user.entity'
+import { LessonContent } from '@/modules/tenanted/lesson-content/lesson-content.entity'
+import { getTenantConnection } from '@/modules/tenancy/tenancy.utils'
+
+import { ApplicationEventEnum, EventHandlerPayloads } from '../users-manager/enums/application-event'
+import { Assigment } from '@/modules/tenanted/assigment/assigment.entity'
+
+@Injectable()
+export class TeacherAssignLesson {
+    constructor() { }
+
+    @OnEvent(ApplicationEventEnum.CREATE_ORG)
+    async createTeacherEventHandler(payload: EventHandlerPayloads["CREATE_ORG"]): Promise<void> {
+        const connection = await getTenantConnection(payload.tenant_id);
+        if (!connection) {
+            throw new Error('No database connection available for this tenant');
+        }
+        // Manually instantiate the services with the tenant-specific connection 
+        const lessonRepository = connection.getRepository(Lesson);
+        const lessonContentRepo = connection.getRepository(LessonContent);
+        const AssigmentRepo = connection.getRepository(Assigment);
+        const userRepository = connection.getRepository(User);
+
+        const lesson = await lessonRepository.findOne({
+            where: { id: '7f0e1ad5-8b8f-4e5b-b27e-0fc5e3bd11b9' },
+            relations: [
+                'contents',
+                'assigments',
+                'units',
+                'lessonToUnits',
+                'last_slides',
+                'skills',]
+        });
+        if (!lesson)
+            throw new MisdirectedException("lesson cant be located");
+        const currentUser = await userRepository.findOne({ where: { id: payload.user_id } })
+
+        if (!currentUser)
+            return;
+
+        let result = lessonRepository.create(lesson)
+        result.id = (new Lesson()).id;
+        result.user = currentUser;
+        let newlesson = await lessonRepository.save(result)
+        let savePromises: Promise<any>[] = []
+        lesson.contents.forEach(content => {
+            let newContent = lessonContentRepo.create(content)
+            let savepromise = lessonContentRepo.insert({
+                ...newContent,
+                id: (new LessonContent()).id,
+                body: () => JSON.stringify(newContent.body),
+                validations: () => JSON.stringify(newContent.validations),
+                creator: () => currentUser.id,
+                lesson: () => newlesson.id,
+                progress: undefined,
+            })
+            savePromises.push(savepromise)
+            return newContent;
+        })
+        lesson.assigments.forEach(ass => {
+            let newAss = AssigmentRepo.create(ass);
+            let savepromise = AssigmentRepo.insert({
+                ...newAss,
+                pined_by_students: undefined,
+                code_assignment: () => newAss.code_assignment.id,
+                creator: () => currentUser.id,
+                courseUnit: () => newAss.courseUnit.id,
+                lesson: () => newlesson.id,
+                school: undefined,
+                course: undefined,
+                assignee_students: undefined,
+                assignee_classes: undefined,
+                skill_tags: undefined
+            })
+
+            savePromises.push(savepromise)
+        })
+        Promise.allSettled(savePromises).then(() => console.log('Saved'))
+        console.log('11111111111111111111111117 lesson save result', result)
+
+    }
+}

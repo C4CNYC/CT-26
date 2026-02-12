@@ -1,0 +1,77 @@
+import { Avatar, Stack, Typography, useMediaQuery } from '@mui/material'
+import { useTheme } from '@mui/system'
+import { FaSchool } from '@react-icons/all-files/fa/FaSchool'
+
+import { IClass } from '@/redux/interfaces/class.interface'
+import { IUser } from '@/redux/services/interfaces/user.interface'
+import { BaseResponseInterface } from '@/utils/baseResponse.interface'
+import { isImageURL } from '@/utils/isImageUrl'
+import { useTranslate } from '@/utils/translateHelper'
+
+import { CLASS_AVATAR_SX, CLASS_INFO_WRAPPER, TEACHER_EMOJI_SX } from './constants'
+
+interface Props {
+  classData: IClass
+  teacher?: IUser & BaseResponseInterface
+}
+
+export default function ClassInfoMain({ classData, teacher }: Props): React.ReactElement {
+  const translate = useTranslate()
+  const theme = useTheme()
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+
+  return (
+    <Stack
+      direction={isMobile ? 'column' : 'row'}
+      alignItems='center'
+      gap={2}
+      sx={{ flex: 1 }}
+    >
+      <Avatar
+        sx={CLASS_AVATAR_SX}
+        src={classData.avatar ?? ''}
+        alt={classData.name}
+      />
+      <Stack alignItems={isMobile ? 'center' : 'start'}>
+        <Typography
+          variant='h2'
+          sx={{ color: '#fff' }}
+        >
+          {classData?.name}
+        </Typography>
+        <Stack
+          direction='row'
+          sx={CLASS_INFO_WRAPPER}
+        >
+          <Typography
+            variant='subtitle2'
+            sx={{ color: '#fff' }}
+          >
+            <FaSchool
+              color='#fff'
+              size='16px'
+              style={{ marginRight: '5px', marginLeft: '5px' }}
+            />
+            {classData?.school?.name}
+          </Typography>
+          <Avatar
+            sx={TEACHER_EMOJI_SX}
+            src={isImageURL(teacher?.avatar) ? teacher?.avatar : undefined}
+            alt={teacher?.first_name ?? 'Teacher avatar'}
+          >
+            {!isImageURL(teacher?.avatar) ? teacher?.avatar : '&#128540;'}
+          </Avatar>
+          <Typography
+            variant='subtitle2'
+            sx={{
+              color: '#fff',
+            }}
+          >
+            {translate('teacher')}: {teacher?.first_name ?? ''} {teacher?.last_name ?? ''}
+          </Typography>
+        </Stack>
+      </Stack>
+    </Stack>
+  )
+}
