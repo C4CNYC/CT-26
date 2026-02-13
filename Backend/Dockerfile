@@ -4,7 +4,7 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 COPY . .
-RUN yarn install --frozen-lockfile
+RUN yarn install 
 
 RUN patch-package
 RUN yarn build
