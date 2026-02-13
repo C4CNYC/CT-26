@@ -47,6 +47,9 @@ export class OrgMiddleware implements NestMiddleware {
     request.org_slug = organization.slug
     request.school_id = school_id
     let referrer = request.headers.referer || request.headers.referrer || ''
+    if (Array.isArray(referrer)) {
+      referrer = referrer[0]
+    }
     /* Example referrer:
       - "https://example.com:8080/dashboard"
       - "https://app.codetribe.com/login"
