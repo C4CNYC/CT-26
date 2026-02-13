@@ -4,9 +4,9 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 COPY . .
-RUN yarn install 
+RUN yarn install
 
-RUN patch-package
+RUN npx patch-package
 RUN yarn build
 
 
