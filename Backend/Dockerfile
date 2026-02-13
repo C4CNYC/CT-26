@@ -4,7 +4,7 @@ FROM node:23-alpine AS builder
 WORKDIR /app
 
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install 
 
 COPY . .
 RUN yarn build
@@ -18,7 +18,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --production
+RUN yarn install  --production
 
 COPY --from=builder /app/dist ./dist
 
