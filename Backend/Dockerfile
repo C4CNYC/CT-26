@@ -20,7 +20,6 @@ ENV NODE_ENV=production
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --production
-RUN patch-package
 
 COPY --from=builder /app/dist ./dist
 
