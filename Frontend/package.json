@@ -1,6 +1,6 @@
 {
   "name": "codetribe",
-  "version": "0.0.0",
+  "version": "0.26.0",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "next dev -p 8080",
