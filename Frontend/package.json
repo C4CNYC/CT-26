@@ -13,8 +13,8 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "clear": "rm -rf .next .swc _static node_modules",
-    "postinstall": "patch-package && husky install",
-    "prepare": "husky install"
+    "postinstall": "patch-package && husky install || true",
+    "prepare": "husky install || true"
   },
   "husky": {
     "hooks": {
