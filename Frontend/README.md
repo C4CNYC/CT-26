@@ -39,3 +39,4 @@ yarn lint         # ESLint check
 - `src/redux/` - State management
 - `src/auth/` - Authentication system
 - `src/utils/` & `src/hooks/` - Utilities and custom hooks
+
