@@ -12,6 +12,8 @@ export async function middleware(req: any) {
       cache: 'no-store',
     })
 
+    if (!res.ok) return NextResponse.next()
+
     const tenant = await res.json()
 
     if (tenant?.meta?.is_enabled_teacher_register_feature === false) {

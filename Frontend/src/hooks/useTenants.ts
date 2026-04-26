@@ -15,8 +15,11 @@ function getDomain() {
 async function fetchTenant(domain: string): Promise<Tenant> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tenant/${domain}`)
+    if (!res.ok) {
+      return DEFAULT_TENANT
+    }
     const data = await res.json()
-    if (data && !data.error) return data
+    if (data && !data.error && data.slug) return data
   } catch (e) {
     // console.error('Failed to fetch tenant', e)
   }

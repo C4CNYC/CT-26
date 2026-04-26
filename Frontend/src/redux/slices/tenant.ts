@@ -17,8 +17,8 @@ export interface Tenant {
 export const DEFAULT_TENANT: Tenant = {
   name: 'CodeTribe',
   slug: 'codetribe',
-  logo: '/logo/logo.png',
-  min_logo: '/logo/logo.png',
+  logo: '/logo/logo_full.svg',
+  min_logo: '/logo/logo_single.svg',
   favicon: '/favicon/favicon-32x32.png',
   domain: 'app.codetribe.com',
   meta: {
