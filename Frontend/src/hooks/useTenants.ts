@@ -26,13 +26,13 @@ async function fetchTenant(domain: string): Promise<Tenant> {
   return DEFAULT_TENANT
 }
 
+let isFetching = false
+let fetchPromise: Promise<Tenant> | null = null
+
 export function useTenants() {
   const [tenant, setTenant] = useState<Tenant | undefined>(undefined)
 
   useEffect(() => {
-    const domain = getDomain()
-    const tenantName = localStorage.getItem('tenantName') || domain
-
     let savedTenant: Tenant | null = null
     try {
       const json = localStorage.getItem('tenant')
@@ -41,24 +41,31 @@ export function useTenants() {
 
     if (savedTenant) {
       setTenant(savedTenant)
+      return
     }
 
-    ;(async () => {
-      const fetchedTenant = await fetchTenant(domain)
+    const tenantName = localStorage.getItem('tenantName')
+    const domain = tenantName || getDomain()
 
-      if (!savedTenant) {
+    if (isFetching && fetchPromise) {
+      fetchPromise.then((fetchedTenant) => {
         setTenant(fetchedTenant)
         localStorage.setItem('tenant', JSON.stringify(fetchedTenant))
         localStorage.setItem('tenantName', fetchedTenant.slug)
-        return
-      }
+      })
+      return
+    }
 
-      if (!savedTenant.updatedAt || fetchedTenant.updatedAt !== savedTenant.updatedAt) {
-        setTenant(fetchedTenant)
-        localStorage.setItem('tenant', JSON.stringify(fetchedTenant))
-        localStorage.setItem('tenantName', fetchedTenant.slug)
-      }
-    })()
+    isFetching = true
+    fetchPromise = fetchTenant(domain)
+
+    fetchPromise.then((fetchedTenant) => {
+      isFetching = false
+      fetchPromise = null
+      setTenant(fetchedTenant)
+      localStorage.setItem('tenant', JSON.stringify(fetchedTenant))
+      localStorage.setItem('tenantName', fetchedTenant.slug)
+    })
   }, [])
 
   return tenant
