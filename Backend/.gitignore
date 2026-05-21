@@ -27,6 +27,7 @@ packages/**/*.js
 # misc
 package-lock.json
 dist/
+storage/
 .DS_Store
 lerna-debug.log
 npm-debug.log

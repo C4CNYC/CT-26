@@ -63,7 +63,7 @@ yarn dev          # Development server (port 8080)
 - `src/modules/core/` - Entities + core services
 - `src/modules/managers/` - Business logic coordination
 - `src/old-auth/` - JWT auth, guards, strategies
-- `src/providers/` - External integrations (S3, Google Auth, OpenAI)
+- `src/providers/` - External integrations (S3, Google Auth, OpenAI, Unsplash)
 - `src/middlewares/` - Tenant resolution via `OrgMiddleware` (reads `x-tenant-id` header)
 
 **Multi-Tenancy**: Organization-based. `OrgMiddleware` injects `org_id`, `org_slug`, `school_id` into request using `RequestWithMeta` interface.

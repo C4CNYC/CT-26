@@ -10,6 +10,7 @@ import { ScheduleModule } from '@nestjs/schedule'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { FeedbackModule } from '@/api/feedback/feedback.module'
+import { UnsplashModule } from '@/providers/unsplash/unsplash.module'
 import { OldAuthUserApiModule } from '@/api/old-auth/old-auth-user-api.module'
 import { PublicApiModule } from '@/api/public/public-api.module'
 import { LessonLastSlideModule } from '@/api/student/lesson-last-slide/lesson-last-slide.module'
@@ -85,13 +86,14 @@ console.log('DB_DEV:', process.env.DATABASE_URL);
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
     EmailsManagerModule,
+    UnsplashModule,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(OrgMiddleware)
-      .exclude('tenant/:slug', 'health')
+      .exclude('tenant/:slug', 'health', 'unsplash/*')
       .exclude({ path: 'payment/stripe', method: RequestMethod.ALL })
       .forRoutes('*')
   }
