@@ -16,6 +16,7 @@ import {
 import { LogActivityManagerService } from '@/api/manager/logactivity-manager/logactivity.service'
 import { AuthGoogleRequestDto } from '@/api/old-auth/dtos/auth-google.dto'
 import { LogActivityCategory } from '@/modules/core/log-activity/log-activity.entity'
+import { OrganizationService } from '@/modules/core/organization/organization.service'
 import { AuthService } from '@/old-auth/auth.service'
 import { LoginedUser } from '@/old-auth/interfaces/logined-user.interface'
 import { TENANT_PATH_BUILDER } from '@/utils/s3/tenant-path-builder'
@@ -29,6 +30,7 @@ import { UserService } from '../../core/user/user.service'
 import { ApplicationEventEnum } from '../users-manager/enums/application-event'
 import { LessonDeepAssignService } from '../lesson-deep-assign/lesson-deep-assign.service'
 import { SchoolClassManagerService } from '../school-class-manager/school-class-manager.service'
+import { SchoolClassStudentsManagerService } from '../school-class-students-manager/school-class-students-manager.service'
 import { SchoolMangerService } from '../school-manager/school-manager.service'
 
 import path = require('path')
@@ -43,8 +45,10 @@ export class AuthGoogleManagerService {
     private studentService: StudentService,
     private googleAuthService: GoogleAuthService,
     private logActivity: LogActivityManagerService,
+    private organizationService: OrganizationService,
     private schoolManager: SchoolMangerService,
     private schoolClassManagerService: SchoolClassManagerService,
+    private schoolClassStudentsManagerService: SchoolClassStudentsManagerService,
     private deepAssignService: LessonDeepAssignService,
   ) {}
 
@@ -77,7 +81,7 @@ export class AuthGoogleManagerService {
     dto: AuthGoogleRequestDto,
     tenant_id: string,
   ): Promise<LoginedUser> {
-    const user = await this.register(dto)
+    const user = await this.register(dto, tenant_id)
 
     await this.logActivity.logActivity(
       LogActivityCategory.USER,
@@ -106,7 +110,7 @@ export class AuthGoogleManagerService {
         tenant_id,
       )
 
-      await this.schoolClassManagerService.createClass(school.id, {
+      const schoolClass = await this.schoolClassManagerService.createClass(school.id, {
         name: uniqueNamesGenerator({
           dictionaries: [adjectives, colors, animals],
         }),
@@ -115,6 +119,9 @@ export class AuthGoogleManagerService {
       })
 
       await this.schoolManager.addTeacher(school.id, { user_id: user.id })
+      const freshClass = await this.schoolClassManagerService.getClass(schoolClass.id)
+      const student = await this.studentService.findOne({ where: { account: { id: user.id } } })
+      await this.schoolClassStudentsManagerService.addStudentToClass(freshClass.id, { student_id: student.id })
 
       this.eventEmitter.emit(ApplicationEventEnum.CREATE_ORG, user.email, tenant_id)
       void this.deepAssignService.CloneLessonToTeacher(
@@ -138,7 +145,7 @@ export class AuthGoogleManagerService {
     return this.authService.buildAuthorizedResponse(user)
   }
 
-  async register(dto: AuthGoogleRequestDto): Promise<User> {
+  async register(dto: AuthGoogleRequestDto, tenant_id?: string): Promise<User> {
     const userInfo = await this.googleAuthService.authenticate(dto.code)
 
     const user = await this.userService.findOne({
@@ -149,14 +156,19 @@ export class AuthGoogleManagerService {
       LogActivityCategory.USER,
       'AuthGoogleManagerService.register',
       {
-        tenant: user?.organization?.id,
+        tenant: user?.organization?.id || tenant_id,
         userid: user?.id,
         email: userInfo.email,
       },
-      user ? 'user exists' : 'user not exists',
+      user ? 'user exists' : 'email not exists',
     )
     if (user) {
       throw new ConflictException('This email is already registered.')
+    }
+
+    let organization
+    if (tenant_id) {
+      organization = await this.organizationService.findOne({ where: { id: tenant_id } })
     }
 
     const studentProfile = await this.studentService.create({
@@ -175,6 +187,7 @@ export class AuthGoogleManagerService {
       last_name: userInfo.family_name,
       verified: userInfo.email_verified,
       username: userInfo.name,
+      organization,
     })
 
     return newUser
