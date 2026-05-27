@@ -1,0 +1,18 @@
+name: Mirror to nerkn/CT-26
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror
+        env:
+          MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+        run: |
+          git clone --mirror https://github.com/C4CNYC/CT-26.git repo
+          cd repo
+          git remote set-url origin https://nerkn:${MIRROR_TOKEN}@github.com/nerkn/CT-26.git
+          git push --mirror
