@@ -19,9 +19,11 @@ import {
   RHFUploadAvatar,
   useSnackbar,
 } from '@/components'
+import { Role } from '@/redux/services/enums/role.enum'
 import { IStudent } from '@/redux/services/interfaces/user.interface'
 import {
   useCreateStudentMutation,
+  usePromoteStudentMutation,
   useUpdateStudentAvatarMutation,
   useUpdateStudentMutation,
 } from '@/redux/services/manager/students-manager'
@@ -53,6 +55,7 @@ export default function StudentNewEditForm({
   const [createStudent] = useCreateStudentMutation()
   const [updateStudent] = useUpdateStudentMutation()
   const [updateStudentAvatar] = useUpdateStudentAvatarMutation()
+  const [promoteStudent] = usePromoteStudentMutation()
   const { enqueueSnackbar } = useSnackbar()
   const translate = useTranslate()
 
@@ -302,6 +305,35 @@ export default function StudentNewEditForm({
                     justifyContent: 'space-between',
                   }}
                 />
+                <Box sx={{ mt: 2 }}>
+                  <Typography
+                    variant='subtitle2'
+                    sx={{ mb: 0.5 }}
+                  >
+                    {translate('make_teacher')}
+                  </Typography>
+                  <Typography
+                    variant='body2'
+                    sx={{ color: 'text.secondary', mb: 1 }}
+                  >
+                    {translate('make_teacher_desc')}
+                  </Typography>
+                  <LoadingButton
+                    variant='soft'
+                    color='warning'
+                    disabled={currentUser?.account?.role === Role.Manager}
+                    onClick={async () => {
+                      try {
+                        await promoteStudent({ schoolId: schoolIdProps ?? schoolId, studentId: currentUser!.id }).unwrap()
+                        enqueueSnackbar(translate('student_promoted_to_teacher'))
+                      } catch (e: any) {
+                        enqueueSnackbar(e?.data?.message ?? 'Error', { variant: 'error' })
+                      }
+                    }}
+                  >
+                    {currentUser?.account?.role === Role.Manager ? translate('already_teacher') : translate('make_teacher')}
+                  </LoadingButton>
+                </Box>
               </>
             )}
           </Card>

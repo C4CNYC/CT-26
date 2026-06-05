@@ -15,6 +15,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
+import { SchoolMangerService } from '../../../modules/managers/school-manager/school-manager.service'
 import { FileInterceptor } from '@nestjs/platform-express'
 import {
   ApiBearerAuth,
@@ -53,6 +54,7 @@ import { SchoolStudentManagerApiService } from './school-student-manager-api.ser
 export class SchoolStudentManagerApiController {
   constructor(
     private schoolStudentManagerApiService: SchoolStudentManagerApiService,
+    private schoolManagerService: SchoolMangerService,
   ) {}
 
   @Get()
@@ -132,6 +134,14 @@ export class SchoolStudentManagerApiController {
       file,
       request.org_id,
     )
+  }
+
+  @Post('/:id/promote')
+  async promoteToTeacher(
+    @Param('school_id', new ParseUUIDPipe()) school_id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<MessageDto> {
+    return await this.schoolStudentManagerApiService.promoteToTeacher(school_id, id)
   }
 
   @Delete('/:id')

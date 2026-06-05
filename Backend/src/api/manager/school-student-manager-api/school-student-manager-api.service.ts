@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 
 import { TENANT_PATH_BUILDER } from '@/utils/s3/tenant-path-builder'
 
 import { Student } from '../../../modules/core/student/student.entity'
 import { StudentService } from '../../../modules/core/student/student.service'
+import { Role } from '../../../modules/core/user/enums/role.enum'
+import { UserService } from '../../../modules/core/user/user.service'
+import { SchoolMangerService } from '../../../modules/managers/school-manager/school-manager.service'
 import { SchoolStudentsManagerService } from '../../../modules/managers/school-students-manager/school-students-manager.service'
 import { ApplicationEventEnum as Event } from '../../../modules/managers/users-manager/enums/application-event'
 import { S3Service } from '../../../providers/s3/s3.service'
@@ -25,6 +28,8 @@ export class SchoolStudentManagerApiService {
     private studentService: StudentService,
     private eventEmitter: EventEmitter2,
     private s3Service: S3Service,
+    private schoolManagerService: SchoolMangerService,
+    private userService: UserService,
   ) {}
 
   async inviteStudent(
@@ -101,5 +106,27 @@ export class SchoolStudentManagerApiService {
   ): Promise<MessageDto> {
     await this.schoolStudentManager.deleteStudent(student_id, tenant_id)
     return new MessageDto('student deleted')
+  }
+
+  async promoteToTeacher(school_id: string, student_id: string): Promise<MessageDto> {
+    const student = await this.studentService.findOne({
+      where: { id: student_id },
+      relations: { account: true },
+    })
+    if (!student?.account) throw new NotFoundException('student not found')
+
+    await this.userService.update(student.account.id, { role: Role.Manager })
+
+    const user = await this.userService.findOne({
+      where: { id: student.account.id },
+      relations: { schools: true },
+    })
+    if (!user) throw new NotFoundException('user not found')
+
+    const alreadyTeacher = user.schools.some((s) => s.id === school_id)
+    if (!alreadyTeacher) {
+      await this.schoolManagerService.addTeacher(school_id, { user_id: student.account.id })
+    }
+    return new MessageDto('student promoted to teacher')
   }
 }

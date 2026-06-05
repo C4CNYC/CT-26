@@ -141,6 +141,13 @@ const extendedApi = managerApi.injectEndpoints({
       }),
       invalidatesTags: ['Students'],
     }),
+    promoteStudent: builder.mutation<void, { schoolId: string; studentId: string }>({
+      query: ({ schoolId, studentId }) => ({
+        url: `/manager/school/${schoolId}/student/${studentId}/promote`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Students', 'Mentors'],
+    }),
     inviteStudent: builder.mutation<
       IStudent & BaseResponseInterface,
       { schoolId: string; email: string; class_id?: string }
@@ -172,4 +179,5 @@ export const {
   useUpdateStudentAvatarMutation,
   useInviteStudentMutation,
   useStudentResetPasswordMutation,
+  usePromoteStudentMutation,
 } = extendedApi
