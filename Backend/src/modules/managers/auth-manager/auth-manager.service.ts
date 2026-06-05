@@ -31,6 +31,8 @@ import { LessonDeepAssignService } from '../lesson-deep-assign/lesson-deep-assig
 import { SchoolClassManagerService } from '../school-class-manager/school-class-manager.service'
 import { SchoolClassStudentsManagerService } from '../school-class-students-manager/school-class-students-manager.service'
 import { SchoolMangerService } from '../school-manager/school-manager.service'
+import { InviteSystemService } from '../../core/invite-system/invite-system.service'
+import { InviteSystemType } from '../../core/invite-system/interfaces/invite-system.interface'
 import { UserResetPasswordManagerService } from '../user-reset-password-manager/user-reset-password-manager.service'
 import { ApplicationEventEnum } from '../users-manager/enums/application-event'
 import { UsersManagerService } from '../users-manager/users-managers.service'
@@ -56,6 +58,7 @@ export class AuthManagerService {
     private authGoogleManagerService: AuthGoogleManagerService,
     private deepAssignService: LessonDeepAssignService,
     private logActivity: LogActivityManagerService,
+    private inviteSystemService: InviteSystemService,
   ) {}
 
   async login(dto: SignigRequestDto, org_id: string): Promise<LoginedUser> {
@@ -130,45 +133,12 @@ export class AuthManagerService {
 
     const user = await this.usersManagerService.createUser(dto, organization)
     if (dto.role !== Role.Student) {
-      const school = await this.schoolManager.create(
-        {
-          name: uniqueNamesGenerator({
-            dictionaries: [adjectives, colors, animals],
-            separator: ' ',
-            style: 'capital',
-          }),
-          zip: undefined,
-          type: undefined,
-          city: undefined,
-          country: undefined,
-        },
-        org_id,
-      )
-
-      await this.schoolClassManagerService.createClass(school.id, {
-        name: uniqueNamesGenerator({
-          dictionaries: [adjectives, colors, animals],
-        }),
-        description: '',
-        cover: '',
-      })
-
-      await this.schoolManager.addTeacher(school.id, { user_id: user.id })
-      const schoolClass = await this.schoolClassManagerService.getClass(school.classes[0].id)
-      const student = await this.studentService.findOne({ where: { account: { id: user.id } } })
-      await this.schoolClassStudentsManagerService.addStudentToClass(schoolClass.id, { student_id: student.id })
+      await this.setupTeacherSchool(user, dto.email, org_id)
 
       this.eventEmitter.emit(
         ApplicationEventEnum.CREATE_ORG,
         user.email,
         tenant_name,
-      )
-      void this.deepAssignService.CloneLessonToTeacher(
-        {
-          user_id: user.id,
-          lesson_id: '328ec3d2-a8e6-4503-b288-92895c402085',
-        },
-        school.id,
       )
     } else {
       this.eventEmitter.emit(ApplicationEventEnum.CREATE_STUDENT, user.email)
@@ -193,44 +163,13 @@ export class AuthManagerService {
       user ? 'email exists' : 'email not exists',
       { user },
     )
-    // TODO: Clarify suitable roles options
     if (dto.role !== Role.Student) {
-      const school = await this.schoolManager.create(
-        {
-          name: uniqueNamesGenerator({
-            dictionaries: [adjectives, colors, animals],
-            separator: ' ',
-            style: 'capital',
-          }),
-          zip: undefined,
-          type: undefined,
-          city: undefined,
-          country: undefined,
-        },
-        tenant_id,
-      )
-
-      await this.schoolClassManagerService.createClass(school.id, {
-        name: uniqueNamesGenerator({
-          dictionaries: [adjectives, colors, animals],
-        }),
-        description: '',
-        cover: '',
-      })
-
-      await this.schoolManager.addTeacher(school.id, { user_id: user.id })
+      await this.setupTeacherSchool(user, user.email, tenant_id)
 
       this.eventEmitter.emit(
         ApplicationEventEnum.CREATE_ORG,
         user.email,
         tenant_id,
-      )
-      void this.deepAssignService.CloneLessonToTeacher(
-        {
-          user_id: user.id,
-          lesson_id: '328ec3d2-a8e6-4503-b288-92895c402085',
-        },
-        school.id,
       )
     }
 
@@ -244,6 +183,51 @@ export class AuthManagerService {
       },
     )
     return this.authService.buildAuthorizedResponse(user)
+  }
+
+  private async setupTeacherSchool(user: User, email: string, tenantId: string): Promise<void> {
+    const pendingInvite = await this.inviteSystemService.findPendingSchoolInvite(email)
+
+    if (pendingInvite?.schoolId) {
+      await this.schoolManager.addTeacher(pendingInvite.schoolId, { user_id: user.id })
+      return
+    }
+
+    const school = await this.schoolManager.create(
+      {
+        name: uniqueNamesGenerator({
+          dictionaries: [adjectives, colors, animals],
+          separator: ' ',
+          style: 'capital',
+        }),
+        zip: undefined,
+        type: undefined,
+        city: undefined,
+        country: undefined,
+      },
+      tenantId,
+    )
+
+    await this.schoolClassManagerService.createClass(school.id, {
+      name: uniqueNamesGenerator({
+        dictionaries: [adjectives, colors, animals],
+      }),
+      description: '',
+      cover: '',
+    })
+
+    await this.schoolManager.addTeacher(school.id, { user_id: user.id })
+    const schoolClass = await this.schoolClassManagerService.getClass(school.classes[0].id)
+    const student = await this.studentService.findOne({ where: { account: { id: user.id } } })
+    await this.schoolClassStudentsManagerService.addStudentToClass(schoolClass.id, { student_id: student.id })
+
+    void this.deepAssignService.CloneLessonToTeacher(
+      {
+        user_id: user.id,
+        lesson_id: '328ec3d2-a8e6-4503-b288-92895c402085',
+      },
+      school.id,
+    )
   }
 
   async getProfile(dto: User): Promise<User> {

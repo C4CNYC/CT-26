@@ -10,6 +10,7 @@ import { AuthGoogleManagerModule } from '../auth-google-manager/auth-google-mana
 import { LessonDeepAssignModule } from '../lesson-deep-assign/lesson-deep-assign.module'
 import { SchoolClassStudentsManagerModule } from '../school-class-students-manager/school-class-students-manager.module'
 import { SchoolMangerModule } from '../school-manager/school-manager.module'
+import { InviteSystemModule } from '../../core/invite-system/invite-system.module'
 import { UserResetPasswordManagerModule } from '../user-reset-password-manager/user-reset-password-manager.module'
 import { UsersManagerModule } from '../users-manager/users-manager.module'
 import { AuthManagerService } from './auth-manager.service'
@@ -31,6 +32,7 @@ import { StudentModule } from '@/modules/core/student/student.module'
     SchoolClassManagerModule,
     LessonDeepAssignModule,
     LogActivityManagerModule,
+    InviteSystemModule,
   ],
   providers: [AuthManagerService],
   exports: [AuthManagerService],

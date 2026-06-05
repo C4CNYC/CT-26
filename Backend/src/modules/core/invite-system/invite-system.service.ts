@@ -32,6 +32,17 @@ export class InviteSystemService {
     return `${prefix}_${token}`
   }
 
+  async findPendingSchoolInvite(email: string): Promise<InviteSystem | null> {
+    return await this.inviteRepo.findOne({
+      where: {
+        email,
+        type: InviteSystemType.SCHOOL,
+        isActive: true,
+      },
+      order: { createdAt: 'DESC' },
+    })
+  }
+
   async createInvite(data: CreateInviteDto): Promise<InviteSystem> {
     const code = this.generateCode(data.role as string)
 
