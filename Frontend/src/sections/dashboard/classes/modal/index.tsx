@@ -157,7 +157,7 @@ export default function ClassPreferences({
 
                   {userRole !== Role.Manager ? (
                     <Tab
-                      label={translate('mentors')}
+                      label={translate('teachers')}
                       {...a11yProps(2)}
                     />
                   ) : null}
