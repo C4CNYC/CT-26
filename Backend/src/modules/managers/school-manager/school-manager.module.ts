@@ -9,6 +9,12 @@ import { SchoolSettingModule } from '../../core/school-setting/school-setting.mo
 import { SchoolModule } from '../../core/school/school.module'
 import { UserModule } from '../../core/user/user.module'
 import { SchoolMangerService } from './school-manager.service'
+import { TeacherSchoolSetupService } from './teacher-school-setup.service'
+import { InviteSystemModule } from '@/modules/core/invite-system/invite-system.module'
+import { StudentModule } from '@/modules/core/student/student.module'
+import { SchoolClassManagerModule } from '../school-class-manager/school-class-manager.module'
+import { SchoolClassStudentsManagerModule } from '../school-class-students-manager/school-class-students-manager.module'
+import { LessonDeepAssignModule } from '../lesson-deep-assign/lesson-deep-assign.module'
 
 @Module({
   imports: [
@@ -19,8 +25,13 @@ import { SchoolMangerService } from './school-manager.service'
     SchoolSettingModule,
     SchoolContactModule,
     ClassSettingModule,
+    StudentModule,
+    SchoolClassManagerModule,
+    SchoolClassStudentsManagerModule,
+    LessonDeepAssignModule,
+    InviteSystemModule,
   ],
-  exports: [SchoolMangerService],
-  providers: [SchoolMangerService],
+  exports: [SchoolMangerService, TeacherSchoolSetupService],
+  providers: [SchoolMangerService, TeacherSchoolSetupService],
 })
 export class SchoolMangerModule {}
