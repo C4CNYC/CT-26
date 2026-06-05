@@ -14,5 +14,5 @@ export enum HomePageTargetType {
 
 export const homePageTargetList: Record<HomePageTargetType, string> = {
   [HomePageTargetType.Catalog]: STUDENT_PATH_DASHBOARD.courses.root,
-  [HomePageTargetType.Tribe]: STUDENT_PATH_DASHBOARD.tribes.root,
+  [HomePageTargetType.Tribe]: STUDENT_PATH_DASHBOARD.class.root,
 }
