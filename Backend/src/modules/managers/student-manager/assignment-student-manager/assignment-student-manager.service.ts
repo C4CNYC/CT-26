@@ -109,6 +109,7 @@ export class StudentAssignmentManagerService {
       where: { id: assignment_id },
       relations: {
         course: true,
+        courseUnit: true,
         skill_tags: true,
       },
     })
@@ -119,6 +120,7 @@ export class StudentAssignmentManagerService {
       where: { id: assignment_id },
       relations: {
         course: true,
+        courseUnit: true,
         skill_tags: true,
       },
     })

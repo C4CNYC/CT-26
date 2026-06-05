@@ -14,12 +14,14 @@ import { QUEST_DIVIDER, QUEST_LINK_SX, getQuestCardWrapperSx } from './constants
 interface IQuestRatingProps {
   courseName: string
   courseId: string
+  courseUnitId?: string
   progress: number
 }
 
 export default function QuestRating({
   courseId,
   courseName,
+  courseUnitId,
   progress,
 }: IQuestRatingProps): React.ReactElement {
   const translate = useTranslate()
@@ -70,7 +72,11 @@ export default function QuestRating({
             />
             <Link
               component={NextLink}
-              href={STUDENT_PATH_DASHBOARD.courses.course(courseId)}
+              href={
+                courseUnitId
+                  ? STUDENT_PATH_DASHBOARD.courses.unit(courseId, courseUnitId)
+                  : STUDENT_PATH_DASHBOARD.courses.course(courseId)
+              }
               underline='none'
               typography='h4'
               sx={QUEST_LINK_SX}

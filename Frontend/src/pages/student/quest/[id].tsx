@@ -120,6 +120,7 @@ export default function Quest(): React.ReactElement | null {
           <QuestRating
             courseId={course?.id ?? ''}
             courseName={course?.name ?? ''}
+            courseUnitId={data?.courseUnitId}
             progress={course?.progress ?? 0}
           />
         ) : (
