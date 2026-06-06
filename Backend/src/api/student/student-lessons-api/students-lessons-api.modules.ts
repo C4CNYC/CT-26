@@ -4,6 +4,7 @@ import { CourseUnitModule } from '../../../modules/core/course-unit/course-unit.
 import { CourseModule } from '../../../modules/core/course/course.module'
 import { StudentModule } from '../../../modules/core/student/student.module'
 import { LessonManagerModule } from '../../../modules/managers/lesson-manager/lesson-manager.module'
+import { UserModule } from '../../../modules/core/user/user.module'
 import { SchoolMangerModule } from '../../../modules/managers/school-manager/school-manager.module'
 import { SchoolStudentsManagerModule } from '../../../modules/managers/school-students-manager/school-students-manager.module'
 import { S3Module } from '../../../providers/s3/s3.module'
@@ -16,6 +17,7 @@ import { StudentLessonsApiService } from './students-lessons-api.services'
     LessonManagerModule,
     SchoolStudentsManagerModule,
     SchoolMangerModule,
+    UserModule,
     S3Module,
     StudentModule,
     CourseModule,
