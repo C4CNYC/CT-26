@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
@@ -24,6 +26,7 @@ export class InviteSystemService {
     @InjectRepository(InviteSystem)
     private readonly inviteRepo: Repository<InviteSystem>,
     private readonly userService: UserService,
+    @Inject(forwardRef(() => SchoolMangerService))
     private readonly schoolManagerService: SchoolMangerService,
   ) {}
 

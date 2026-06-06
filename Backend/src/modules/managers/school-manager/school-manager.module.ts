@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
 
 import { OrganizationModule } from '@/modules/core/organization/organization.module'
 
@@ -29,7 +29,7 @@ import { LessonDeepAssignModule } from '../lesson-deep-assign/lesson-deep-assign
     SchoolClassManagerModule,
     SchoolClassStudentsManagerModule,
     LessonDeepAssignModule,
-    InviteSystemModule,
+    forwardRef(() => InviteSystemModule),
   ],
   exports: [SchoolMangerService, TeacherSchoolSetupService],
   providers: [SchoolMangerService, TeacherSchoolSetupService],

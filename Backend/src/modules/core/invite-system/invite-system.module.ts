@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { SchoolMangerModule } from '@/modules/managers/school-manager/school-manager.module'
@@ -11,7 +11,7 @@ import { InviteSystemService } from './invite-system.service'
   imports: [
     TypeOrmModule.forFeature([InviteSystem]),
     UserModule,
-    SchoolMangerModule,
+    forwardRef(() => SchoolMangerModule),
   ],
   providers: [InviteSystemService],
   exports: [InviteSystemService],
