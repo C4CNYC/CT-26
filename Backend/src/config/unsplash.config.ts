@@ -5,7 +5,9 @@ export interface UnsplashConfig {
 }
 
 export default registerAs('unsplashConfig', () => {
-  return {
-    accessKey: process.env.UNSPLASH_ACCESS_KEY,
-  } as UnsplashConfig
+  const accessKey = process.env.UNSPLASH_ACCESS_KEY
+  if (!accessKey) {
+    throw new Error('UNSPLASH_ACCESS_KEY env var is required')
+  }
+  return { accessKey } as UnsplashConfig
 })

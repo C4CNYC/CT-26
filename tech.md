@@ -63,10 +63,10 @@ yarn dev          # Development server (port 8080)
 - `src/modules/core/` - Entities + core services
 - `src/modules/managers/` - Business logic coordination
 - `src/old-auth/` - JWT auth, guards, strategies
-- `src/providers/` - External integrations (S3, Google Auth, OpenAI, Unsplash)
+- `src/providers/` - External integrations (S3, Google Auth, OpenAI, Unsplash proxy at `/unsplash/image`)
 - `src/middlewares/` - Tenant resolution via `OrgMiddleware` (reads `x-tenant-id` header)
 
-**Multi-Tenancy**: Organization-based. `OrgMiddleware` injects `org_id`, `org_slug`, `school_id` into request using `RequestWithMeta` interface.
+**Multi-Tenancy**: Organization-based. `OrgMiddleware` injects `org_id`, `org_slug`, `school_id` into request using `RequestWithMeta` interface. Routes `unsplash/*`, `jokes/*`, `health`, `tenant/:slug` are excluded from org middleware.
 
 **Auth/Authorization**: JWT tokens, role-based guards (Admin, Manager, Student, SuperAdmin).
 
@@ -128,6 +128,8 @@ source config/dokploy.env
 - Use DTOs with class-validator for validation
 - Manager services injected via NestJS DI
 - Pattern: API → Manager → Core Service → Entity
+- `TeacherSchoolSetupService` (school-manager module): shared service for teacher school creation — checks pending school invites before creating new school. Used by both `auth-manager` and `auth-google-manager`.
+- `POST /manager/school/:school_id/student/:id/promote` — promotes student to teacher (changes role + adds to school teachers)
 
 **Frontend**:
 - All API calls through RTK Query services
