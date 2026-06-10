@@ -95,7 +95,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(OrgMiddleware)
-      .exclude('tenant/:slug', 'health', 'unsplash/*', 'jokes/*')
+      .exclude('tenant/:slug', 'health', 'unsplash/(.*)', 'jokes/(.*)')
       .exclude({ path: 'payment/stripe', method: RequestMethod.ALL })
       .forRoutes('*')
   }
