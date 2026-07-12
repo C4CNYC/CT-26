@@ -11,6 +11,7 @@ import {
 } from '@mui/material'
 import { useRouter } from 'next/router'
 
+import { useAuthContext } from '@/auth/useAuthContext'
 import CustomPopover, { usePopover } from '@/components/custom-popover'
 import RoleBasedGuard from '@root/src/auth/RoleBasedGuard'
 import { Role } from '@root/src/redux/services/enums/role.enum'
@@ -23,8 +24,10 @@ function OrgSwitcher() {
   const theme = useTheme()
   const popover = usePopover()
   const { reload } = useRouter()
+  const { user } = useAuthContext()
+  const isSuperAdmin = user?.role === Role.SuperAdmin
 
-  const { data, isLoading } = useGetOrgListQuery({})
+  const { data, isLoading } = useGetOrgListQuery({}, { skip: !isSuperAdmin })
 
   const [org, setOrg] = useState<IAdministration | null>(null)
 

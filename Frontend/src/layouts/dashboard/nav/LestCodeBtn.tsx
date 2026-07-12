@@ -34,7 +34,7 @@ export default function LetsCodeBtn({ isMini }: ILetsCodeBtnProps) {
 
   const letsCodeBtnSx = useMemo(() => getLetsCodeBtnSx(theme, isMini), [theme, isMini])
 
-  const { data: workspaceActivity } = useGetLastWorkspaceQuery()
+  const { data: workspaceActivity } = useGetLastWorkspaceQuery(undefined, { skip: !profile })
   const { data: assigments } = useGetAssignmentListStudentQuery(
     { class_id: query.id as string },
     { skip: !query.id || !profile }

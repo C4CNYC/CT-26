@@ -2,10 +2,17 @@ import { useRouter } from 'next/router'
 
 import { useGetLastLessonByCourseQuery } from '@/redux/services/manager/progress-student'
 
-export const useContinueCourse = (courseId: string, studentId: string) => {
+export const useContinueCourse = (
+  courseId: string,
+  studentId: string,
+  progress?: number | null,
+) => {
   const router = useRouter()
 
-  const { data, refetch, isLoading } = useGetLastLessonByCourseQuery({ courseId, studentId })
+  const { data, refetch, isLoading } = useGetLastLessonByCourseQuery(
+    { courseId, studentId },
+    { skip: !studentId || !progress },
+  )
 
   const continueCourse = async () => {
     const result = await refetch()

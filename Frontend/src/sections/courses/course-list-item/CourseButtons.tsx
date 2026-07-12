@@ -27,7 +27,7 @@ export default function CourseButtons({
   const translate = useTranslate()
   const exploreCourseBtnSx = useMemo(() => getExploreCourseBtnSX(isLight), [isLight])
 
-  const { continueCourse, isLoading } = useContinueCourse(courseId, profile?.id || '')
+  const { continueCourse, isLoading } = useContinueCourse(courseId, profile?.id || '', progress)
 
   return (
     <Stack

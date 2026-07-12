@@ -11,6 +11,7 @@ import {
 } from '@mui/material'
 import { useRouter } from 'next/router'
 
+import { useAuthContext } from '@/auth/useAuthContext'
 import CustomPopover, { usePopover } from '@/components/custom-popover'
 import { setSchool as setSchoolRedux } from '@/redux/slices/manager'
 import { dispatch } from '@/redux/store'
@@ -25,8 +26,10 @@ function SchoolSwitcher() {
   const theme = useTheme()
   const popover = usePopover()
   const { reload } = useRouter()
+  const { user } = useAuthContext()
+  const canSwitch = [Role.SuperAdmin, Role.Admin, Role.Manager, Role.Owner].includes(user?.role as Role)
 
-  const { data, isLoading } = useGetMySchoolsQuery({})
+  const { data, isLoading } = useGetMySchoolsQuery({}, { skip: !canSwitch })
 
   const [school, setSchool] = useState<ISchool | null>(null)
 
