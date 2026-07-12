@@ -7,12 +7,26 @@ export function getLocalStorageCode(key: string) {
   if (!localStorageCodeValue) return null
 
   try {
-    const docInfo = JSON.parse(localStorageCodeValue) as Record<string, string>
-    return (
-      (docInfo?.htmlBody as unknown as string[])?.join('') ??
-      (docInfo?.default as unknown as { body?: string })?.body ??
-      localStorageCodeValue
-    )
+    const docInfo = JSON.parse(localStorageCodeValue) as Record<string, any>
+
+    if (docInfo?.htmlBody !== undefined) {
+      return (docInfo.htmlBody as unknown as string[])?.join('') ?? docInfo.htmlBody
+    }
+
+    if (docInfo?.default?.body !== undefined) {
+      return docInfo.default.body
+    }
+
+    const values = Object.values(docInfo)
+    if (values.length > 0 && typeof values[0]?.body === 'string') {
+      const allBodies = values
+        .filter((v: any) => typeof v?.body === 'string')
+        .map((v: any) => v.body)
+        .join('\n')
+      return allBodies || null
+    }
+
+    return localStorageCodeValue
   } catch (e) {
     return localStorageCodeValue
   }

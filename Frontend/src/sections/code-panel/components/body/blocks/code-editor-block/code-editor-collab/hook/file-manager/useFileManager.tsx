@@ -426,13 +426,12 @@ export const useFileManagerOrj = () => {
 
     if (!isAuthenticated) {
       unauthFileLocalStorageManger(localStorageKey).updateFile(id, filteredBody)
-      const updatedUnauthFiles = unauthFileLocalStorageManger(localStorageKey).getFiles(
-        guestFiles,
-        'ignoreThisVersion'
-      )
 
-      guestFilesList.current = updatedUnauthFiles
-      filesSet(updatedUnauthFiles)
+      filesSet((prev) => {
+        const updated = prev.map((f) => (f.id === id ? { ...f, ...filteredBody } : f))
+        guestFilesList.current = updated
+        return updated
+      })
     } else {
       // Run the API update with the complete file data
       await updateStudentFile({
@@ -500,8 +499,10 @@ export const useFileManagerOrj = () => {
   useEffect(() => {
     fnIncUse(448, files.length, 'sandbox', incVal, guestFilesList.current.length)
     if (sandbox) {
-      _setActiveFile({ ...DEFAULT_FILE, body: localstorageCode ?? '' })
-      _setBarFiles([{ ...DEFAULT_FILE, body: localstorageCode ?? '' }])
+      const sandboxFile = { ...DEFAULT_FILE, body: localstorageCode ?? '' }
+      _setActiveFile(sandboxFile)
+      _setBarFiles([sandboxFile])
+      filesSet([sandboxFile])
     }
   }, [isAuthenticated, searchParams, localstorageCode])
 
