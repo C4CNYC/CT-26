@@ -119,6 +119,7 @@ source config/dokploy.env
 - Module-level `isFetching` flag prevents duplicate API calls across 13+ component instances
 - Stores fetched tenant in `localStorage.tenant` for subsequent component renders
 - Super admin tenant switch works by setting `localStorage.tenantName` before reload
+- `_app.tsx` `stableTenant` precedence (2026-07-12): client-resolved `useTenants()` tenant wins once hydrated, `serverTenant` (`getInitialProps` by host, SSR-safe first paint) as fallback, then `DEFAULT_TENANT` — so OrgSwitcher now drives favicon/meta/Redux `state.tenant`, not just data; server cache in `serverUtils.ts` untouched
 
 ---
 
