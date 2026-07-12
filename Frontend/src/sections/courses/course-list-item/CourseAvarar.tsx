@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 
+import NextImage from 'next/image'
 import { Box, IconButton, Rating } from '@mui/material'
 import { AiFillHeart } from '@react-icons/all-files/ai/AiFillHeart'
 import { AiOutlineHeart } from '@react-icons/all-files/ai/AiOutlineHeart'
 
-import { Image, useSnackbar } from '@/components'
+import { useSnackbar } from '@/components'
 import { ICourseElement } from '@/redux/interfaces/content.interface'
 import { APIError } from '@/redux/interfaces/custom-error.interface'
 import {
@@ -89,11 +90,15 @@ export default function CourseAvatar({ course }: Props): React.ReactElement {
         ) : (
           <></>
         )}
-        <Image
-          alt='course cover'
-          src={course.cover ?? '/assets/courses/courseImg.png'}
-          sx={COURSE_IMG_XS}
-        />
+        <Box sx={{ ...COURSE_IMG_XS, position: 'relative', overflow: 'hidden' }}>
+          <NextImage
+            alt='course cover'
+            src={course.cover || '/assets/courses/courseImg.png'}
+            fill
+            sizes='220px'
+            style={{ objectFit: 'contain' }}
+          />
+        </Box>
         {course.progress && course.progress > 30 && (
           <Box sx={COURSE_RATING_WRAPPER_SX}>
             <Rating
