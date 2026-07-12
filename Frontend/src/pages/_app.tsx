@@ -45,7 +45,7 @@ export default function MyApp({
   ...props
 }: MyAppProps): React.ReactElement {
   const tenantFromHook = useTenants()
-  const stableTenant = serverTenant ?? tenantFromHook ?? DEFAULT_TENANT
+  const stableTenant = tenantFromHook ?? serverTenant ?? DEFAULT_TENANT
   const getLayout = Component.getLayout ?? ((page) => page)
 
   const favicon = useMemo(() => {
