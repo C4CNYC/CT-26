@@ -49,6 +49,7 @@ export function LinkItem({ link, activeLast, disabled }: Props): React.ReactElem
       <Link
         component={NextLink}
         href={href}
+        prefetch={false}
         sx={styles}
       >
         {renderContent}

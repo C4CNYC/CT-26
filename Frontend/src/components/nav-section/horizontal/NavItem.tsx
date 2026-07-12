@@ -100,6 +100,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
         <Link
           component={NextLink}
           href={path}
+          prefetch={false}
           underline='none'
         >
           {renderContent}
