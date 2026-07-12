@@ -5,10 +5,10 @@ import { useGetLastLessonByModuleQuery } from '@/redux/services/manager/progress
 export const useContinueUnit = (unitId: string, studentId: string) => {
   const router = useRouter()
 
-  const { data, refetch, isLoading } = useGetLastLessonByModuleQuery({
-    moduleId: unitId,
-    studentId,
-  })
+  const { data, refetch, isLoading } = useGetLastLessonByModuleQuery(
+    { moduleId: unitId, studentId },
+    { skip: !unitId || !studentId }
+  )
 
   const continueUnit = async () => {
     const result = await refetch()

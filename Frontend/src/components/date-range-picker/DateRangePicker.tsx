@@ -12,6 +12,7 @@ import {
 } from '@mui/material'
 import { CalendarPicker, DatePicker } from '@mui/x-date-pickers'
 
+import DateLocalizationProvider from '@/components/DateLocalizationProvider'
 import { useResponsive } from '@/hooks'
 
 import { DateRangePickerProps } from './types'
@@ -36,19 +37,20 @@ export function DateRangePicker({
   const isCalendarView = variant === 'calendar'
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth={isCalendarView ? false : 'xs'}
-      open={open}
-      onClose={onClose}
-      PaperProps={{
-        sx: {
-          ...(isCalendarView && {
-            maxWidth: 720,
-          }),
-        },
-      }}
-    >
+    <DateLocalizationProvider>
+      <Dialog
+        fullWidth
+        maxWidth={isCalendarView ? false : 'xs'}
+        open={open}
+        onClose={onClose}
+        PaperProps={{
+          sx: {
+            ...(isCalendarView && {
+              maxWidth: 720,
+            }),
+          },
+        }}
+      >
       <DialogTitle sx={{ pb: 2 }}>{title}</DialogTitle>
 
       <DialogContent
@@ -148,6 +150,7 @@ export function DateRangePicker({
           Apply
         </Button>
       </DialogActions>
-    </Dialog>
+      </Dialog>
+    </DateLocalizationProvider>
   )
 }

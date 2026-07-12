@@ -21,6 +21,7 @@ import { useRouter } from 'next/router'
 import { Controller, useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
+import DateLocalizationProvider from '@/components/DateLocalizationProvider'
 import { FormProvider, RHFSelect, RHFTextField, useSnackbar } from '@/components'
 import { IAssignmentFull } from '@/redux/interfaces/assignment.interface'
 import { ISkill } from '@/redux/interfaces/content.interface'
@@ -84,19 +85,20 @@ export default function AssignmentDrawer({
   }
 
   return (
-    <Drawer
-      open={openDetails}
-      onClose={onCloseDetails}
-      anchor='right'
-      PaperProps={{
-        sx: {
-          width: {
-            xs: 1,
-            sm: 420,
+    <DateLocalizationProvider>
+      <Drawer
+        open={openDetails}
+        onClose={onCloseDetails}
+        anchor='right'
+        PaperProps={{
+          sx: {
+            width: {
+              xs: 1,
+              sm: 420,
+            },
           },
-        },
-      }}
-    >
+        }}
+      >
       <FormProvider
         methods={methods}
         onSubmit={methods.handleSubmit(onSubmit)}
@@ -333,6 +335,7 @@ export default function AssignmentDrawer({
         </List>
       </FormProvider>
     </Drawer>
+    </DateLocalizationProvider>
   )
 }
 

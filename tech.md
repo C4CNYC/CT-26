@@ -134,3 +134,10 @@ source config/dokploy.env
 **Frontend**:
 - All API calls through RTK Query services
 - Build process copies TinyMCE to public
+- `LocalizationProvider`/`AdapterDateFns` are NOT global; wrapped per-component via `src/components/DateLocalizationProvider.tsx` (used only by date-picker files: `DateRangePicker`, `TimeController`, `AssignmentsTableToolbar`, `AssignmentDrawer`) so `@mui/x-date-pickers` stays out of the `_app` chunk
+- RTK Query hooks that need a user id must use `skip: !id` to avoid firing with `undefined` in the URL (see `useContinueUnit`)
+
+**Perf hotspots (course page load ~20s)**:
+- `_app` chunk ~517 KB gzip / 1.7 MB raw, downloaded on every page — run `ANALYZE=true yarn build` to break it down
+- `_app.getInitialProps` forces SSR + a tenant API call per request, so Netlify can't cache HTML (`no-store`, edge miss)
+- Netlify edge TTFB ~450 ms to TR (consider Cloudflare in front)

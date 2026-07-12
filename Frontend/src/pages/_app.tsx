@@ -1,8 +1,6 @@
 import { useMemo } from 'react'
 
 import { AppCacheProvider as EmotionAppCacheProvider } from '@mui/material-nextjs/v14-pagesRouter'
-import { LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { NextPage } from 'next'
 import type { AppContext } from 'next/app'
 import App from 'next/app'
@@ -165,8 +163,7 @@ export default function MyApp({
       <GoogleAnalytics></GoogleAnalytics>
       <ReduxProvider store={store}>
         <AuthProvider tenant={stableTenant}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <SettingsProvider>
+          <SettingsProvider>
               <MotionLazyContainer>
                 <ThemeProvider>
                   <ThemeSettings>
@@ -180,7 +177,6 @@ export default function MyApp({
                 </ThemeProvider>
               </MotionLazyContainer>
             </SettingsProvider>
-          </LocalizationProvider>
         </AuthProvider>
       </ReduxProvider>
     </EmotionAppCacheProvider>

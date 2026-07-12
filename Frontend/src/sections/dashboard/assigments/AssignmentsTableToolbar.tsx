@@ -3,6 +3,7 @@ import { DatePicker } from '@mui/x-date-pickers'
 import { FiSearch } from '@react-icons/all-files/fi/FiSearch'
 import { FiTrash2 } from '@react-icons/all-files/fi/FiTrash2'
 
+import DateLocalizationProvider from '@/components/DateLocalizationProvider'
 import { useTranslate } from '@/utils/translateHelper'
 
 const INPUT_WIDTH = 160
@@ -37,15 +38,16 @@ export default function AssignmentsTableToolbar({
   const translate = useTranslate()
 
   return (
-    <Stack
-      spacing={2}
-      alignItems='center'
-      direction={{
-        xs: 'column',
-        md: 'row',
-      }}
-      sx={{ px: 2.5, py: 3 }}
-    >
+    <DateLocalizationProvider>
+      <Stack
+        spacing={2}
+        alignItems='center'
+        direction={{
+          xs: 'column',
+          md: 'row',
+        }}
+        sx={{ px: 2.5, py: 3 }}
+      >
       <TextField
         fullWidth
         select
@@ -135,5 +137,6 @@ export default function AssignmentsTableToolbar({
         </Button>
       )}
     </Stack>
+    </DateLocalizationProvider>
   )
 }

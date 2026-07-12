@@ -3,6 +3,8 @@ import { DatePicker } from '@mui/x-date-pickers'
 import { TbInfoCircleFilled } from '@react-icons/all-files/tb/TbInfoCircleFilled'
 import { Control, Controller } from 'react-hook-form'
 
+import DateLocalizationProvider from '@/components/DateLocalizationProvider'
+
 import { FormQuestProps } from '../helpers/quest.interface'
 
 interface Props {
@@ -20,7 +22,8 @@ export default function TimeController({
 }: Props): React.ReactElement {
   const theme = useTheme()
   return (
-    <FormGroup>
+    <DateLocalizationProvider>
+      <FormGroup>
       <Typography
         variant='h5'
         gutterBottom
@@ -80,5 +83,6 @@ export default function TimeController({
         )}
       />
     </FormGroup>
+    </DateLocalizationProvider>
   )
 }
