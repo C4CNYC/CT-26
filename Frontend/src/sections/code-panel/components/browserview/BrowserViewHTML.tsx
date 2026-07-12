@@ -134,7 +134,12 @@ export function BrowserViewHTML({
       .join('\n')
 
     let htmls = Array.isArray(htmlBody) ? htmlBody : [htmlBody]
-    let htmlPart = (doc as any).length ? doc : htmls
+    let htmlPart = ((doc as any).length ? doc : htmls) as string | string[]
+    if (typeof htmlPart === 'string') {
+      htmlPart = htmlPart.replace(/<[^>]*$/, '')
+    } else if (Array.isArray(htmlPart)) {
+      htmlPart = htmlPart.map(h => h.replace(/<[^>]*$/, ''))
+    }
 
     return `
       <html 
