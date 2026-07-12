@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import { Avatar, FormGroup, Skeleton, Stack, Typography, useTheme } from '@mui/material'
 import { UseFormReturn } from 'react-hook-form'
 
-import { RHFSelect, RHFTextField } from '@/components'
+import { RHFSelect, RHFTextField } from '@/components/hook-form'
 import { FilterMode, useFilters } from '@/hooks'
 import { AssignmentTypes, AssignmentTypesForQuest } from '@/redux/enums/assignment-types.enum'
 import { ICourse, ILessonSearchParams } from '@/redux/services/interfaces/courseUnits.interface'

@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, RHFTextField } from '@/components'
+import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { ISocials } from '@/redux/interfaces/socials.interface'
 import { usePostSocialMutation } from '@/redux/services/manager/socials-student'
 import { useTranslate } from '@/utils/translateHelper'

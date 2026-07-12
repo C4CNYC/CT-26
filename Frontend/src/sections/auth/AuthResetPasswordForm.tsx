@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, RHFTextField } from '@/components'
+import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { useResetPasswordMutation } from '@/redux/services/auth'
 import { useTranslate } from '@/utils/translateHelper'
 

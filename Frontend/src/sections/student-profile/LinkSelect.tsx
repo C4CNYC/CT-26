@@ -1,7 +1,7 @@
 import { MenuItem } from '@mui/material'
 
 import { Socials } from '@/assets/data'
-import { RHFSelect } from '@/components'
+import { RHFSelect } from '@/components/hook-form'
 
 interface Props {
   defaultValue?: string

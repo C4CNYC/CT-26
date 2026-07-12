@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, RHFTextField, RHFUploadAvatar } from '@/components'
+import { FormProvider, RHFTextField, RHFUploadAvatar } from '@/components/hook-form'
 import { IUser } from '@/redux/interfaces/auth.interface'
 import { useUdpateProfileAvatarMutation, useUpdateProfileMutation } from '@/redux/services/auth'
 import { BaseResponseInterface } from '@/utils/baseResponse.interface'

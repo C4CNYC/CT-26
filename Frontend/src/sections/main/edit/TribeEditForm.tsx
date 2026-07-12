@@ -14,7 +14,7 @@ import {
   RHFSwitch,
   RHFTextField,
   RHFUploadAvatar, // useSnackbar,
-} from '@/components'
+} from '@/components/hook-form'
 import { IStudent } from '@/redux/services/interfaces/user.interface'
 import { BaseResponseInterface, getRandomColor } from '@/utils'
 

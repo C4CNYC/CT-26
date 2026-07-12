@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material'
 import { Box, Stack } from '@mui/system'
 
-import { RHFSelect, RHFSwitch, RHFTextField } from '@/components'
+import { RHFSelect, RHFSwitch, RHFTextField } from '@/components/hook-form'
 import { LessonContentComplexity } from '@/redux/services/enums/lesson-content-complexity.enum'
 import { useTranslate } from '@/utils/translateHelper'
 import { RHFColorPicker } from '@root/src/components/hook-form/RHFColorPicker'

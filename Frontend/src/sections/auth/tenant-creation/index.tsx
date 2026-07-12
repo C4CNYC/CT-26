@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Box, Stack } from '@mui/material'
 import { useForm } from 'react-hook-form'
 
-import { FormProvider } from '@root/src/components'
+import { FormProvider } from '@root/src/components/hook-form/FormProvider'
 import { StyledContent } from '@root/src/layouts/login/styles'
 import { useTranslate } from '@root/src/utils/translateHelper'
 

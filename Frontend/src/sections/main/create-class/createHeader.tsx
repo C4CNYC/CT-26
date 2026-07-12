@@ -1,7 +1,7 @@
 import { Box, Stack, Typography, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/system'
 
-import { RHFTextField } from '@/components'
+import { RHFTextField } from '@/components/hook-form'
 import { useTranslate } from '@/utils/translateHelper'
 
 interface ICreateHeaderProps {

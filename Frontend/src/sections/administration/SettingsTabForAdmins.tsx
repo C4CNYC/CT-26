@@ -7,9 +7,9 @@ import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider } from '@/components'
+import { FormProvider } from '@/components/hook-form'
 import { convertStringToBool } from '@/utils/convertStringToBool'
-import { RHFSwitch } from '@root/src/components'
+import { RHFSwitch } from '@root/src/components/hook-form'
 import { useUpdateOrgMutation } from '@root/src/redux/services/manager/super-admin'
 import { useTranslate } from '@root/src/utils/translateHelper'
 

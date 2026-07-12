@@ -7,8 +7,7 @@ import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider } from '@/components'
-import { RHFSelect, RHFTextField } from '@/components'
+import { FormProvider, RHFSelect, RHFTextField } from '@/components/hook-form'
 import {
   HomePageType,
   HomePageTargetType,

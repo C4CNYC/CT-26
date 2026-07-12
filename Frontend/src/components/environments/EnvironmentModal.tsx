@@ -18,7 +18,7 @@ import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, RHFTextField } from '@/components'
+import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { RHFCode } from '@/components/hook-form/RHFCode'
 import { ModalCodeFullscreen } from '@/components/modal-code-fullscreen'
 import {

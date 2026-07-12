@@ -1,7 +1,8 @@
 import { Box, IconButton, Typography } from '@mui/material'
 import { IoMdClose } from '@react-icons/all-files/io/IoMdClose'
 
-import { RHFSwitch, RHFTextField, RHFUpload, SingleFilePreview } from '@/components'
+import { RHFSwitch, RHFTextField, RHFUpload } from '@/components/hook-form'
+import { SingleFilePreview } from '@/components/upload'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
 import { HELPER_IMG_TEXT, UPLOAD_IMG_BTN } from './constants'

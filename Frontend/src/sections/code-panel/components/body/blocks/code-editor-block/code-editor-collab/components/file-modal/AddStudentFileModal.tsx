@@ -9,7 +9,7 @@ import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, RHFTextField, RHFSelect } from '@/components'
+import { FormProvider, RHFTextField, RHFSelect } from '@/components/hook-form'
 import { StudentFile } from '@root/src/redux/services/interfaces/workspace.interface'
 import { useGetLessonFilesQuery } from '@root/src/redux/services/manager/lesson-content-manager'
 import { FileExtension, FileExtensions } from '@root/src/types/lessons'

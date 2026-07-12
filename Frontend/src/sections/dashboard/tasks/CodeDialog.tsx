@@ -15,7 +15,8 @@ import { dracula } from '@uiw/codemirror-theme-dracula'
 import { xcodeLight } from '@uiw/codemirror-theme-xcode'
 import CodeMirror from '@uiw/react-codemirror'
 
-import { CustomSmallSelect, useSnackbar } from '@/components'
+import { useSnackbar } from '@/components'
+import { CustomSmallSelect } from '@/components/custom-input'
 import {
   useCreateTaskMutation,
   useUpdateTaskMutation,

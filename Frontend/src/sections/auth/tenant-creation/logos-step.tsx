@@ -4,7 +4,8 @@ import { Box, IconButton, Stack, Typography } from '@mui/material'
 import { IoMdClose } from '@react-icons/all-files/io/IoMdClose'
 import { MdCloudUpload } from '@react-icons/all-files/md/MdCloudUpload'
 
-import { RHFUploadBox, SingleFilePreview } from '@root/src/components'
+import { RHFUploadBox } from '@root/src/components/hook-form'
+import { SingleFilePreview } from '@root/src/components/upload'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
 import CustomLabel from './_components/CustomLabel'

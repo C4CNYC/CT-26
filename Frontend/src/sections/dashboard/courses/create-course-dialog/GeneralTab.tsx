@@ -13,7 +13,9 @@ import {
   useUpdateCourseCoverMutation,
   useUpdateCourseMutation,
 } from '@/redux/services/manager/courses-manager'
-import { FormProvider, RHFUpload, SingleFilePreview, useSnackbar } from '@root/src/components'
+import { useSnackbar } from '@root/src/components'
+import { FormProvider, RHFUpload } from '@root/src/components/hook-form'
+import { SingleFilePreview } from '@root/src/components/upload'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
 import {

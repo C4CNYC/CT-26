@@ -3,7 +3,7 @@ import { Card, Link, Stack, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 
-import { FormProvider, RHFSelect, RHFSwitch } from '@/components'
+import { FormProvider, RHFSelect, RHFSwitch } from '@/components/hook-form'
 import { SchoolSettings } from '@/redux/services/interfaces/school.interface'
 import { useUpdateSchoolSettingsMutation } from '@/redux/services/manager/schools-manager'
 import { setSchoolSettings } from '@/redux/slices/schoolSettings'

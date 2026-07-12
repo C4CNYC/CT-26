@@ -8,7 +8,8 @@ import { RiAccountBoxFill } from '@react-icons/all-files/ri/RiAccountBoxFill'
 import Head from 'next/head'
 import { useSnackbar } from 'notistack'
 
-import { UploadImageModal, useSettingsContext } from '@/components'
+import { useSettingsContext } from '@/components'
+import { UploadImageModal } from '@/components/upload-image-modal'
 import { SchoolDashboardLayout } from '@/layouts/dashboard/SchoolDashboardLayout'
 import {
   useGetSchoolProfileQuery,

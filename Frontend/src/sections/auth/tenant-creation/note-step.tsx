@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Stack } from '@mui/material'
 
-import { RHFTextField } from '@root/src/components'
+import { RHFTextField } from '@root/src/components/hook-form'
 
 import CustomLabel from './_components/CustomLabel'
 import NextBtn from './_components/NextBtn'

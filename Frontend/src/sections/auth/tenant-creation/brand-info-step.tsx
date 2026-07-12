@@ -1,6 +1,6 @@
 import { InputAdornment, Stack, Typography } from '@mui/material'
 
-import { RHFTextField } from '@root/src/components'
+import { RHFTextField } from '@root/src/components/hook-form'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
 import CustomLabel from './_components/CustomLabel'

@@ -1,6 +1,6 @@
 import { Button, FormGroup, Stack } from '@mui/material'
 
-import { RHFSelect, RHFSwitch, RHFTextField } from '@root/src/components'
+import { RHFSelect, RHFSwitch, RHFTextField } from '@root/src/components/hook-form'
 import { LEVEL } from '@root/src/redux/services/interfaces/courseUnits.interface'
 import { capitalizeFirstSymbol } from '@root/src/utils/capitalizeFirstSymbol'
 import { useTranslate } from '@root/src/utils/translateHelper'

@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
 import { SOCIAL_ICONS } from '@/assets/data'
-import { FormProvider, RHFTextField } from '@/components'
+import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { APIError } from '@/redux/interfaces/custom-error.interface'
 import { ISocials } from '@/redux/interfaces/socials.interface'
 import {

@@ -10,7 +10,7 @@ import { Controller, useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
 import { countries } from '@/assets/data'
-import { FormProvider, RHFSelect, RHFTextField, RHFUploadAvatar } from '@/components'
+import { FormProvider, RHFSelect, RHFTextField, RHFUploadAvatar } from '@/components/hook-form'
 import { IUser } from '@/redux/interfaces/auth.interface'
 import { APIError } from '@/redux/interfaces/custom-error.interface'
 import {

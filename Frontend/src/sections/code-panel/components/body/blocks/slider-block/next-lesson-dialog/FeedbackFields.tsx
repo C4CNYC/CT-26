@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { RHFSelect, RHFTextField } from '@root/src/components'
+import { RHFSelect, RHFTextField } from '@root/src/components/hook-form'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
 import { FeedbackNegativeEnum, FeedbackPositiveEnum } from './constants'

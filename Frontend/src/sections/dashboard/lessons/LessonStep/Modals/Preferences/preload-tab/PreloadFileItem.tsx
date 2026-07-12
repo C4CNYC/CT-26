@@ -9,11 +9,9 @@ import * as Yup from 'yup'
 
 import {
   ConfirmDialog,
-  FormProvider,
-  RHFSelect,
-  RHFTextField,
   useSnackbar,
 } from '@/components'
+import { FormProvider, RHFSelect, RHFTextField } from '@/components/hook-form'
 import { RHFCode } from '@/components/hook-form/RHFCode'
 import { ModalCodeFullscreen } from '@/components/modal-code-fullscreen'
 import {

@@ -19,7 +19,8 @@ import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, RHFTextField, useSnackbar } from '@/components'
+import { useSnackbar } from '@/components'
+import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { APIError } from '@/redux/interfaces/custom-error.interface'
 import {
   useSendGeneralFeedbackMutation,

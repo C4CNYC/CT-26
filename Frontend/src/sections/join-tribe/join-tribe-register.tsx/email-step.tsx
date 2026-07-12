@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 
 import { useAuthContext } from '@/auth/useAuthContext'
-import { RHFTextField } from '@/components'
+import { RHFTextField } from '@/components/hook-form'
 import { Role } from '@/redux/services/enums/role.enum'
 import { STUDENT_PATH_DASHBOARD } from '@/routes/student.paths'
 import { useTenants } from '@root/src/hooks/useTenants'

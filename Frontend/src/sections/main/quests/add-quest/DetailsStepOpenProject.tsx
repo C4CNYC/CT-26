@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Avatar, FormGroup, Stack, Typography, useTheme } from '@mui/material'
 import { UseFormReturn } from 'react-hook-form'
 
-import { RHFSelect, RHFTextField } from '@/components'
+import { RHFSelect, RHFTextField } from '@/components/hook-form'
 import {
   AssignmentProjectCategories,
   AssignmentProjectLanguages,

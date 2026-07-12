@@ -4,7 +4,7 @@ import { IconButton, InputAdornment, Stack } from '@mui/material'
 import { HiEye } from '@react-icons/all-files/hi/HiEye'
 import { HiEyeOff } from '@react-icons/all-files/hi/HiEyeOff'
 
-import { RHFTextField } from '@root/src/components'
+import { RHFTextField } from '@root/src/components/hook-form'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
 import CustomLabel from './_components/CustomLabel'

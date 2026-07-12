@@ -23,7 +23,8 @@ import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { animals, colors, uniqueNamesGenerator } from 'unique-names-generator'
 
-import { FormProvider, useSnackbar } from '@/components'
+import { useSnackbar } from '@/components'
+import { FormProvider } from '@/components/hook-form'
 import CustomTabPanel, { customTabProps } from '@/components/custom-tab-panel'
 import {
   AssignmentProjectCategories,

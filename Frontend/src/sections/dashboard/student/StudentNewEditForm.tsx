@@ -10,15 +10,7 @@ import { useSelector } from 'react-redux'
 import * as Yup from 'yup'
 
 import { countries } from '@/assets/data'
-import {
-  FormProvider,
-  Label,
-  RHFSelect,
-  RHFSwitch,
-  RHFTextField,
-  RHFUploadAvatar,
-  useSnackbar,
-} from '@/components'
+import { Label, useSnackbar } from '@/components'
 import { Role } from '@/redux/services/enums/role.enum'
 import { IStudent } from '@/redux/services/interfaces/user.interface'
 import {
@@ -34,6 +26,11 @@ import { useTranslate } from '@/utils/translateHelper'
 import { createWeakPassword } from '@root/src/auth/utils'
 
 import { StudentChangePassword } from './StudentChangePassword'
+import { FormProvider } from '@root/src/components/hook-form/FormProvider'
+import { RHFUploadAvatar } from '@root/src/components/hook-form/RHFUpload'
+import { RHFSwitch } from '@root/src/components/hook-form/RHFSwitch'
+import { RHFTextField } from '@root/src/components/hook-form/RHFTextField'
+import { RHFSelect } from '@root/src/components/hook-form/RHFSelect'
 
 interface FormValuesProps extends Omit<IStudent, keyof BaseResponseInterface> {
   avatarUrl: File & { preview: string }
@@ -324,14 +321,19 @@ export default function StudentNewEditForm({
                     disabled={currentUser?.account?.role === Role.Manager}
                     onClick={async () => {
                       try {
-                        await promoteStudent({ schoolId: schoolIdProps ?? schoolId, studentId: currentUser!.id }).unwrap()
+                        await promoteStudent({
+                          schoolId: schoolIdProps ?? schoolId,
+                          studentId: currentUser!.id,
+                        }).unwrap()
                         enqueueSnackbar(translate('student_promoted_to_teacher'))
                       } catch (e: any) {
                         enqueueSnackbar(e?.data?.message ?? 'Error', { variant: 'error' })
                       }
                     }}
                   >
-                    {currentUser?.account?.role === Role.Manager ? translate('already_teacher') : translate('make_teacher')}
+                    {currentUser?.account?.role === Role.Manager
+                      ? translate('already_teacher')
+                      : translate('make_teacher')}
                   </LoadingButton>
                 </Box>
               </>

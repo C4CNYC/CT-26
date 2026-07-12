@@ -18,7 +18,7 @@ import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, RHFSelect, RHFSwitch, RHFTextField } from '@/components'
+import { FormProvider, RHFSelect, RHFSwitch, RHFTextField } from '@/components/hook-form'
 import { LessonContentComplexity } from '@/redux/services/enums/lesson-content-complexity.enum'
 import { useCreateLessonContentMutation } from '@/redux/services/manager/lesson-content-manager'
 

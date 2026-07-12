@@ -8,14 +8,10 @@ import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
 import {
-  FormProvider,
   Label,
-  RHFSelect,
-  RHFSwitch,
-  RHFTextField,
-  RHFUploadAvatar,
   useSnackbar,
 } from '@/components'
+import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '@/components/hook-form'
 import {
   useCreateOrgMemberMutation,
   useUdpateMemberAvatarMutation,

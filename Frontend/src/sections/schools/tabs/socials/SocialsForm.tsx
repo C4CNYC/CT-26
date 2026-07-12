@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
 import { Socials } from '@/assets/data'
-import { FormProvider, RHFSelect, RHFTextField } from '@/components'
+import { FormProvider, RHFSelect, RHFTextField } from '@/components/hook-form'
 import { SchoolSocials } from '@/redux/services/interfaces/school.interface'
 import { useCreateSchoolSocialMutation } from '@/redux/services/manager/schools-manager'
 import { useTranslate } from '@/utils/translateHelper'

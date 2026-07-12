@@ -6,7 +6,7 @@ import { useSnackbar } from 'notistack'
 import { Controller, useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, RHFTextField } from '@/components'
+import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { useUpdateOrgContactsMutation } from '@/redux/services/admin/organization-contacts'
 import { ContactsResponce } from '@/redux/services/interfaces/organization.interface'
 

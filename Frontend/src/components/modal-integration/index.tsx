@@ -19,7 +19,7 @@ import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
 import RoleBasedGuard from '@/auth/RoleBasedGuard'
-import { FormProvider, RHFTextField } from '@/components'
+import { FormProvider, RHFTextField } from '@/components/hook-form'
 import { RHFCode } from '@/components/hook-form/RHFCode'
 import { ModalCodeFullscreen } from '@/components/modal-code-fullscreen'
 import { useIsSuperAdmin } from '@/hooks/useIsSuperAdmin'

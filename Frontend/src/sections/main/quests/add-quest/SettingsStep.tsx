@@ -1,7 +1,7 @@
 import { FormGroup, Stack, Typography, useTheme } from '@mui/material'
 import { Control } from 'react-hook-form'
 
-import { RHFSelect } from '@/components'
+import { RHFSelect } from '@/components/hook-form'
 import { ISkill } from '@/redux/interfaces/content.interface'
 import { useTranslate } from '@/utils/translateHelper'
 

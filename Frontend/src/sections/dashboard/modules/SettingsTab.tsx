@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 
-import { RHFTextField, RHFSelect } from '@/components'
+import { RHFTextField, RHFSelect } from '@/components/hook-form'
 import { LessonMachineLang } from '@root/src/redux/services/enums/lesson-language.enum'
 import { useTranslate } from '@root/src/utils/translateHelper'
 

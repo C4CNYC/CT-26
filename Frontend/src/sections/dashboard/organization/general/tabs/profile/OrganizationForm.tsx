@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, RHFTextField, RHFUploadAvatar } from '@/components'
+import { FormProvider, RHFTextField, RHFUploadAvatar } from '@/components/hook-form'
 import {
   useUpdateOrgAvatarMutation,
   useUpdateOrganizationMutation,

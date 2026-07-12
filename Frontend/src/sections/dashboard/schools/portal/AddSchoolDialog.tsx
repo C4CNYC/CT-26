@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
 import { countries } from '@/assets/data'
-import { FormProvider, RHFSelect, RHFTextField } from '@/components'
+import { FormProvider, RHFSelect, RHFTextField } from '@/components/hook-form'
 import { useCreateOrganizationSchoolMutation } from '@/redux/services/admin/school-amdin'
 import { useTranslate } from '@/utils/translateHelper'
 

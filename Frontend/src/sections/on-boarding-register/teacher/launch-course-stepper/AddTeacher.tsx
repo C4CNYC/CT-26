@@ -6,7 +6,7 @@ import { HiEye } from '@react-icons/all-files/hi/HiEye'
 import { HiEyeOff } from '@react-icons/all-files/hi/HiEyeOff'
 import { useRouter } from 'next/router'
 
-import { RHFTextField } from '@/components'
+import { RHFTextField } from '@/components/hook-form'
 import { useTranslate } from '@/utils/translateHelper'
 
 import { styledRegisterInput } from '../../styles'

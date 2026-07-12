@@ -1,7 +1,7 @@
 import { Box, Stack, Tooltip, Typography, InputAdornment } from '@mui/material'
 
 import { languages } from '@root/src/assets/data/languages'
-import { RHFSelect, RHFSwitch, RHFTextField } from '@root/src/components'
+import { RHFSelect, RHFSwitch, RHFTextField } from '@root/src/components/hook-form'
 import { RHFToggleButtonGroup } from '@root/src/components/hook-form/RHFToggleButtonGroup'
 import { LessonMachineLang } from '@root/src/redux/services/enums/lesson-language.enum'
 import { useTranslate } from '@root/src/utils/translateHelper'

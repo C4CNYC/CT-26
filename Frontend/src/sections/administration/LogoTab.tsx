@@ -5,7 +5,9 @@ import { Box, Button, IconButton, Stack, Typography } from '@mui/material'
 import { IoMdClose } from '@react-icons/all-files/io/IoMdClose'
 import { useForm } from 'react-hook-form'
 
-import { FormProvider, RHFUpload, SingleFilePreview, useSnackbar } from '@/components'
+import { useSnackbar } from '@/components'
+import { FormProvider, RHFUpload } from '@/components/hook-form'
+import { SingleFilePreview } from '@/components/upload'
 import {
   useUpdateOrgLogoMutation,
   useUpdateOrgLogoMiniMutation,

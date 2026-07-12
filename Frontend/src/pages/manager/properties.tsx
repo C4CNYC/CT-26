@@ -26,15 +26,13 @@ import { useForm } from 'react-hook-form'
 
 import {
   CustomBreadcrumbs,
-  FormProvider,
-  RHFSelect,
-  RHFTextField,
   Scrollbar,
   TableNoData,
   TablePaginationCustom,
   useSettingsContext,
   useTable,
 } from '@/components'
+import { FormProvider, RHFSelect, RHFTextField } from '@/components/hook-form'
 import { useFilters } from '@/hooks'
 import DashboardLayout from '@/layouts/dashboard/DashboardLayout'
 import { MANAGER_PATH_DASHBOARD } from '@/routes/manager.paths'

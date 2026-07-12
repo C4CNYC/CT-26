@@ -9,7 +9,8 @@ import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, useSnackbar } from '@/components'
+import { useSnackbar } from '@/components'
+import { FormProvider } from '@/components/hook-form'
 import { StudentDashboardLayout } from '@/layouts/dashboard'
 import {
   useCreateClassesMutation,

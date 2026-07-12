@@ -1,7 +1,7 @@
 import { Stack, Typography, Box } from '@mui/material'
 import { useFormContext } from 'react-hook-form'
 
-import { RHFSelect } from '@root/src/components'
+import { RHFSelect } from '@root/src/components/hook-form'
 import { LessonDisplayEngine } from '@root/src/redux/services/interfaces/lesson.interface'
 import { useTranslate } from '@root/src/utils/translateHelper'
 

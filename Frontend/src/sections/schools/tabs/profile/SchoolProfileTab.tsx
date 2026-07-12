@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 
 import { Card, Grid, Stack, Typography } from '@mui/material'
 
-import { UploadAvatar } from '@/components'
+import { UploadAvatar } from '@/components/upload'
 import { useGetSchoolProfileQuery } from '@/redux/services/manager/schools-manager'
 import { fData } from '@/utils'
 import { useTranslate } from '@/utils/translateHelper'

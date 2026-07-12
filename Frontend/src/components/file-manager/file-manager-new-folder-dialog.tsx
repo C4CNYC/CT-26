@@ -12,8 +12,8 @@ import TextField from '@mui/material/TextField'
 import { IoMdClose } from '@react-icons/all-files/io/IoMdClose'
 import { useForm } from 'react-hook-form'
 
-import { RHFUpload, SingleFilePreview } from '@/components'
-import { FormProvider } from '@/components'
+import { FormProvider, RHFUpload } from '@/components/hook-form'
+import { SingleFilePreview } from '@/components/upload'
 import { HELPER_IMG_TEXT, UPLOAD_IMG_BTN } from '@/sections/dashboard/modules/constants'
 import { useTranslate } from '@/utils/translateHelper'
 

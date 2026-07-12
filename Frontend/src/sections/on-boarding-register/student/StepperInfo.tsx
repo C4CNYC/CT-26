@@ -5,7 +5,9 @@ import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import * as Yup from 'yup'
 
-import { FormProvider, RHFSelect, useSnackbar } from '@/components'
+import { FormProvider } from '@root/src/components/hook-form/FormProvider'
+import { RHFSelect } from '@root/src/components/hook-form/RHFSelect'
+import { useSnackbar } from '@root/src/components'
 import { useUpdateStudentProfileMutation } from '@/redux/services/auth'
 import { useTranslate } from '@/utils/translateHelper'
 import {

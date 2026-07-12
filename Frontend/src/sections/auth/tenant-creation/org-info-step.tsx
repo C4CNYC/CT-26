@@ -1,6 +1,6 @@
 import { Stack, Typography } from '@mui/material'
 
-import { RHFSelect, RHFTextField } from '@root/src/components'
+import { RHFSelect, RHFTextField } from '@root/src/components/hook-form'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
 import CustomLabel from './_components/CustomLabel'

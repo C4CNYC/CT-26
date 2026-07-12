@@ -1,7 +1,8 @@
 import { Stack } from '@mui/material'
 
 import { countries } from '@root/src/assets/data'
-import { RHFSelect, RHFTextField } from '@root/src/components'
+import { RHFSelect } from '@root/src/components/hook-form/RHFSelect'
+import { RHFTextField } from '@root/src/components/hook-form/RHFTextField'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
 import CustomLabel from './_components/CustomLabel'
