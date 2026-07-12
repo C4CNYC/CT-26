@@ -5,7 +5,7 @@ import { Box, Dialog, DialogContent, DialogTitle, IconButton, Stack } from '@mui
 import { HiMiniArrowsPointingIn } from '@react-icons/all-files/hi2/HiMiniArrowsPointingIn'
 import { HiMiniArrowsPointingOut } from '@react-icons/all-files/hi2/HiMiniArrowsPointingOut'
 
-import { RHFCode } from '../hook-form'
+import { RHFCode } from '../hook-form/RHFCode'
 interface Props {
   title: string
   name: string
