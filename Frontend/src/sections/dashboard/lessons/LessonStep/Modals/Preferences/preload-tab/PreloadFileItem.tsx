@@ -10,11 +10,11 @@ import * as Yup from 'yup'
 import {
   ConfirmDialog,
   FormProvider,
-  RHFCode,
   RHFSelect,
   RHFTextField,
   useSnackbar,
 } from '@/components'
+import { RHFCode } from '@/components/hook-form/RHFCode'
 import { ModalCodeFullscreen } from '@/components/modal-code-fullscreen'
 import {
   useRemoveLessonStepPreloadFileMutation,
