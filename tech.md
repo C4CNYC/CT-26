@@ -63,7 +63,7 @@ yarn dev          # Development server (port 8080)
 - `src/modules/core/` - Entities + core services
 - `src/modules/managers/` - Business logic coordination
 - `src/old-auth/` - JWT auth, guards, strategies
-- `src/providers/` - External integrations (S3, Google Auth, OpenAI, Unsplash proxy at `/unsplash/image`)
+- `src/providers/` - External integrations (S3, Google Auth, OpenAI, Unsplash proxy at `/unsplash/image` and friendly path `/unsplash/WxH/:query`, e.g. `/unsplash/200x200/nature`; Netlify proxies `codetribe.ai/unsplash/*` to the backend)
 - `src/middlewares/` - Tenant resolution via `OrgMiddleware` (reads `x-tenant-id` header)
 
 **Multi-Tenancy**: Organization-based. `OrgMiddleware` injects `org_id`, `org_slug`, `school_id` into request using `RequestWithMeta` interface. Routes `unsplash/*`, `jokes/*`, `health`, `tenant/:slug` are excluded from org middleware.
