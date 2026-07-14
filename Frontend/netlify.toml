@@ -8,8 +8,13 @@ included_files = [
   "node_modules/next/dist/server/future/route-modules/pages/vendored/contexts/html-context*",
 ]
 [[redirects]]
-  from = "/unsplash/*"
-  to = "https://ct26be.codetribe.ai/unsplash/:splat"
+  from = "/unsplash/:dims/*"
+  to = "https://ct26be.codetribe.ai/unsplash/image?width=:dims&height=:dims&query=:splat"
+  status = 200
+  force = true
+[[redirects]]
+  from = "/unsplash/:dims"
+  to = "https://ct26be.codetribe.ai/unsplash/image?width=:dims&height=:dims"
   status = 200
   force = true
 [[headers]]
