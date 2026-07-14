@@ -131,6 +131,7 @@ source config/dokploy.env
 - Pattern: API → Manager → Core Service → Entity
 - `TeacherSchoolSetupService` (school-manager module): shared service for teacher school creation — checks pending school invites before creating new school. Used by both `auth-manager` and `auth-google-manager`.
 - `POST /manager/school/:school_id/student/:id/promote` — promotes student to teacher (changes role + adds to school teachers)
+- Build fix 2026-07-14 (`src/api/utils/markdown-body.decorator.ts`): `raw-body`'s typings clash with Express `Request[Symbol.asyncIterator]` (TS2345, breaks `nest build`). Cast `req` to `NodeJS.ReadableStream` before `getRawBody(req)` — runtime unchanged.
 
 **Frontend**:
 - All API calls through RTK Query services

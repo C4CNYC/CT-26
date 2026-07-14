@@ -24,7 +24,7 @@ export const MarkdownBody = createParamDecorator(
     // There could be features in the software which do not work properly if the text can't be parsed as markdown.
     if (req.get('Content-Type') === 'text/markdown') {
       if (req.readable) {
-        return (await getRawBody(req)).toString().trim()
+        return (await getRawBody(req as unknown as NodeJS.ReadableStream)).toString().trim()
       } else {
         throw new InternalServerErrorException('Failed to parse request body!')
       }
