@@ -78,10 +78,13 @@ export class OrganizationManagerService {
 
   async getBySlug(domain: string): Promise<Organization> {
     const firstPart = domain.split('.')[0]
-    const organizations = await this.organizationService.find([
-      { domain: Like(`%,${domain},%`) },
-      { slug: firstPart },
-    ])
+    // Oldest first, as in OrgMiddleware; the stable sort below keeps that order within each priority
+    const organizations = await this.organizationService.find(
+      [{ domain: Like(`%,${domain},%`) }, { slug: firstPart }],
+      undefined,
+      undefined,
+      { createdAt: 'ASC' },
+    )
 
     const sortedOrganizations = organizations.sort((a, b) => {
       const aPriority = a.domain.includes(`,${domain},`) ? 1 : 0
