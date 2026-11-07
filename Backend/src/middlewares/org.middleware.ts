@@ -26,11 +26,14 @@ export class OrgMiddleware implements NestMiddleware {
     if (!dataSource.isInitialized) {
       await dataSource.initialize()
     }
+    // Oldest first, so an organization created later with the same slug never answers for it
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const organization = (
       await dataSource.query(
         `SELECT * FROM organization 
-         WHERE LOWER(slug) = LOWER($1) OR LOWER(domain) = LOWER($1)`,
+         WHERE LOWER(slug) = LOWER($1) OR LOWER(domain) = LOWER($1)
+         ORDER BY "createdAt" ASC
+         LIMIT 1`,
         [organization_name],
       )
     )[0]

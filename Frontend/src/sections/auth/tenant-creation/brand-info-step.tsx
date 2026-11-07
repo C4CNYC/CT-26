@@ -41,7 +41,7 @@ const BrandInfoStep = () => {
                 pointerEvents: 'none',
               }}
             >
-              .codetribe.com
+              .codetribe.ai
             </InputAdornment>
           ),
         }}
