@@ -27,8 +27,8 @@ export class LessonService extends BaseService<Lesson> {
     return await super.create(data)
   }
 
-  async getLesson(id: string, studentId?: string): Promise<Lesson> {
-    const query_builder = this.getRepository()
+  async getLesson(id: string): Promise<Lesson> {
+    return await this.getRepository()
       .createQueryBuilder('l')
       .where('l.id = :id', { id })
       .leftJoinAndSelect('l.contents', 'contents')
@@ -36,57 +36,7 @@ export class LessonService extends BaseService<Lesson> {
       .leftJoinAndSelect('l.integrations', 'integrations')
       .leftJoinAndSelect('l.skills', 'skills')
       .leftJoinAndSelect('l.environments', 'environments')
-
-    if (studentId)
-      query_builder
-        .leftJoinAndSelect('contents.progress', 'progress')
-        .leftJoinAndSelect(
-          'progress.student',
-          'student',
-          'student.id = :studentId',
-          { studentId },
-        )
-
-    const data = await query_builder.getOneOrFail()
-
-    data.contents = data.contents.map((content) => ({
-      ...content,
-      progress: content?.progress?.filter((progress) => !!progress.student),
-    }))
-
-    return data
-  }
-
-  async getLessonWithoutContent(
-    id: string,
-    studentId?: string,
-  ): Promise<Lesson> {
-    const query_builder = this.getRepository()
-      .createQueryBuilder('l')
-      .where('l.id = :id', { id })
-      .leftJoinAndSelect('l.contents', 'contents')
-      .leftJoinAndSelect('contents.validations', 'validations')
-      .leftJoinAndSelect('l.integrations', 'integrations')
-      .leftJoinAndSelect('l.skills', 'skills')
-      .leftJoinAndSelect('l.environments', 'environments')
-
-    if (studentId)
-      query_builder
-        .leftJoinAndSelect('contents.progress', 'progress')
-        .leftJoinAndSelect(
-          'progress.student',
-          'student',
-          'student.id = :studentId',
-          { studentId },
-        )
-
-    const data = await query_builder.getOneOrFail()
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    data.contents = undefined
-
-    return data
+      .getOneOrFail()
   }
 
   async getByStudentAndUnit(
