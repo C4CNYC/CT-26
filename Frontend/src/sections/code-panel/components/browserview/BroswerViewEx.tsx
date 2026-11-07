@@ -14,6 +14,8 @@ import {
 
 import { prepareJavaCode } from './prepare/java'
 import { preparePythonCode } from './prepare/python'
+import { runJavaOnJudge0 } from './run/java'
+import { runPythonInBrowser } from './run/python'
 
 export function BrowserViewEx({ iframeKey }: { iframeKey: number }) {
   const theme = useTheme()
@@ -58,25 +60,16 @@ export function BrowserViewEx({ iframeKey }: { iframeKey: number }) {
     stdoutSet('')
     let code = java ? prepareJavaCode(java, test) : preparePythonCode(pys, test)
 
-    fetch('https://ct26n8n.codetribe.ai/webhook/CodeRunner', {
-      method: 'POST',
-      headers: {
-        'x-school-id': '6e81fc6a-ffc0-4e07-b84b-d415d524d6df',
-        'x-tenant-id': 'codetribe',
-      },
-      body: JSON.stringify({
-        prompt: { code, language: java ? 'java' : 'python' },
-        endPointPath: 'CodeRunner',
-      }),
-    })
-      .then((r) => r.json())
+    let run = java ? runJavaOnJudge0(code) : runPythonInBrowser(code)
+
+    run
       .then((r) => {
         let { err, msg, stdout, output } = r
         stderrSet((err || '') + (msg || ''))
         stdoutSet(stdout || '')
         contentsSet(`Results :`)
         let contents = ''
-        if (output as { all: 'Passed' | 'Failed'; passed: string[]; failed: string[] }) {
+        if (output) {
           for (let testName of output.passed) {
             window.postMessage(
               {
