@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 
+import { CourseProgressModule } from '../../../modules/core/course-progress/course-progress.module'
 import { CourseUnitModule } from '../../../modules/core/course-unit/course-unit.module'
 import { CourseModule } from '../../../modules/core/course/course.module'
 import { StudentModule } from '../../../modules/core/student/student.module'
@@ -22,6 +23,7 @@ import { StudentLessonsApiService } from './students-lessons-api.services'
     StudentModule,
     CourseModule,
     CourseUnitModule,
+    CourseProgressModule,
   ],
   providers: [StudentLessonsApiService, SchoolStudentManagerApiService],
   controllers: [StudentModulesApiController],

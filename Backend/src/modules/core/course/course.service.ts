@@ -430,10 +430,7 @@ export class CourseService extends BaseService<Course> {
     return query
   }
 
-  async getCourseSortedContent(
-    student_id: string | undefined,
-    course_id: string,
-  ) {
+  async getCourseSortedContent(course_id: string) {
     const query_builder = this.getRepository()
       .createQueryBuilder('course')
       .where('course.id = :id', { id: course_id })
@@ -451,17 +448,6 @@ export class CourseService extends BaseService<Course> {
       )
       .leftJoinAndSelect('lesson.skills', 'skill')
       .leftJoinAndSelect('content.validations', 'validations')
-    if (student_id)
-      query_builder
-        .leftJoinAndSelect('content.progress', 'progress')
-        .leftJoinAndSelect(
-          'progress.student',
-          'student',
-          'student.id = :student_id',
-          { student_id },
-        )
-
-    query_builder
       .orderBy('unit.sort', 'ASC')
       .addOrderBy('lessonToUnits.sort', 'ASC')
 
@@ -483,15 +469,6 @@ export class CourseService extends BaseService<Course> {
         .leftJoinAndSelect('lesson.skills', 'skill')
         .orderBy('unit.sort', 'ASC')
         .addOrderBy('lessonToUnits.sort', 'ASC')
-      if (student_id)
-        query_builder
-          .leftJoinAndSelect('content.progress', 'progress')
-          .leftJoinAndSelect(
-            'progress.student',
-            'student',
-            'student.id = :student_id',
-            { student_id },
-          )
       const c = await query_builder.getOne()
       if (!c)
         throw new NotFoundException(
@@ -500,13 +477,7 @@ export class CourseService extends BaseService<Course> {
       else return c
     }
     course.units.forEach((item) => {
-      item.lessons = item.lessonToUnits.map(({ lesson }) => ({
-        ...lesson,
-        contents: lesson.contents.map((content) => ({
-          ...content,
-          progress: content.progress?.filter((progress) => !!progress.student),
-        })),
-      }))
+      item.lessons = item.lessonToUnits.map(({ lesson }) => lesson)
       item.lessons = item.lessons.map((lesson) => ({
         ...lesson,
         progress: lesson.contents.length
@@ -551,120 +522,6 @@ export class CourseService extends BaseService<Course> {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       delete item.lessonToUnits
-    })
-
-    return course
-  }
-
-  async getCourseWithoutContentAndLessonToUnitsOld(
-    student_id: string | undefined,
-    course_id: string,
-  ) {
-    const query_builder = this.getRepository()
-      .createQueryBuilder('course')
-      .where('course.id = :id', { id: course_id })
-      .andWhere('course.active = true')
-      .leftJoinAndSelect('course.units', 'unit')
-      .andWhere('unit.active = true')
-      .leftJoinAndSelect('unit.lessonToUnits', 'lessonToUnits')
-      .leftJoinAndSelect('lessonToUnits.lesson', 'lesson')
-      .andWhere('lesson.active = true')
-      .leftJoinAndSelect(
-        'lesson.contents',
-        'content',
-        'content.body IS NOT NULL',
-      )
-      .leftJoinAndSelect('lesson.skills', 'skill')
-      .leftJoinAndSelect('content.validations', 'validations')
-    if (student_id)
-      query_builder
-        .leftJoinAndSelect('content.progress', 'progress')
-        .leftJoinAndSelect(
-          'progress.student',
-          'student',
-          'student.id = :student_id',
-          { student_id },
-        )
-
-    query_builder
-      .orderBy('unit.sort', 'ASC')
-      .addOrderBy('lessonToUnits.sort', 'ASC')
-
-    const course = await query_builder.getOne()
-
-    if (!course) {
-      const query_builder = this.getRepository()
-        .createQueryBuilder('course')
-        .where('course.id = :id', { id: course_id })
-        .andWhere('course.active = true')
-        .leftJoinAndSelect('course.units', 'unit')
-        .leftJoinAndSelect('unit.lessonToUnits', 'lessonToUnits')
-        .leftJoinAndSelect('lessonToUnits.lesson', 'lesson')
-        .leftJoinAndSelect(
-          'lesson.contents',
-          'content',
-          'content.body IS NOT NULL',
-        )
-        .leftJoinAndSelect('lesson.skills', 'skill')
-        .orderBy('unit.sort', 'ASC')
-        .addOrderBy('lessonToUnits.sort', 'ASC')
-      if (student_id)
-        query_builder
-          .leftJoinAndSelect('content.progress', 'progress')
-          .leftJoinAndSelect(
-            'progress.student',
-            'student',
-            'student.id = :student_id',
-            { student_id },
-          )
-      const c = await query_builder.getOne()
-      if (!c)
-        throw new NotFoundException(
-          'Course not found or no active units/lessons available.',
-        )
-      else return c
-    }
-    course.units.forEach((item) => {
-      item.lessons = item.lessonToUnits?.map(({ lesson }) => ({
-        ...lesson,
-        contents: lesson.contents.map((content) => ({
-          ...content,
-          progress: content.progress?.filter((progress) => !!progress.student),
-        })),
-      }))
-      item.lessons = item.lessons?.map((lesson) => ({
-        ...lesson,
-        progress: lesson.contents.length
-          ? (lesson.contents.filter((item) => item.progress?.length).length *
-              100) /
-            lesson.contents.filter((item) => item.validations.length).length
-          : 0,
-      }))
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      delete item?.lessonToUnits
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      delete item?.lessons?.contents
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      item.progress =
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        item.lessons?.reduce((acc, cur) => acc + cur.progress, 0) /
-        item.lessons.length
-    })
-
-    course.units.forEach((item) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      item.lessons = item.lessons?.map((lesson) => ({
-        ...lesson,
-        contents: undefined,
-      }))
     })
 
     return course

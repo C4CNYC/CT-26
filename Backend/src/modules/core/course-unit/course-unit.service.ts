@@ -18,8 +18,8 @@ export class CourseUnitService extends BaseService<CourseUnit> {
     super(CourseUnit, repository)
   }
 
-  async getCourseUnit(id: string, studentId?: string): Promise<CourseUnit> {
-    const query_builder = this.getRepository()
+  async getCourseUnit(id: string): Promise<CourseUnit> {
+    const data = await this.getRepository()
       .createQueryBuilder('c')
       .where('c.id = :id and c.active = true', { id })
       .leftJoinAndSelect('c.lessonToUnits', 'lessonToUnits')
@@ -28,33 +28,9 @@ export class CourseUnitService extends BaseService<CourseUnit> {
       .leftJoinAndSelect('contents.validations', 'validations')
       .leftJoinAndSelect('lesson.skills', 'skills')
       .orderBy('lessonToUnits.sort', 'ASC')
-    if (studentId)
-      query_builder
-        .leftJoinAndSelect('contents.progress', 'progress')
-        .leftJoinAndSelect(
-          'progress.student',
-          'student',
-          'student.id = :studentId',
-          { studentId },
-        )
-
-    const data = await query_builder.getOneOrFail()
-    data.lessons = data.lessonToUnits.map(({ lesson }) => ({
-      ...lesson,
-      contents: lesson.contents.map((content) => ({
-        ...content,
-        progress: content.progress?.filter((progress) => !!progress?.student),
-      })),
-    }))
-
+      .getOneOrFail()
+    data.lessons = data.lessonToUnits.map(({ lesson }) => lesson)
     data.lessonToUnits = []
-    data.lessons = data.lessons.map((lesson) => ({
-      ...lesson,
-      progress:
-        (lesson.contents.filter((item) => item.progress?.length).length * 100) /
-        lesson.contents.filter((item) => item.validations.length).length,
-    }))
-
     return data
   }
 

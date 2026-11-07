@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 
+import { CourseProgressService } from '../../../modules/core/course-progress/course-progress.service'
 import { CourseUnitService } from '../../../modules/core/course-unit/course-unit.service'
 import { CourseService } from '../../../modules/core/course/course.service'
 import { LessonContent } from '../../../modules/core/lesson-content/lesson-content.entity'
@@ -16,47 +17,40 @@ export class StudentLessonsApiService {
     private studentService: StudentService,
     private courseService: CourseService,
     private courseUnitService: CourseUnitService,
-  ) { }
+    private courseProgressService: CourseProgressService,
+  ) {}
 
   async getLesson(studentId: string | undefined, id: string): Promise<Lesson> {
-    return await this.lessonManagerService.getLesson(
-      id,
-      {
-        integrations: true,
-        skills: true,
-        contents: { progress: { student: true } },
-      },
+    const lesson = await this.lessonManagerService.getLesson(id, {
+      integrations: true,
+      skills: true,
+      contents: true,
+    })
+    await this.courseProgressService.attachStudentProgressToLessonContents(
+      lesson.contents,
       studentId,
     )
+    return lesson
   }
 
-  async getLessonWithoutContent(
-    studentId: string | undefined,
-    id: string,
-  ): Promise<Lesson> {
-    return await this.lessonManagerService.getLessonWithoutContent(
-      id,
-      { integrations: true, environments: true },
-      studentId,
-    )
+  async getLessonWithoutContent(id: string): Promise<Lesson> {
+    return await this.lessonManagerService.getLessonWithoutContent(id, {
+      integrations: true,
+      environments: true,
+    })
   }
 
   async getLessonContentList(
     studentId: string | undefined,
     id: string,
   ): Promise<LessonContent[]> {
-    const lesson = await this.lessonManagerService.getLesson(
-      id,
-      {
-        contents: {
-          environments: true,
-          validations: true,
-          progress: { student: true },
-        }
-      },
+    const lesson = await this.lessonManagerService.getLesson(id, {
+      contents: { environments: true, validations: true },
+    })
+    await this.courseProgressService.attachStudentProgressToLessonContents(
+      lesson.contents,
       studentId,
     )
-    console.log('Lesson Contents:', lesson.contents);
     return lesson.contents
   }
 

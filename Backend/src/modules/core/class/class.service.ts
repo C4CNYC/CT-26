@@ -57,25 +57,6 @@ export class ClassService extends BaseService<Class> {
     return await query_builder.getOneOrFail()
   }
 
-  async getClassProgressOld(class_id: string): Promise<Class> {
-    const query_builder = this.getRepository()
-      .createQueryBuilder('c')
-      .where('c.id = :class_id', { class_id })
-      .innerJoinAndSelect('c.students', 'students')
-      .leftJoinAndSelect('c.assigments', 'assigments')
-      .leftJoinAndSelect('assigments.course', 'course')
-      .leftJoinAndSelect('course.units', 'units')
-      .leftJoinAndSelect('units.lessons', 'lessons')
-      .leftJoinAndSelect('lessons.contents', 'contents')
-      .leftJoinAndSelect(
-        'contents.validations',
-        'validations',
-        'validations.regex is not null',
-      )
-      .leftJoinAndSelect('contents.progress', 'progress')
-      .leftJoinAndSelect('progress.student', 'student')
-    return await query_builder.getOneOrFail()
-  }
   async getClassProgress(class_id: string, student_id?: string): Promise<ClassProgressResult> {
     // First, get the basic class information with assignments
     const classInfo = await this.getRepository()

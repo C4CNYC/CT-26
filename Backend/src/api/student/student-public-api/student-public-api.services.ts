@@ -44,7 +44,7 @@ export class StudentPublicApiService {
   }
 
   async getCourseContent(id: string): Promise<Course> {
-    return await this.courseService.getCourseSortedContent(undefined, id)
+    return await this.courseService.getCourseSortedContent(id)
   }
 
   async getModuleContentList(module_id: string): Promise<Course> {
