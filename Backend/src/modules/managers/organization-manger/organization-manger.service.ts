@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
-import { Like } from 'typeorm'
+import { Like, Raw } from 'typeorm'
 
 import { UpdateOrganizationByOwnerDto } from '@/api/admin/organization-api/dtos/update-organization.dto'
 import { CreateOrganizationDto } from '@/api/super-admin/organization-api/dtos/create-organization.dto'
@@ -23,6 +23,29 @@ import { PageDto } from '../../../utils/dtos/page.dto'
 import { ApplicationEventEnum as Event } from '../users-manager/enums/application-event'
 
 import path = require('path')
+
+// A slug becomes the hostname <slug>.codetribe.ai, so it must be a single DNS label
+const ORGANIZATION_SLUG_PATTERN = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/
+
+// Hostnames we use or plan to use on codetribe.ai and codetribe.com
+const RESERVED_ORGANIZATION_SLUGS = [
+  'admin',
+  'api',
+  'api-v1',
+  'app',
+  'ct26',
+  'ct26be',
+  'ct26fe',
+  'ct26n8n',
+  'docs',
+  'kedi',
+  'mail',
+  'me',
+  'stage',
+  'stage1',
+  'staging',
+  'www',
+]
 
 @Injectable()
 export class OrganizationManagerService {
@@ -55,10 +78,13 @@ export class OrganizationManagerService {
 
   async getBySlug(domain: string): Promise<Organization> {
     const firstPart = domain.split('.')[0]
-    const organizations = await this.organizationService.find([
-      { domain: Like(`%,${domain},%`) },
-      { slug: firstPart },
-    ])
+    // Oldest first, as in OrgMiddleware; the stable sort below keeps that order within each priority
+    const organizations = await this.organizationService.find(
+      [{ domain: Like(`%,${domain},%`) }, { slug: firstPart }],
+      undefined,
+      undefined,
+      { createdAt: 'ASC' },
+    )
 
     const sortedOrganizations = organizations.sort((a, b) => {
       const aPriority = a.domain.includes(`,${domain},`) ? 1 : 0
@@ -72,6 +98,36 @@ export class OrganizationManagerService {
     }
 
     return organization
+  }
+
+  async checkOrganizationSlugAvailability(
+    subdomain: string,
+  ): Promise<{ slug: string; isAvailable: boolean; message: string }> {
+    const slug = (subdomain ?? '').trim().toLowerCase()
+
+    if (!ORGANIZATION_SLUG_PATTERN.test(slug)) {
+      return {
+        slug,
+        isAvailable: false,
+        message: 'Use only letters, numbers and hyphens',
+      }
+    }
+
+    const isTaken =
+      RESERVED_ORGANIZATION_SLUGS.includes(slug) ||
+      Boolean(
+        await this.organizationService.findOne({
+          where: [
+            { slug: Raw((column) => `LOWER(${column}) = :slug`, { slug }) },
+            { domain: Like(`%,${slug}.codetribe.ai,%`) },
+          ],
+          select: ['id'],
+        }),
+      )
+
+    return isTaken
+      ? { slug, isAvailable: false, message: 'Subdomain is already taken' }
+      : { slug, isAvailable: true, message: 'Subdomain is available' }
   }
 
   async getHomePage(tenantName: string): Promise<Organization> {

@@ -1,8 +1,8 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Get,
-  NotFoundException,
   Param,
   Post,
   Req,
@@ -119,27 +119,12 @@ export class TenantPublicApiController {
   @Post('/check-subdomain')
   @UseGuards(JwtAuthGuard)
   async checkSubdomain(@Body() data: UpdateOrganizationDto) {
-    const domain = `${data.subdomain}.codetribe.com`
+    const { message, isAvailable } =
+      await this.organizationMangerService.checkOrganizationSlugAvailability(
+        data.subdomain,
+      )
 
-    try {
-      const organization =
-        await this.organizationMangerService.getBySlug(domain)
-
-      if (organization) {
-        return {
-          message: 'Subdomain is already taken',
-          isAvailable: false,
-        }
-      }
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        return {
-          message: 'Subdomain is available',
-          isAvailable: true,
-        }
-      }
-      throw error
-    }
+    return { message, isAvailable }
   }
 
   @Post('/update-info')
@@ -152,8 +137,16 @@ export class TenantPublicApiController {
       surname: string
     },
   ): Promise<Organization> {
+    const { slug, isAvailable, message } =
+      await this.organizationMangerService.checkOrganizationSlugAvailability(
+        data.subdomain,
+      )
+    if (!isAvailable) throw new ConflictException(message)
+
+    data.slug = slug
+    data.subdomain = slug
     data.min_logo = data.logo
-    data.domain = `,${data.subdomain}.codetribe.ai,`
+    data.domain = `,${slug}.codetribe.ai,`
 
     const organization =
       await this.organizationMangerService.createOrganization(

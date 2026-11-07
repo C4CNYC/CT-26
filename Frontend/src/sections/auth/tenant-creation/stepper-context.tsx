@@ -165,10 +165,7 @@ export const StepperProvider = ({
       setIsLoading(true)
 
       try {
-        await updateInfo({
-          ...data,
-          slug: data.subdomain,
-        }).unwrap()
+        await updateInfo(data).unwrap()
 
         enqueueSnackbar(translate('Info updated successfully'))
         handleNext()
