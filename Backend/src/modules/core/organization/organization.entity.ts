@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, OneToMany, OneToOne } from 'typeorm'
 
 import { BaseEntity } from '../../../utils/base/base.entity'
 import { School } from '../school/school.entity'
@@ -8,6 +8,8 @@ import { HomePageType } from './enums/home-page-type.enum'
 const ALIAS = 'organization'
 
 @Entity({ name: ALIAS })
+// Unique on LOWER(slug), created by migration UniqueOrganizationSlug; TypeORM can't express it
+@Index('organization_slug_lower_unique', { synchronize: false })
 export class Organization extends BaseEntity {
   @Column({ type: 'varchar' })
   name: string
