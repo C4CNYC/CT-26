@@ -13,9 +13,11 @@ import { CreateCourseUnitDto } from '../../../api/manager/course-unit-manager-ap
 import { UpdateCourseUnitDto } from '../../../api/manager/course-unit-manager-api/dtos/update-course-unit.dto'
 import { PageMetaDto } from '../../../utils/dtos/page-meta.dto'
 import { PageDto } from '../../../utils/dtos/page.dto'
+import { CourseProgressService } from '../../core/course-progress/course-progress.service'
 import { CourseUnit } from '../../core/course-unit/course-unit.entity'
 import { CourseUnitService } from '../../core/course-unit/course-unit.service'
 import { CourseService } from '../../core/course/course.service'
+import { Lesson } from '../../core/lesson/lesson.entity'
 
 @Injectable()
 export class CourseUnitManagerService {
@@ -24,6 +26,7 @@ export class CourseUnitManagerService {
     private schoolService: SchoolService,
     private courseUnitService: CourseUnitService,
     private userService: UserService,
+    private courseProgressService: CourseProgressService,
   ) {}
 
   async getList(
@@ -82,8 +85,11 @@ export class CourseUnitManagerService {
   ): Promise<CourseUnit> {
     let unit
     if (onlyActiveWithLessons) {
-      unit = await this.courseUnitService.getCourseUnit(id, studentId)
-      unit.lessons = unit.lessons.filter((lesson) => lesson.active)
+      unit = await this.courseUnitService.getCourseUnit(id)
+      unit.lessons = await this.attachStudentProgressToLessons(
+        unit.lessons.filter((lesson) => lesson.active),
+        studentId,
+      )
     } else {
       unit = await this.courseUnitService.findOne({
         where: { id },
@@ -102,6 +108,10 @@ export class CourseUnitManagerService {
     let unit: CourseUnit
     if (onlyActiveWithLessons) {
       unit = await this.courseUnitService.getCourseUnit(id)
+      unit.lessons = await this.attachStudentProgressToLessons(
+        unit.lessons,
+        undefined,
+      )
     } else {
       unit = await this.courseUnitService.findOne({
         where: { id },
@@ -154,5 +164,22 @@ export class CourseUnitManagerService {
 
   async remove(id: string): Promise<void> {
     await this.courseUnitService.remove(id)
+  }
+
+  private async attachStudentProgressToLessons(
+    lessons: Lesson[],
+    student_id: string | undefined,
+  ): Promise<Lesson[]> {
+    await this.courseProgressService.attachStudentProgressToLessonContents(
+      lessons.flatMap((lesson) => lesson.contents),
+      student_id,
+    )
+    return lessons.map((lesson) => ({
+      ...lesson,
+      progress:
+        (lesson.contents.filter((content) => content.progress.length).length *
+          100) /
+        lesson.contents.filter((content) => content.validations.length).length,
+    }))
   }
 }

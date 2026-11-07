@@ -11,7 +11,7 @@ export class StudentModulesApiService {
     return await this.courseUnitManagerModule.getCourseUnit(
       id,
       true,
-      { lessons: { contents: { progress: { student: true } } } },
+      undefined,
       studentId,
     )
   }

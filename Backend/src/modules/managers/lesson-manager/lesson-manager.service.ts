@@ -126,7 +126,6 @@ export class LessonManagerService {
   async getLesson(
     id: string,
     relations?: FindOptionsRelations<Lesson>,
-    studentId?: string,
   ): Promise<Lesson> {
     const lesson = await this.lessonService.findOne({
       where: { id },
@@ -139,7 +138,6 @@ export class LessonManagerService {
   async getLessonWithoutContent(
     id: string,
     relations?: FindOptionsRelations<Lesson>,
-    studentId?: string,
   ): Promise<Lesson> {
     const lesson = await this.lessonService.findOne({
       where: { id },

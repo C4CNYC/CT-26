@@ -7,11 +7,13 @@ import {
   ParseUUIDPipe,
   Patch,
   Request,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 import { ApiHeader, ApiTags } from '@nestjs/swagger'
 
 import { Roles } from '@/old-auth/decorators/roles.decorator'
+import { OptionalJwtAuthGuard } from '@/old-auth/guards/optional-jwt-auth.guard'
 
 import { LessonContent } from '../../../modules/core/lesson-content/lesson-content.entity'
 import { Lesson } from '../../../modules/core/lesson/lesson.entity'
@@ -41,6 +43,7 @@ export class StudentModulesApiController {
     )
   }
 
+  @UseGuards(OptionalJwtAuthGuard)
   @Get(':id')
   async getLesson(
     @Request() request: RequestWithMeta,
@@ -54,15 +57,12 @@ export class StudentModulesApiController {
 
   @Get('without-contents/:id')
   async getLessonWithoutContent(
-    @Request() request: RequestWithMeta,
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<Lesson> {
-    return await this.studentLessonsApiService.getLessonWithoutContent(
-      request.user?.studentID,
-      id,
-    )
+    return await this.studentLessonsApiService.getLessonWithoutContent(id)
   }
 
+  @UseGuards(OptionalJwtAuthGuard)
   @Get(':id/content')
   async getLessonContent(
     @Request() request: RequestWithMeta,

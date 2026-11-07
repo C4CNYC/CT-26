@@ -9,6 +9,7 @@ import { BaseService } from '../../../utils/base/base.service'
 import { Order } from '../../../utils/constants/order.enum'
 import { PageMetaDto } from '../../../utils/dtos/page-meta.dto'
 import { PageDto } from '../../../utils/dtos/page.dto'
+import { LessonContent } from '../lesson-content/lesson-content.entity'
 import { CourseProgress } from './course-progress.entity'
 
 @Injectable()
@@ -32,6 +33,46 @@ export class CourseProgressService extends BaseService<CourseProgress> {
       .where('student.id = :student_id', { student_id }) // Change to use student.id
       .groupBy('lesson.id')
       .getRawMany()
+  }
+
+  async attachStudentProgressToLessonContents(
+    lesson_contents: LessonContent[],
+    student_id: string | undefined,
+  ): Promise<void> {
+    const student_course_progress =
+      student_id && lesson_contents.length
+        ? await this.findOne({ where: { student: { id: student_id } } })
+        : null
+
+    const completed_rows = student_course_progress
+      ? await this.getRepository()
+          .createQueryBuilder('progress')
+          .innerJoin(
+            'progress.completed_chalanges',
+            'lesson_content',
+            'lesson_content.id IN (:...lesson_content_ids)',
+            {
+              lesson_content_ids: lesson_contents.map(
+                (lesson_content) => lesson_content.id,
+              ),
+            },
+          )
+          .select('lesson_content.id', 'lesson_content_id')
+          .where('progress.id = :progress_id', {
+            progress_id: student_course_progress.id,
+          })
+          .getRawMany<{ lesson_content_id: string }>()
+      : []
+    const completed_lesson_content_ids = new Set(
+      completed_rows.map((row) => row.lesson_content_id),
+    )
+
+    for (const lesson_content of lesson_contents)
+      lesson_content.progress =
+        student_course_progress &&
+        completed_lesson_content_ids.has(lesson_content.id)
+          ? [student_course_progress]
+          : []
   }
 
   async getList(

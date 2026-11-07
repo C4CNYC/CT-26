@@ -132,6 +132,7 @@ source config/dokploy.env
 - `TeacherSchoolSetupService` (school-manager module): shared service for teacher school creation — checks pending school invites before creating new school. Used by both `auth-manager` and `auth-google-manager`.
 - `POST /manager/school/:school_id/student/:id/promote` — promotes student to teacher (changes role + adds to school teachers)
 - Build fix 2026-07-14 (`src/api/utils/markdown-body.decorator.ts`): `raw-body`'s typings clash with Express `Request[Symbol.asyncIterator]` (TS2345, breaks `nest build`). Cast `req` to `NodeJS.ReadableStream` before `getRawBody(req)` — runtime unchanged.
+- Slide progress (`LessonContent.progress`) is attached only by `CourseProgressService.attachStudentProgressToLessonContents`: the signed-in student's own `course-progress` row on the slides they completed, `[]` on the rest and when there is no student. It looks up from the student (`students.progressId` → `progress_lesson_complete`); never join `contents.progress` from the lesson side. Used by `GET /student/lesson/:id`, `GET /student/lesson/:id/content` and the student module view (`CourseUnitManagerService`). Student lesson routes use `OptionalJwtAuthGuard`: a route without a guard never gets `request.user`, because `@Roles` alone doesn't authenticate.
 
 **Frontend**:
 - All API calls through RTK Query services
