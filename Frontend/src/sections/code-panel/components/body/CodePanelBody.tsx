@@ -1,11 +1,10 @@
 import { FaDesktop } from '@react-icons/all-files/fa/FaDesktop'
 import { TiDocumentText } from '@react-icons/all-files/ti/TiDocumentText'
+import { Box } from '@mui/material'
 import { useDispatch } from 'react-redux'
-import SwipeableViews from 'react-swipeable-views'
 
 import useIsDesktop from '@/hooks/useIsDesktop'
 import { toggleBrowser, toggleInstrations } from '@/redux/slices/code-panel-global'
-import { setTab } from '@/redux/slices/mobile-tab-manager'
 import { useSelector } from '@/redux/store'
 import { TAB_TITLES } from '@/sections/code-panel/components/body/consts'
 import { CodePanelBodyProps } from '@/sections/code-panel/components/body/types'
@@ -79,31 +78,46 @@ export function CodePanelBody({
     )
   }
 
+  // Mobile: the three panels stay mounted side by side and slide to the active tab
+  const mobilePanels = [
+    <SliderBlock
+      key='instructions'
+      isLoadingLessonContent={isLoadingLessonContent}
+      onSubmitLesson={onSubmitLesson}
+      onSubmitChallenge={onSubmitChallenge}
+      integrations={lesson?.integrations ?? []}
+      lessonType={lesson?.type}
+      lessonId={lesson?.id || lessonId}
+      lessonMeta={lesson?.meta}
+    />,
+    <CodeEditorBlockContent
+      key='code'
+      preloadedCode={lessonContents[0]?.preload_body ?? ''}
+      contentId={lessonContents[slideIndex]?.id}
+    />,
+    <ViewBlock key='preview' />,
+  ]
+
   return (
-    <SwipeableViews
-      disabled
-      index={activeTab}
-      onChangeIndex={(index) => {
-        dispatch(setTab(index))
-      }}
-    >
-      <SliderBlock
-        isLoadingLessonContent={isLoadingLessonContent}
-        onSubmitLesson={onSubmitLesson}
-        onSubmitChallenge={onSubmitChallenge}
-        integrations={lesson?.integrations ?? []}
-        lessonType={lesson?.type}
-        lessonId={lesson?.id || lessonId}
-        lessonMeta={lesson?.meta}
-      />
-
-      <CodeEditorBlockContent
-        preloadedCode={lessonContents[0]?.preload_body ?? ''}
-        contentId={lessonContents[slideIndex]?.id}
-      />
-
-      <ViewBlock />
-    </SwipeableViews>
+    <Box sx={{ overflowX: 'hidden' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          transform: `translateX(-${activeTab * 100}%)`,
+          transition: 'transform 0.35s cubic-bezier(0.15, 0.3, 0.25, 1)',
+        }}
+      >
+        {mobilePanels.map((panel, panelIndex) => (
+          <Box
+            key={panel.key}
+            aria-hidden={panelIndex !== activeTab}
+            sx={{ width: '100%', flexShrink: 0, overflow: 'auto' }}
+          >
+            {panel}
+          </Box>
+        ))}
+      </Box>
+    </Box>
   )
 }
 

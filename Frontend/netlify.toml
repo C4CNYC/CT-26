@@ -1,5 +1,5 @@
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "22"
 [functions]
 included_files = [
   "node_modules/next/dist/server/future/route-modules/pages/vendored/contexts/router-context*",

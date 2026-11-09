@@ -1,3 +1,4 @@
+import { type Variants } from 'framer-motion'
 import * as Yup from 'yup'
 
 export type Props = {
@@ -37,7 +38,7 @@ export const CreateFeedbackSchema = Yup.object().shape({
     .optional(),
 })
 
-export const animateCustomBg = () => {
+export const animateCustomBg = (): Variants => {
   const gradient = (deg: number) =>
     `linear-gradient(${deg}deg, 
       #00140A 0%, 

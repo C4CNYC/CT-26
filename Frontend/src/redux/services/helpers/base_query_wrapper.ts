@@ -1,4 +1,4 @@
-import { BaseQueryFn, fetchBaseQuery } from '@reduxjs/toolkit/dist/query'
+import { BaseQueryFn, fetchBaseQuery } from '@reduxjs/toolkit/query'
 
 const AUTHORIZATION_HEADER_KEY = 'authorization'
 const TENANT_ID_HEADER_KEY = 'x-tenant-id'

@@ -5,7 +5,7 @@ import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 
-import { ResizerUi } from '@/components'
+import { ResizableSideBySidePanes } from '@/components'
 import LessonCreationIntro from '@root/src/sections/intro-tours/lesson-creation-intro'
 
 import { lessonViewAtom } from './lesson-atoms/lesson-view-atom'
@@ -69,16 +69,15 @@ export default function LessonStepMain({
           <LessonTopBar closeThis={onClose} />
 
           {stepId && <LessonCreationIntro delay={1000} />}
-          <ResizerUi
-            split='vertical'
-            minSize={300}
-            maxSize={750}
-            defaultSize={'400px'}
+          <ResizableSideBySidePanes
+            leftPaneDefaultWidth='400px'
+            leftPaneMinWidth={300}
+            leftPaneMaxWidth={750}
             style={{ height: 'calc(100% - 48px)' }}
           >
             <LessonStepList lessonId={lessonId as string} />
             {stepId ? <StepContentEditor /> : <NoSelectedStep />}
-          </ResizerUi>
+          </ResizableSideBySidePanes>
         </FullScreen>
       </Dialog>
     </LessonContentContext.Provider>
