@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import JoyRide, { ACTIONS, type CallBackProps, EVENTS, STATUS } from 'react-joyride'
+import { ACTIONS, type EventData, EVENTS, Joyride, STATUS } from 'react-joyride'
 import { useDispatch } from 'react-redux'
 
 import { useProfileQuery } from '@/redux/services/auth'
@@ -9,6 +9,7 @@ import { useSelector } from '@/redux/store'
 import { useUpdateMeMetaFlagMutation } from '@root/src/redux/services/auth'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
+import { TOUR_JOYRIDE_OPTIONS } from '../tour-joyride-options'
 import TooltipTourCodePanel from '../tour-tooltip'
 
 import { getDefaultAdminIntroSteps } from './config'
@@ -27,7 +28,7 @@ export const AdminDefaultIntro = () => {
   const { data: userData, isLoading } = useProfileQuery(null as unknown as void, { skip: !profile })
   const [updateMeMetaFlag] = useUpdateMeMetaFlagMutation()
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
+  const handleJoyrideCallback = (data: EventData) => {
     const { action, index, status, type } = data
     if (STATUSES.includes(status as string) && isTourStarted) {
       dispatch(setStartTour(false))
@@ -61,19 +62,15 @@ export const AdminDefaultIntro = () => {
   }, [isTourStarted, isLoading, dispatch])
 
   return (
-    <JoyRide
-      callback={handleJoyrideCallback}
+    <Joyride
+      onEvent={handleJoyrideCallback}
       run={isTourStarted}
       tooltipComponent={TooltipTourCodePanel}
       steps={getDefaultAdminIntroSteps(translate)}
-      showSkipButton={false}
-      showProgress
       stepIndex={slideIndex}
-      styles={JOY_RIDE_OPTIONS}
+      options={TOUR_JOYRIDE_OPTIONS}
     />
   )
 }
-
-const JOY_RIDE_OPTIONS = { options: { zIndex: 10000 } }
 
 export default AdminDefaultIntro

@@ -1,4 +1,4 @@
-import { FormGroup, TextField, Typography, useTheme } from '@mui/material'
+import { FormGroup, Typography, useTheme } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import { TbInfoCircleFilled } from '@react-icons/all-files/tb/TbInfoCircleFilled'
 import { Control, Controller } from 'react-hook-form'
@@ -35,13 +35,11 @@ export default function TimeController({
         control={control}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <DatePicker
-            value={value}
-            onChange={(event) => {
-              onChange(event as string | React.ChangeEvent<Element>)
-            }}
-            renderInput={(params) => (
-              <TextField
-                sx={{
+            value={value ? new Date(value) : null}
+            onChange={onChange}
+            slotProps={{
+              textField: {
+                sx: {
                   '& fieldset': { border: 'none' },
                   '& .MuiInputBase-root': {
                     width: '200px',
@@ -51,9 +49,9 @@ export default function TimeController({
                   '& .MuiFormHelperText-root': {
                     ml: 0,
                   },
-                }}
-                error={!!error}
-                helperText={
+                },
+                error: !!error,
+                helperText: (
                   <Typography
                     variant='caption'
                     sx={{
@@ -75,10 +73,9 @@ export default function TimeController({
                       </>
                     )}
                   </Typography>
-                }
-                {...params}
-              />
-            )}
+                ),
+              },
+            }}
           />
         )}
       />

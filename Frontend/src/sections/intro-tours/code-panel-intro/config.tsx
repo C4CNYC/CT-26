@@ -17,7 +17,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): Step[] 
         {translate('intro_tour_step_1_desktop_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'center' as const,
   },
   {
@@ -29,7 +29,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): Step[] 
         <p>{translate('intro_tour_step_2_desktop_subtitle_2')}</p>
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
   {
@@ -45,7 +45,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): Step[] 
         {translate('intro_tour_step_3_desktop_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
   {
@@ -61,7 +61,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): Step[] 
         {translate('intro_tour_step_4_desktop_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
   },
   {
@@ -81,7 +81,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): Step[] 
         {translate('intro_tour_step_5_desktop_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
   {
@@ -97,7 +97,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): Step[] 
         {translate('intro_tour_step_6_desktop_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'center' as const,
   },
   {
@@ -126,14 +126,14 @@ export const getTourStepsDesktop = (translate: (key: string) => string): Step[] 
         {translate('intro_tour_step_7_desktop_subtitle_3')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
   },
   {
     target: '.lessonsTour',
     title: <div>{translate('intro_tour_step_8_desktop_title')} </div>,
     content: <div>{translate('intro_tour_step_8_desktop_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
   },
   {
@@ -144,7 +144,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): Step[] 
         {translate('intro_tour_step_9_desktop_subtitle')}
       </Box>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
   },
 ]
@@ -163,14 +163,14 @@ export const getTourStepsMobile = (translate: (key: string) => string): Step[] =
         {translate('intro_tour_step_1_mobile_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'center' as const,
   },
   {
     target: '.sliderTour',
     title: <div>{translate('intro_tour_step_2_mobile_title')}</div>,
     content: <div>{translate('intro_tour_step_2_mobile_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
   },
   {
     target: '.sliderTour',
@@ -185,7 +185,7 @@ export const getTourStepsMobile = (translate: (key: string) => string): Step[] =
         {translate('intro_tour_step_3_mobile_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'center' as const,
   },
   {
@@ -201,20 +201,20 @@ export const getTourStepsMobile = (translate: (key: string) => string): Step[] =
         {translate('intro_tour_step_4_mobile_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
   },
   {
     target: '.smallSliderTour',
     title: <div>{translate('intro_tour_step_5_mobile_title')}</div>,
     content: <div>{translate('intro_tour_step_5_mobile_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
   },
   {
     target: '.lessonsTourMobile',
     title: <div>{translate('intro_tour_step_6_mobile_title')}</div>,
     content: <div>{translate('intro_tour_step_6_mobile_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
   },
   {
@@ -225,7 +225,7 @@ export const getTourStepsMobile = (translate: (key: string) => string): Step[] =
         {translate('intro_tour_step_7_mobile_subtitle')}
       </Box>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
   },
 ]

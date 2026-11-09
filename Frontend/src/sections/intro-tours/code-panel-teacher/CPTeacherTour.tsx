@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { differenceInSeconds } from 'date-fns'
-import JoyRide, { ACTIONS, type CallBackProps, EVENTS, STATUS } from 'react-joyride'
+import { ACTIONS, type EventData, EVENTS, Joyride, STATUS } from 'react-joyride'
 import { useDispatch } from 'react-redux'
 
 import useIsDesktop from '@/hooks/useIsDesktop'
@@ -10,6 +10,8 @@ import { setStartTour } from '@/redux/slices/tour'
 import { useSelector } from '@/redux/store'
 import { useUpdateMeMetaFlagMutation } from '@root/src/redux/services/auth'
 import { useTranslate } from '@root/src/utils/translateHelper'
+
+import { TOUR_JOYRIDE_OPTIONS } from '../tour-joyride-options'
 
 import { getTourStepsDesktop, getTourStepsMobile } from './CPTeacherTourConfig'
 import { CPTeacherTourToolTip } from './CPTeacherTourToolTip'
@@ -31,7 +33,7 @@ export function CPTeacherTour() {
   const { data: userData, isLoading } = useProfileQuery(null as unknown as void, { skip: !profile })
   const [updateMeMetaFlag] = useUpdateMeMetaFlagMutation()
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
+  const handleJoyrideCallback = (data: EventData) => {
     const { action, index, status, type } = data
     if (STATUSES.includes(status as string) && isTourStarted) {
       dispatch(setStartTour(false))
@@ -74,15 +76,13 @@ export function CPTeacherTour() {
   }, [userCreated, isTourStarted, dispatch, isLoading])
 
   return (
-    <JoyRide
-      callback={handleJoyrideCallback}
+    <Joyride
+      onEvent={handleJoyrideCallback}
       run={isTourStarted}
       tooltipComponent={CPTeacherTourToolTip}
       steps={isDesktop ? getTourStepsDesktop(translate) : getTourStepsMobile(translate)}
-      showSkipButton={false}
-      showProgress
       stepIndex={slideIndex}
-      styles={{ options: { zIndex: 10000 } }}
+      options={TOUR_JOYRIDE_OPTIONS}
     />
   )
 }

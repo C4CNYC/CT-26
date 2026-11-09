@@ -16,7 +16,7 @@ export const getDefaultAdminIntroSteps = (translate: (key: string) => string): S
         {translate('manager_admin_intro_tour_step_1_desc')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
   {
@@ -32,7 +32,7 @@ export const getDefaultAdminIntroSteps = (translate: (key: string) => string): S
         {translate('manager_admin_intro_tour_step_2_desc')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
 ]

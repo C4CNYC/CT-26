@@ -16,28 +16,28 @@ export const getIntroStudentJoinSteps = (translate: (key: string) => string): St
         {translate('intro_tour_student_join_step_1_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'bottom' as const,
   },
   {
     target: '.studentJoinStep4',
     title: <div>{translate('intro_tour_student_join_step_2_title')}</div>,
     content: <div>{translate('intro_tour_student_join_step_2_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
   {
     target: '.studentJoinStep2',
     title: <div>{translate('intro_tour_student_join_step_3_title')}</div>,
     content: <div>{translate('intro_tour_student_join_step_3_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
   {
     target: '.studentJoinStep3',
     title: <div>{translate('intro_tour_student_join_step_4_title')}</div>,
     content: <div> {translate('intro_tour_student_join_step_4_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
 ]
