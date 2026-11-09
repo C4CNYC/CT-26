@@ -9,7 +9,7 @@ import { useSelector } from '@/redux/store'
 import { useUpdateMeMetaFlagMutation } from '@root/src/redux/services/auth'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
-import { TOUR_JOYRIDE_OPTIONS } from '../tour-joyride-options'
+import { TOUR_JOYRIDE_SHARED_PROPS } from '../tour-joyride-shared-props'
 import TooltipTourCodePanel from '../tour-tooltip'
 
 import { getIntroStudentJoinSteps } from './config'
@@ -67,7 +67,7 @@ export const StudentJoinIntro = () => {
       tooltipComponent={TooltipTourCodePanel}
       steps={getIntroStudentJoinSteps(translate)}
       stepIndex={slideIndex}
-      options={TOUR_JOYRIDE_OPTIONS}
+      {...TOUR_JOYRIDE_SHARED_PROPS}
     />
   )
 }

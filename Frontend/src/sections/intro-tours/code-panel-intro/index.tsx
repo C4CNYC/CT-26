@@ -12,7 +12,7 @@ import { hasUserMadeProgress } from '@/utils/hasUserMadeProgress'
 import { useUpdateMeMetaFlagMutation } from '@root/src/redux/services/auth'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
-import { TOUR_JOYRIDE_OPTIONS } from '../tour-joyride-options'
+import { TOUR_JOYRIDE_SHARED_PROPS } from '../tour-joyride-shared-props'
 import TooltipTourCodePanel from '../tour-tooltip'
 
 import { getTourStepsDesktop, getTourStepsMobile } from './config'
@@ -107,7 +107,7 @@ export const CodePanelTour = () => {
       tooltipComponent={TooltipTourCodePanel}
       steps={isDesktop ? getTourStepsDesktop(translate) : getTourStepsMobile(translate)}
       stepIndex={slideIndex}
-      options={TOUR_JOYRIDE_OPTIONS}
+      {...TOUR_JOYRIDE_SHARED_PROPS}
     />
   )
 }

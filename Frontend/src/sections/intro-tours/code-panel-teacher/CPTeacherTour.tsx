@@ -11,7 +11,7 @@ import { useSelector } from '@/redux/store'
 import { useUpdateMeMetaFlagMutation } from '@root/src/redux/services/auth'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
-import { TOUR_JOYRIDE_OPTIONS } from '../tour-joyride-options'
+import { TOUR_JOYRIDE_SHARED_PROPS } from '../tour-joyride-shared-props'
 
 import { getTourStepsDesktop, getTourStepsMobile } from './CPTeacherTourConfig'
 import { CPTeacherTourToolTip } from './CPTeacherTourToolTip'
@@ -82,7 +82,7 @@ export function CPTeacherTour() {
       tooltipComponent={CPTeacherTourToolTip}
       steps={isDesktop ? getTourStepsDesktop(translate) : getTourStepsMobile(translate)}
       stepIndex={slideIndex}
-      options={TOUR_JOYRIDE_OPTIONS}
+      {...TOUR_JOYRIDE_SHARED_PROPS}
     />
   )
 }

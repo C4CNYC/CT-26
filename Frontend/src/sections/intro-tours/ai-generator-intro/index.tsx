@@ -12,7 +12,7 @@ import { useUpdateMeMetaFlagMutation } from '@root/src/redux/services/auth'
 
 import CopyLinkModal from '../../code-panel/components/modals/CopyLinkModal'
 import WelcomeCodePanelModal from '../../code-panel/components/modals/WelcomeCodePanelModal'
-import { TOUR_JOYRIDE_OPTIONS } from '../tour-joyride-options'
+import { TOUR_JOYRIDE_SHARED_PROPS } from '../tour-joyride-shared-props'
 import TooltipTourCodePanel from '../tour-tooltip'
 
 import { AI_GENERATOR_TOUR_DECKTOP, AI_GENERATOR_TOUR_MOBILE } from './config'
@@ -88,7 +88,7 @@ export const AIGeneratorTour = ({ withModals }: AIGeneratorTourProps) => {
         tooltipComponent={TooltipTourCodePanel}
         steps={isDesktop ? AI_GENERATOR_TOUR_DECKTOP : AI_GENERATOR_TOUR_MOBILE}
         stepIndex={slideIndex}
-        options={TOUR_JOYRIDE_OPTIONS}
+        {...TOUR_JOYRIDE_SHARED_PROPS}
       />
       {withModals && isReadyForModals ? (
         <>
