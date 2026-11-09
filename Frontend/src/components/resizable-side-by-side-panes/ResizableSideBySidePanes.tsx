@@ -10,7 +10,6 @@ interface ResizableSideBySidePanesProps {
   style?: CSSProperties
 }
 
-// Two panes side by side with a draggable divider; the left pane's width is clamped
 export function ResizableSideBySidePanes({
   children: [leftPane, rightPane],
   leftPaneDefaultWidth,
