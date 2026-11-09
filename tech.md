@@ -139,7 +139,7 @@ source config/dokploy.env
 - Build process copies TinyMCE to public
 - React 19-ready libraries (2026-11-09, prep for Next 16): split panes use `ResizableSideBySidePanes` (`@uiw/react-split`), the mobile code-panel swipe is a CSS transform, `html-react-parser` replaces `react-html-parser`, and `@lottiefiles/dotlottie-react` plays the checker animations (`components/checkers-completed-animation`)
 - `LocalizationProvider`/`AdapterDateFns` are NOT global; wrapped per-component via `src/components/DateLocalizationProvider.tsx` (used only by date-picker files: `TimeController`, `AssignmentsTableToolbar`, `AssignmentDrawer`) so `@mui/x-date-pickers` stays out of the `_app` chunk
-- `@mui/x-date-pickers` 7 takes only `Date | null`; forms that store date strings convert at the picker (`value ? new Date(value) : null`). Intro tours use react-joyride 3 (`onEvent`, shared props in `sections/intro-tours/tour-joyride-shared-props.ts`; its `flipOptions.fallbackPlacements: undefined` restores Joyride 2's flip to the opposite side, since Joyride 3 only falls back from left/right to top/bottom)
+- `@mui/x-date-pickers` 7 takes only `Date | null`; forms that store date strings convert at the picker (`value ? new Date(value) : null`). Intro tours use react-joyride 3 (`onEvent`, shared props in `sections/intro-tours/tour-joyride-shared-props.ts`; its `flipOptions` (`fallbackPlacements: undefined`, `fallbackAxisSideDirection: 'end'`) make a left/right step that doesn't fit try the opposite side first, as Joyride 2 did, then bottom and top; Joyride 3 alone only tries bottom and top)
 - RTK Query hooks that need a user id must use `skip: !id` to avoid firing with `undefined` in the URL (see `useContinueUnit`)
 
 **Perf hotspots (course page load ~20s)**:
