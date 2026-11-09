@@ -31,7 +31,7 @@ Dump/Restore:
 CodeTribe is an educational platform with multi-tenant architecture.
 
 - **Backend** (`/Backend`) - NestJS API with PostgreSQL + TypeORM, requires Node.js 22.x
-- **Frontend** (`/Frontend`) - Next.js 14 + TypeScript + Redux Toolkit + Mui
+- **Frontend** (`/Frontend`) - Next.js 14 + TypeScript + Redux Toolkit 2 + Mui 5, built on Node 22 (`netlify.toml`)
 
 ---
 
@@ -137,6 +137,7 @@ source config/dokploy.env
 **Frontend**:
 - All API calls through RTK Query services
 - Build process copies TinyMCE to public
+- React 19-ready libraries (2026-11-09, prep for Next 16): split panes use `ResizableSideBySidePanes` (`@uiw/react-split`), the mobile code-panel swipe is a CSS transform, `html-react-parser` replaces `react-html-parser`, and `@lottiefiles/dotlottie-react` plays the checker animations (`components/checkers-completed-animation`)
 - `LocalizationProvider`/`AdapterDateFns` are NOT global; wrapped per-component via `src/components/DateLocalizationProvider.tsx` (used only by date-picker files: `DateRangePicker`, `TimeController`, `AssignmentsTableToolbar`, `AssignmentDrawer`) so `@mui/x-date-pickers` stays out of the `_app` chunk
 - RTK Query hooks that need a user id must use `skip: !id` to avoid firing with `undefined` in the URL (see `useContinueUnit`)
 

@@ -78,7 +78,6 @@ export function CodePanelBody({
     )
   }
 
-  // Mobile: the three panels stay mounted side by side and slide to the active tab
   const mobilePanels = [
     <SliderBlock
       key='instructions'
