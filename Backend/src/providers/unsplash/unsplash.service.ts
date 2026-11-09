@@ -70,7 +70,7 @@ export class UnsplashService {
     this.lru.set(cacheKey, { photo, timestamp: Date.now() })
     if (this.lru.size > LRU_MAX) {
       const firstKey = this.lru.keys().next().value
-      this.lru.delete(firstKey)
+      if (firstKey !== undefined) this.lru.delete(firstKey)
     }
 
     this.logger.log(`Fetched photo ${photo.id} for query "${query}"`)

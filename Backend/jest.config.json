@@ -1,0 +1,12 @@
+{
+  "rootDir": "src",
+  "testRegex": ".*\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": ["ts-jest", { "diagnostics": { "ignoreCodes": [151002] } }]
+  },
+  "moduleNameMapper": {
+    "^@/(.*)$": "<rootDir>/$1"
+  },
+  "testEnvironment": "node",
+  "coverageDirectory": "../coverage"
+}
