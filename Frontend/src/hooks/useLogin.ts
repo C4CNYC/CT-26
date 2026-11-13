@@ -31,8 +31,6 @@ export function useLogin() {
         if (!c?.processed) {
           completeLesson({
             lesson_content_id: c.slideId,
-            id: c.courseId,
-            module_id: c.moduleId,
             code: '',
           })
           c.processed = true
