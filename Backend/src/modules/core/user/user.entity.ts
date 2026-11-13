@@ -56,25 +56,33 @@ export class User extends BaseEntity {
   @Column({ type: 'boolean', default: true })
   active: boolean
 
-  @ManyToMany(() => School, (school) => school.teachers)
+  @ManyToMany(() => School, (school) => school.teachers, {
+    onDelete: 'CASCADE',
+  })
   schools: School[]
 
   @ManyToOne(() => Organization, (organization) => organization.users)
   organization: Organization
 
-  @ManyToMany(() => Course, (course) => course.authors)
+  @ManyToMany(() => Course, (course) => course.authors, {
+    onDelete: 'CASCADE',
+  })
   courses: Course[]
 
   @OneToMany(() => Lesson, (lessons) => lessons.user)
   lesson: Lesson[]
 
-  @ManyToMany(() => Class, (student) => student.mentors)
+  @ManyToMany(() => Class, (student) => student.mentors, {
+    onDelete: 'CASCADE',
+  })
   classes: Class[]
 
   @OneToMany(() => CourseUnit, (courseUnit) => courseUnit.user)
   courseUnits: CourseUnit[]
 
-  @ManyToMany(() => Lesson, (lesson) => lesson.authors)
+  @ManyToMany(() => Lesson, (lesson) => lesson.authors, {
+    onDelete: 'CASCADE',
+  })
   lessons: Lesson[]
 
   @OneToMany(() => Assigment, (assigment) => assigment.creator)
@@ -86,11 +94,15 @@ export class User extends BaseEntity {
   @OneToMany(() => LessonContent, (content) => content.creator)
   lesson_contents: LessonContent[]
 
-  @OneToOne(() => Student, (student) => student.account)
+  @OneToOne(() => Student, (student) => student.account, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   student_profile: Student
 
-  @OneToOne(() => UserActivity, (activity) => activity.user)
+  @OneToOne(() => UserActivity, (activity) => activity.user, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   activity: UserActivity
 

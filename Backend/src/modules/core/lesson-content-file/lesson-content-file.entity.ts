@@ -28,6 +28,8 @@ export class LessonContentFile extends BaseEntity {
   @Column({ type: 'boolean', default: true })
   active: boolean
 
-  @ManyToOne(() => LessonContent, (lessonContent) => lessonContent.files)
+  @ManyToOne(() => LessonContent, (lessonContent) => lessonContent.files, {
+    onDelete: 'CASCADE',
+  })
   lessonContent: LessonContent
 }
