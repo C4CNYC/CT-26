@@ -43,6 +43,7 @@ cd Backend
 yarn start:dev     # Development server
 yarn migration:run         # Run migrations
 yarn migration:generate    # Generate from entity changes
+yarn test          # Unit tests (jest, src/**/*.spec.ts)
 ```
 
 ### Frontend
@@ -63,7 +64,7 @@ yarn dev          # Development server (port 8080)
 - `src/modules/core/` - Entities + core services
 - `src/modules/managers/` - Business logic coordination
 - `src/old-auth/` - JWT auth, guards, strategies
-- `src/providers/` - External integrations (S3, Google Auth, OpenAI, Unsplash proxy at `/unsplash/image`). Netlify edge-proxies `codetribe.ai/unsplash/WxH/:query` -> backend `/unsplash/image` (square `WxH` dims; non-square needs a backend path route, pending backend deploy)
+- `src/providers/` - External integrations (S3, Google Auth, OpenAI, Claude through the AI SDK in `claude/claude-models.ts`, Unsplash proxy at `/unsplash/image`). Netlify edge-proxies `codetribe.ai/unsplash/WxH/:query` -> backend `/unsplash/image` (square `WxH` dims; non-square needs a backend path route, pending backend deploy)
 - `src/middlewares/` - Tenant resolution via `OrgMiddleware` (reads `x-tenant-id` header)
 
 **Multi-Tenancy**: Organization-based. `OrgMiddleware` injects `org_id`, `org_slug`, `school_id` into request using `RequestWithMeta` interface. Routes `unsplash/*`, `jokes/*`, `health`, `tenant/:slug` are excluded from org middleware.
@@ -127,6 +128,7 @@ source config/dokploy.env
 
 **Backend**:
 - Use DTOs with class-validator for validation
+- Lesson AI (2026-11-09, foundation for the Claude lesson agent): the `lesson-chat-messages` table keeps each lesson's AI chat as AI SDK `UIMessage` jsonb; `modules/managers/lesson-ai/slide-checks.ts` checks slides with the code panel's checker rules
 - Manager services injected via NestJS DI
 - Pattern: API → Manager → Core Service → Entity
 - `TeacherSchoolSetupService` (school-manager module): shared service for teacher school creation — checks pending school invites before creating new school. Used by both `auth-manager` and `auth-google-manager`.
