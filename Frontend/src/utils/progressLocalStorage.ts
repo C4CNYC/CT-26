@@ -31,13 +31,9 @@ export function progressGuestSet(lessonId: string, progress: IProgressGuest) {
 }
 export function progressGuestSetValidation({
   lessonId,
-  courseId,
-  moduleId,
   slideId,
 }: {
   lessonId: string
-  courseId: string
-  moduleId: string
   slideId: string
 }) {
   let cl = progressGuestGetAll(lessonId)
@@ -46,8 +42,6 @@ export function progressGuestSetValidation({
   if (!found) {
     cl.challanges.push({
       slideId,
-      courseId,
-      moduleId,
     })
     cl.numberOfCompletedChallenges += 1
     progressGuestSet(lessonId, cl)

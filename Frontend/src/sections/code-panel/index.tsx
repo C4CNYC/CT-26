@@ -270,16 +270,12 @@ export function CodePanelLayout(): ReactElement | null {
     if (!profile) {
       progressGuestSetValidation({
         lessonId: lesson?.id || '',
-        courseId: router.query.courseId as string,
-        moduleId: router.query.unitId as string,
         slideId: lessonContentId,
       })
       return
     }
     try {
       await completeLesson({
-        id: router.query.courseId as string,
-        module_id: router.query.unitId as string,
         lesson_content_id: lessonContentId,
         code,
       }).unwrap()
