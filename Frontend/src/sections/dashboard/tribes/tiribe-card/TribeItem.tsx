@@ -50,7 +50,7 @@ export default function TribeItem({ tribe }: ITribeItemProps): React.ReactElemen
           display: 'flex',
           justifyContent: 'flex-end',
           p: '5px',
-          background: getLinearGradient(tribe.cover ?? '#784af4'),
+          background: getLinearGradient(tribe.cover || '#784af4'),
         }}
       >
         <Chip

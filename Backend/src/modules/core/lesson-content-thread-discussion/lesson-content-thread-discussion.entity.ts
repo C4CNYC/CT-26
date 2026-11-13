@@ -12,10 +12,14 @@ export class LessonContentThreadDiscussion extends BaseEntity {
   @Column({ type: 'varchar' })
   message: string
 
-  @ManyToOne(() => LessonContentThread, (thread) => thread.discussions)
+  @ManyToOne(() => LessonContentThread, (thread) => thread.discussions, {
+    onDelete: 'CASCADE',
+  })
   thread: LessonContentThread
 
-  @ManyToOne(() => Student, (student) => student.discussions)
+  @ManyToOne(() => Student, (student) => student.discussions, {
+    onDelete: 'CASCADE',
+  })
   owner: Student
 
   @OneToMany(

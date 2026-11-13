@@ -33,8 +33,4 @@ export class StudentManagerService {
       username: dto.email,
     })
   }
-
-  async deleteStudent(id: string): Promise<void> {
-    await this.studentService.remove(id)
-  }
 }

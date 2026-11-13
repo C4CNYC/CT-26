@@ -17,6 +17,8 @@ export class StudentSocial extends BaseEntity {
   @Column({ type: 'varchar' })
   link: string
 
-  @ManyToOne(() => Student, (student) => student.socials)
+  @ManyToOne(() => Student, (student) => student.socials, {
+    onDelete: 'CASCADE',
+  })
   student: Student
 }

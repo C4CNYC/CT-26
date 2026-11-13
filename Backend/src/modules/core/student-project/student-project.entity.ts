@@ -28,6 +28,8 @@ export class StudentProject extends BaseEntity {
   @Column({ type: 'boolean', default: false })
   public: boolean
 
-  @ManyToOne(() => Student, (student) => student.projects)
+  @ManyToOne(() => Student, (student) => student.projects, {
+    onDelete: 'CASCADE',
+  })
   student: Student
 }

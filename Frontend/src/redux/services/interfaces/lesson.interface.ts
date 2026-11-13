@@ -50,6 +50,10 @@ export interface ILesson {
   userId?: string
 }
 
+export interface ILessonWithCoursePlacement extends ILesson {
+  coursePlacement: { courseId: string; unitId: string } | null
+}
+
 export interface IStudentProgress {
   lessonId: string
   numberOfCompletedChallenges: number
@@ -57,5 +61,5 @@ export interface IStudentProgress {
 export interface IProgressGuest {
   lastSlide: number
   numberOfCompletedChallenges: number
-  challanges: Array<{ courseId: string; moduleId: string; slideId: string; processed?: boolean }>
+  challanges: Array<{ slideId: string; processed?: boolean }>
 }

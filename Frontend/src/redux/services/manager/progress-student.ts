@@ -12,11 +12,8 @@ const extendedApi = managerApi.injectEndpoints({
       }),
       providesTags: ['Progress'],
     }),
-    completeLesson: builder.mutation<
-      string,
-      { id: string; lesson_content_id: string; module_id: string; code?: string }
-    >({
-      query: ({ id, ...body }) => ({
+    completeLesson: builder.mutation<string, { lesson_content_id: string; code?: string }>({
+      query: (body) => ({
         url: `/student/progress/complete-chalange`,
         method: 'POST',
         body,

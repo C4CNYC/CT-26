@@ -16,6 +16,8 @@ import { SchoolClassStudentsManagerService } from '../school-class-students-mana
 
 import { SchoolMangerService } from './school-manager.service'
 
+const TEACHER_STARTER_LESSON_ID = 'ce657991-8cfd-4481-ad86-c268e8200ed3'
+
 @Injectable()
 export class TeacherSchoolSetupService {
   constructor(
@@ -50,7 +52,7 @@ export class TeacherSchoolSetupService {
       tenantId,
     )
 
-    await this.schoolClassManagerService.createClass(school.id, {
+    const schoolClass = await this.schoolClassManagerService.createClass(school.id, {
       name: uniqueNamesGenerator({
         dictionaries: [adjectives, colors, animals],
       }),
@@ -59,16 +61,17 @@ export class TeacherSchoolSetupService {
     })
 
     await this.schoolManager.addTeacher(school.id, { user_id: user.id })
-    const schoolClass = await this.schoolClassManagerService.getClass(school.classes[0].id)
     const student = await this.studentService.findOne({ where: { account: { id: user.id } } })
-    await this.schoolClassStudentsManagerService.addStudentToClass(schoolClass.id, { student_id: student.id })
+    if (student) {
+      await this.schoolClassStudentsManagerService.addStudentToClass(schoolClass.id, { student_id: student.id })
+    }
 
-    void this.deepAssignService.CloneLessonToTeacher(
+    this.deepAssignService.CloneLessonToTeacher(
       {
         user_id: user.id,
-        lesson_id: '328ec3d2-a8e6-4503-b288-92895c402085',
+        lesson_id: TEACHER_STARTER_LESSON_ID,
       },
       school.id,
-    )
+    ).catch(() => undefined)
   }
 }

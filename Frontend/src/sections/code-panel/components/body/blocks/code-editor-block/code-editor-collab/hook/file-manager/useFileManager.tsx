@@ -305,8 +305,6 @@ export const useFileManagerOrj = () => {
         ?.filter((content) => content.validations.length > 0) ?? []
     for (let content of contentsWithValidations) {
       await completeLesson({
-        id: query.courseId as string,
-        module_id: query.unit_id as string,
         lesson_content_id: content.id as string,
         code: 'really',
       })

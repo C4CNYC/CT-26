@@ -132,7 +132,7 @@ export default function DefaultClassInfo({
         {/* <ClassInfoToggle /> */}
         <Stack
           sx={() => ({
-            ...getClassInfoWrapperSx(classData?.cover ?? '#75CF6D'),
+            ...getClassInfoWrapperSx(classData?.cover || '#75CF6D'),
           })}
         >
           <Container

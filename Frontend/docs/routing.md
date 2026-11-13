@@ -21,7 +21,7 @@ Next.js pages directory `/pages`
 - `/api/s3-upload.ts`
 - `/api/unsplash/[[...params]].ts`
 - `/api/tinymce/[...file].ts`
-- `/api/jokes/[[...params]].ts`
+- `/api/jokes/random.ts`
 
 ## Protected Routes
 - `src/auth/AuthGuard.tsx`

@@ -19,7 +19,7 @@ RTK Query for API calls via Redux services
 - `/api/s3-upload.ts` - File uploads
 - `/api/unsplash/[[...params]].ts` - Image search
 - `/api/tinymce/[...file].ts` - Rich text editor assets
-- `/api/jokes/[[...params]].ts` - External API proxy
+- `/api/jokes/random.ts` - Random joke, forwarded from the backend's `GET /jokes/random`
 
 ## Data Flow
 RTK Query handles caching, invalidation, and loading states

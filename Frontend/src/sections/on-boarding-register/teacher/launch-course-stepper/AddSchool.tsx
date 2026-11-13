@@ -49,6 +49,7 @@ export default function AddSchool(): React.ReactElement {
     ? localStorage.getItem('AiGenerateLessonData')
     : null
   const defaultCountry = countries.find((ct) => ct.code === 'US') ?? countries[0]
+  const defaultSchoolType = capitalize(SchoolType.Middle_School) as SchoolType
 
   const CreateSchoolSchema = Yup.object().shape({
     schoolName: Yup.string().required(translate('required_name')),
@@ -79,6 +80,7 @@ export default function AddSchool(): React.ReactElement {
     if (!isLoading && data) {
       methods.reset({
         schoolName: data?.data?.[0].name ?? '',
+        type: data?.data?.[0].type ?? defaultSchoolType,
         city: data?.data?.[0].city ?? 'New York City',
         zip: data?.data?.[0].zip ?? '',
         country: data?.data?.[0].country ?? defaultCountry.code.toLowerCase(),
@@ -93,7 +95,7 @@ export default function AddSchool(): React.ReactElement {
     mode: 'all',
     defaultValues: {
       schoolName: '',
-      type: capitalize(SchoolType.Middle_School) as SchoolType,
+      type: defaultSchoolType,
     },
   })
 

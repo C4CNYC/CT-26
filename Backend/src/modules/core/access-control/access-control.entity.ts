@@ -7,7 +7,9 @@ const ALIAS = 'access-control'
 
 @Entity({ name: ALIAS })
 export class AccessControlEntity extends BaseEntity {
-  @ManyToOne(() => User, (user) => user.accessControl)
+  @ManyToOne(() => User, (user) => user.accessControl, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: User
 

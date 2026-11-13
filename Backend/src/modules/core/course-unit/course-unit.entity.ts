@@ -65,7 +65,9 @@ export class CourseUnit extends BaseEntity {
   })
   courses: Course[]
 
-  @ManyToOne(() => User, (user) => user.courseUnits)
+  @ManyToOne(() => User, (user) => user.courseUnits, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   user: User
 

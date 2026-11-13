@@ -10,7 +10,6 @@ import { ScheduleModule } from '@nestjs/schedule'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { FeedbackModule } from '@/api/feedback/feedback.module'
-import { JokesModule } from '@/providers/jokes/jokes.module'
 import { UnsplashModule } from '@/providers/unsplash/unsplash.module'
 import { OldAuthUserApiModule } from '@/api/old-auth/old-auth-user-api.module'
 import { PublicApiModule } from '@/api/public/public-api.module'
@@ -87,7 +86,6 @@ console.log('DB_DEV:', process.env.DATABASE_URL);
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
     EmailsManagerModule,
-    JokesModule,
     UnsplashModule,
   ],
 })

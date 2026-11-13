@@ -242,22 +242,40 @@ export function CodePanelLayout(): ReactElement | null {
     }
   }, [courseContent, router.query.courseId, router.query.unitId, router.query.lessonId])
 
+  useEffect(() => {
+    if (router.query.courseId || lesson?.id !== lessonIdFromRoute) return
+
+    if (lesson.coursePlacement) {
+      void router.replace({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          courseId: lesson.coursePlacement.courseId,
+          unitId: lesson.coursePlacement.unitId,
+        },
+      })
+      return
+    }
+
+    dispatch(setLessonId(lesson.id))
+
+    return () => {
+      dispatch(setLessonId(''))
+    }
+  }, [router.query.courseId, lesson, lessonIdFromRoute])
+
   const onSubmitChallenge = async (lessonContentId: string, code?: string): Promise<void> => {
     dispatch(setIsActivateCompeated(false))
 
     if (!profile) {
       progressGuestSetValidation({
         lessonId: lesson?.id || '',
-        courseId: router.query.courseId as string,
-        moduleId: router.query.unitId as string,
         slideId: lessonContentId,
       })
       return
     }
     try {
       await completeLesson({
-        id: router.query.courseId as string,
-        module_id: router.query.unitId as string,
         lesson_content_id: lessonContentId,
         code,
       }).unwrap()
