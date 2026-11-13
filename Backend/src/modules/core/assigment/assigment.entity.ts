@@ -93,7 +93,9 @@ export class Assigment extends BaseEntity {
   })
   lesson: Lesson
 
-  @ManyToOne(() => User, (user) => user.assigments)
+  @ManyToOne(() => User, (user) => user.assigments, {
+    onDelete: 'SET NULL',
+  })
   creator: User
 
   @ManyToOne(() => CourseUnit, (unit) => unit.assigments)

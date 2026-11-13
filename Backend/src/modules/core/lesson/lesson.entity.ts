@@ -58,7 +58,9 @@ export class Lesson extends BaseEntity {
   @Column({ type: 'varchar', nullable: true })
   head: string
 
-  @ManyToOne(() => User, (user) => user.lessons)
+  @ManyToOne(() => User, (user) => user.lessons, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   user: User
 

@@ -54,10 +54,14 @@ export class Class extends BaseEntity {
   @ManyToOne(() => School, (school) => school.classes)
   school: School
 
-  @ManyToMany(() => Student, (student) => student.classes)
+  @ManyToMany(() => Student, (student) => student.classes, {
+    onDelete: 'CASCADE',
+  })
   students: Student[]
 
-  @ManyToMany(() => User, (student) => student.classes)
+  @ManyToMany(() => User, (student) => student.classes, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable({ name: 'class_mentors' })
   mentors: User[]
 
@@ -68,7 +72,9 @@ export class Class extends BaseEntity {
   @JoinColumn({ name: 'class-setting' })
   setting: ClassSetting
 
-  @ManyToMany(() => Course, (course) => course.classes)
+  @ManyToMany(() => Course, (course) => course.classes, {
+    onDelete: 'CASCADE',
+  })
   courses: Course[]
 
   @ManyToMany(() => Assigment, (assigment) => assigment.assignee_classes, {
