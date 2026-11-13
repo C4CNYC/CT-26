@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { differenceInSeconds } from 'date-fns'
-import JoyRide, { ACTIONS, type CallBackProps, EVENTS, STATUS } from 'react-joyride'
+import { ACTIONS, type EventData, EVENTS, Joyride, STATUS } from 'react-joyride'
 import { useDispatch } from 'react-redux'
 
 import useIsDesktop from '@/hooks/useIsDesktop'
@@ -12,6 +12,7 @@ import { useUpdateMeMetaFlagMutation } from '@root/src/redux/services/auth'
 
 import CopyLinkModal from '../../code-panel/components/modals/CopyLinkModal'
 import WelcomeCodePanelModal from '../../code-panel/components/modals/WelcomeCodePanelModal'
+import { TOUR_JOYRIDE_SHARED_PROPS } from '../tour-joyride-shared-props'
 import TooltipTourCodePanel from '../tour-tooltip'
 
 import { AI_GENERATOR_TOUR_DECKTOP, AI_GENERATOR_TOUR_MOBILE } from './config'
@@ -35,7 +36,7 @@ export const AIGeneratorTour = ({ withModals }: AIGeneratorTourProps) => {
   const { data: userData, isLoading } = useProfileQuery(null as unknown as void, { skip: !profile })
   const [updateMeMetaFlag] = useUpdateMeMetaFlagMutation()
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
+  const handleJoyrideCallback = (data: EventData) => {
     const { action, index, status, type } = data
     if (STATUSES.includes(status as string) && isTourStarted) {
       dispatch(setStartTour(false))
@@ -81,15 +82,13 @@ export const AIGeneratorTour = ({ withModals }: AIGeneratorTourProps) => {
 
   return (
     <>
-      <JoyRide
-        callback={handleJoyrideCallback}
+      <Joyride
+        onEvent={handleJoyrideCallback}
         run={isTourStarted}
         tooltipComponent={TooltipTourCodePanel}
         steps={isDesktop ? AI_GENERATOR_TOUR_DECKTOP : AI_GENERATOR_TOUR_MOBILE}
-        showSkipButton={false}
-        showProgress
         stepIndex={slideIndex}
-        styles={JOY_RIDE_OPTIONS}
+        {...TOUR_JOYRIDE_SHARED_PROPS}
       />
       {withModals && isReadyForModals ? (
         <>
@@ -100,7 +99,5 @@ export const AIGeneratorTour = ({ withModals }: AIGeneratorTourProps) => {
     </>
   )
 }
-
-const JOY_RIDE_OPTIONS = { options: { zIndex: 10000 } }
 
 export default AIGeneratorTour

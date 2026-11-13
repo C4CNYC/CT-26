@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import JoyRide, { ACTIONS, type CallBackProps, EVENTS, STATUS } from 'react-joyride'
+import { ACTIONS, type EventData, EVENTS, Joyride, STATUS } from 'react-joyride'
 import { useDispatch } from 'react-redux'
 
 import { useProfileQuery } from '@/redux/services/auth'
@@ -9,6 +9,7 @@ import { useSelector } from '@/redux/store'
 import { useUpdateMeMetaFlagMutation } from '@root/src/redux/services/auth'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
+import { TOUR_JOYRIDE_SHARED_PROPS } from '../tour-joyride-shared-props'
 import TooltipTourCodePanel from '../tour-tooltip'
 
 import { getLessonCreationSteps } from './config'
@@ -32,7 +33,7 @@ export const LessonCreationIntro = ({ delay }: LessonCreationIntroProps) => {
   const { data: userData, isLoading } = useProfileQuery(null as unknown as void, { skip: !profile })
   const [updateMeMetaFlag] = useUpdateMeMetaFlagMutation()
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
+  const handleJoyrideCallback = (data: EventData) => {
     const { action, index, status, type } = data
     if (STATUSES.includes(status as string) && isTourStarted) {
       dispatch(setStartTour(false))
@@ -72,22 +73,16 @@ export const LessonCreationIntro = ({ delay }: LessonCreationIntroProps) => {
   }, [])
 
   return isHidden ? null : (
-    <JoyRide
-      callback={handleJoyrideCallback}
+    <Joyride
+      onEvent={handleJoyrideCallback}
       run={isTourStarted}
       tooltipComponent={TooltipTourCodePanel}
       steps={getLessonCreationSteps(translate)}
-      showSkipButton={false}
-      showProgress
       stepIndex={slideIndex}
-      styles={JOY_RIDE_OPTIONS}
-      floaterProps={{
-        disableAnimation: true,
-      }}
+      {...TOUR_JOYRIDE_SHARED_PROPS}
+      styles={{ tooltip: { transition: 'none' } }}
     />
   )
 }
-
-const JOY_RIDE_OPTIONS = { options: { zIndex: 10000 } }
 
 export default LessonCreationIntro

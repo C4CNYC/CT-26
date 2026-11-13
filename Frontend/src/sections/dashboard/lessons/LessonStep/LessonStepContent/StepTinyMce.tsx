@@ -4,7 +4,7 @@ import { Box } from '@mui/system'
 import { Editor } from '@tinymce/tinymce-react'
 import { useAtom } from 'jotai/react'
 
-import { ResizerUi } from '@root/src/components'
+import { ResizableSideBySidePanes } from '@root/src/components'
 
 import { lessonViewAtom } from '../lesson-atoms/lesson-view-atom'
 
@@ -47,11 +47,10 @@ export function StepTinyMce(props: EditorSelectorProps) {
   }
   return (
     <>
-      <ResizerUi
-        split='vertical'
-        defaultSize={isAllColumnsVisible ? '70%' : '100%'}
-        minSize={480}
-        maxSize={750}
+      <ResizableSideBySidePanes
+        leftPaneDefaultWidth={isAllColumnsVisible ? '70%' : '100%'}
+        leftPaneMinWidth={480}
+        leftPaneMaxWidth={750}
       >
         <Box className='lessonCreationStep3'>
           <style>{`.tox-promotion{filter:opacity(0)}`}</style>
@@ -338,7 +337,7 @@ export function StepTinyMce(props: EditorSelectorProps) {
             bgColor={props.bgColor}
           />
         </Box>
-      </ResizerUi>
+      </ResizableSideBySidePanes>
     </>
   )
 }

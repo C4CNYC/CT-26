@@ -15,7 +15,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): TourSte
         {translate('cp_teacher_tour.0.body')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'center' as const,
     button: translate('cp_teacher_tour.0.button'),
   },
@@ -27,7 +27,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): TourSte
         <p>{translate('cp_teacher_tour.1.body')}</p>
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
     button: translate('cp_teacher_tour.1.button'),
   },
@@ -47,7 +47,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): TourSte
         {translate('cp_teacher_tour.2.body')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
     button: translate('cp_teacher_tour.2.button'),
   },
@@ -55,7 +55,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): TourSte
     target: '.ChatPlace',
     title: <div>{translate('cp_teacher_tour.3.title')}</div>,
     content: <div>{translate('cp_teacher_tour.3.body')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'left' as const,
     button: translate('cp_teacher_tour.3.button'),
   },
@@ -67,7 +67,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): TourSte
         <p> {translate('cp_teacher_tour.4.body')}</p>
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
     button: translate('cp_teacher_tour.4.button'),
   },
@@ -75,7 +75,7 @@ export const getTourStepsDesktop = (translate: (key: string) => string): TourSte
     target: '.feedback-button',
     title: <div>{translate('cp_teacher_tour.5.title')}</div>,
     content: <Box sx={{ py: 1, textAlign: 'left' }}>{translate('cp_teacher_tour.5.body')}</Box>,
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
     button: translate('cp_teacher_tour.5.button'),
   },
@@ -95,14 +95,14 @@ export const getTourStepsMobile = (translate: (key: string) => string): Step[] =
         {translate('intro_tour_step_1_mobile_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'center' as const,
   },
   {
     target: '.sliderTour',
     title: <div>{translate('intro_tour_step_2_mobile_title')}</div>,
     content: <div>{translate('intro_tour_step_2_mobile_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
   },
   {
     target: '.sliderTour',
@@ -117,7 +117,7 @@ export const getTourStepsMobile = (translate: (key: string) => string): Step[] =
         {translate('intro_tour_step_3_mobile_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'center' as const,
   },
   {
@@ -133,20 +133,20 @@ export const getTourStepsMobile = (translate: (key: string) => string): Step[] =
         {translate('intro_tour_step_4_mobile_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
   },
   {
     target: '.smallSliderTour',
     title: <div>{translate('intro_tour_step_5_mobile_title')}</div>,
     content: <div>{translate('intro_tour_step_5_mobile_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
   },
   {
     target: '.lessonsTourMobile',
     title: <div>{translate('intro_tour_step_6_mobile_title')}</div>,
     content: <div>{translate('intro_tour_step_6_mobile_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
   },
   {
@@ -157,7 +157,7 @@ export const getTourStepsMobile = (translate: (key: string) => string): Step[] =
         {translate('intro_tour_step_7_mobile_subtitle')}
       </Box>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'top' as const,
   },
 ]

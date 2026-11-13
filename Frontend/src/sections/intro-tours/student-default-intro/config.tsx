@@ -16,21 +16,21 @@ export const getDefaultStudentIntroSteps = (translate: (key: string) => string):
         {translate('intro_tour_default_student_step_1_subtitle')}
       </div>
     ),
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
   {
     target: '.defaultIntroStudentStep2',
     title: <div>{translate('intro_tour_default_student_step_2_title')}</div>,
     content: <div> {translate('intro_tour_default_student_step_2_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
   {
     target: '.defaultIntroStudentStep3',
     title: <div>{translate('intro_tour_default_student_step_3_title')}</div>,
     content: <div> {translate('intro_tour_default_student_step_3_subtitle')}</div>,
-    disableBeacon: true,
+    skipBeacon: true,
     placement: 'right' as const,
   },
 ]

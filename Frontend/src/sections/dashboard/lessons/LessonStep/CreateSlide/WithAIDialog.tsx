@@ -66,7 +66,7 @@ export function WithAIDialog({ open, onClose, lessonId, lessonName }: Props) {
         add_response_format: 'false',
       })
 
-      if ('error' in aiResponse && 'data' in aiResponse.error) {
+      if ('error' in aiResponse && aiResponse.error && 'data' in aiResponse.error) {
         let newLesson =
           body.slice(0, start.index - 3) +
           stripQuotesFromAiResponse(aiResponse.error.data as string) +

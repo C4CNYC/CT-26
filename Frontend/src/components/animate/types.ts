@@ -1,42 +1,30 @@
-type EaseType =
-  | 'linear'
-  | 'easeIn'
-  | 'easeOut'
-  | 'easeInOut'
-  | 'circIn'
-  | 'circOut'
-  | 'circInOut'
-  | 'backIn'
-  | 'backOut'
-  | 'backInOut'
-  | 'anticipate'
-  | number[]
+import { type Easing } from 'framer-motion'
 
 export interface VariantsType {
   distance?: number
   durationIn?: number
   durationOut?: number
-  easeIn?: EaseType
-  easeOut?: EaseType
+  easeIn?: Easing
+  easeOut?: Easing
 }
 
 export interface TranHoverType {
   duration?: number
-  ease?: EaseType
+  ease?: Easing
 }
 
 export interface TranEnterType {
   durationIn?: number
-  easeIn?: EaseType
+  easeIn?: Easing
 }
 
 export interface TranExitType {
   durationOut?: number
-  easeOut?: EaseType
+  easeOut?: Easing
 }
 
 export interface BackgroundType {
   colors?: string[]
   duration?: number
-  ease?: EaseType
+  ease?: Easing
 }

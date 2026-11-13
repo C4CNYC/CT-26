@@ -28,7 +28,6 @@ export const Scrollbar = memo(
     return (
       <StyledRootScrollbar>
         <StyledScrollbar
-          timeout={500}
           clickOnTrack={false}
           sx={sx}
           {...other}

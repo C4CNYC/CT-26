@@ -7,7 +7,7 @@ import { dracula } from '@uiw/codemirror-theme-dracula'
 import CodeMirror, { EditorView } from '@uiw/react-codemirror'
 import { useAtom } from 'jotai'
 
-import { ResizerUi } from '@/components'
+import { ResizableSideBySidePanes } from '@/components'
 import { useDebounceCallback } from '@/hooks'
 import { ILessonContent } from '@/redux/services/interfaces/courseUnits.interface'
 import { IIntegration } from '@/redux/services/interfaces/integration.interface'
@@ -72,11 +72,10 @@ export default function StepCode({
   }, [content])
 
   return (
-    <ResizerUi
-      split='vertical'
-      defaultSize={isAllColumnsVisible ? '70%' : '100%'}
-      minSize={400}
-      maxSize={750}
+    <ResizableSideBySidePanes
+      leftPaneDefaultWidth={isAllColumnsVisible ? '70%' : '100%'}
+      leftPaneMinWidth={400}
+      leftPaneMaxWidth={750}
     >
       <Box
         position='relative'
@@ -133,6 +132,6 @@ export default function StepCode({
           />
         </Box>
       )}
-    </ResizerUi>
+    </ResizableSideBySidePanes>
   )
 }

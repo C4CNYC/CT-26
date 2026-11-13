@@ -86,30 +86,24 @@ export default function AssignmentsTableToolbar({
         label={translate('assignments_start_date')}
         value={filterStartDate}
         onChange={onFilterStartDate}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            fullWidth
-            sx={{
-              maxWidth: { md: INPUT_WIDTH },
-            }}
-          />
-        )}
+        slotProps={{
+          textField: {
+            fullWidth: true,
+            sx: { maxWidth: { md: INPUT_WIDTH } },
+          },
+        }}
       />
 
       <DatePicker
         label={translate('assignments_end_date')}
         value={filterEndDate}
         onChange={onFilterEndDate}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            fullWidth
-            sx={{
-              maxWidth: { md: INPUT_WIDTH },
-            }}
-          />
-        )}
+        slotProps={{
+          textField: {
+            fullWidth: true,
+            sx: { maxWidth: { md: INPUT_WIDTH } },
+          },
+        }}
       />
 
       <TextField

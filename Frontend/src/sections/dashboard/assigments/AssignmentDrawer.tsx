@@ -10,7 +10,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  TextField,
   Typography,
 } from '@mui/material'
 import { useTheme } from '@mui/system'
@@ -173,31 +172,26 @@ export default function AssignmentDrawer({
               control={methods.control}
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <DatePicker
-                  value={value}
-                  onChange={(event) => {
-                    onChange(event as string | React.ChangeEvent<Element>)
+                  value={value ? new Date(value) : null}
+                  onChange={onChange}
+                  slotProps={{
+                    textField: {
+                      error: !!error,
+                      helperText: error ? (
+                        <Typography
+                          variant='caption'
+                          sx={{
+                            fontStyle: 'italic',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            color: error ? theme.palette.error.main : 'error',
+                          }}
+                        >
+                          {error?.message}
+                        </Typography>
+                      ) : null,
+                    },
                   }}
-                  renderInput={(params) => (
-                    <TextField
-                      error={!!error}
-                      helperText={
-                        error ? (
-                          <Typography
-                            variant='caption'
-                            sx={{
-                              fontStyle: 'italic',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              color: error ? theme.palette.error.main : 'error',
-                            }}
-                          >
-                            {error?.message}
-                          </Typography>
-                        ) : null
-                      }
-                      {...params}
-                    />
-                  )}
                 />
               )}
             />
@@ -211,31 +205,26 @@ export default function AssignmentDrawer({
               control={methods.control}
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <DatePicker
-                  value={value}
-                  onChange={(event) => {
-                    onChange(event as string | React.ChangeEvent<Element>)
+                  value={value ? new Date(value) : null}
+                  onChange={onChange}
+                  slotProps={{
+                    textField: {
+                      error: !!error,
+                      helperText: error ? (
+                        <Typography
+                          variant='caption'
+                          sx={{
+                            fontStyle: 'italic',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            color: error ? theme.palette.error.main : 'error',
+                          }}
+                        >
+                          {error?.message}
+                        </Typography>
+                      ) : null,
+                    },
                   }}
-                  renderInput={(params) => (
-                    <TextField
-                      error={!!error}
-                      helperText={
-                        error ? (
-                          <Typography
-                            variant='caption'
-                            sx={{
-                              fontStyle: 'italic',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              color: error ? theme.palette.error.main : 'error',
-                            }}
-                          >
-                            {error?.message}
-                          </Typography>
-                        ) : null
-                      }
-                      {...params}
-                    />
-                  )}
                 />
               )}
             />
@@ -249,31 +238,26 @@ export default function AssignmentDrawer({
               control={methods.control}
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <DatePicker
-                  value={value}
-                  onChange={(event) => {
-                    onChange(event as string | React.ChangeEvent<Element>)
+                  value={value ? new Date(value) : null}
+                  onChange={onChange}
+                  slotProps={{
+                    textField: {
+                      error: !!error,
+                      helperText: error ? (
+                        <Typography
+                          variant='caption'
+                          sx={{
+                            fontStyle: 'italic',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            color: error ? theme.palette.error.main : 'error',
+                          }}
+                        >
+                          {error?.message}
+                        </Typography>
+                      ) : null,
+                    },
                   }}
-                  renderInput={(params) => (
-                    <TextField
-                      error={!!error}
-                      helperText={
-                        error ? (
-                          <Typography
-                            variant='caption'
-                            sx={{
-                              fontStyle: 'italic',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              color: error ? theme.palette.error.main : 'error',
-                            }}
-                          >
-                            {error?.message}
-                          </Typography>
-                        ) : null
-                      }
-                      {...params}
-                    />
-                  )}
                 />
               )}
             />
