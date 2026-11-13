@@ -1,8 +1,9 @@
 import { alpha } from '@mui/system'
 
 export const getLinearGradient = (coverColor: string) => {
-  const baseColor = alpha(coverColor ?? '#333333', 0.6)
-  const gradient = `linear-gradient(75deg, ${coverColor} 22% , ${baseColor} 34% , ${baseColor} 58%, ${coverColor} 90%)`
+  const color = coverColor || '#333333'
+  const baseColor = alpha(color, 0.6)
+  const gradient = `linear-gradient(75deg, ${color} 22% , ${baseColor} 34% , ${baseColor} 58%, ${color} 90%)`
 
   return gradient
 }
