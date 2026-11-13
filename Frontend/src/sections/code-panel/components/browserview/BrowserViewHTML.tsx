@@ -31,7 +31,8 @@ export function BrowserViewHTML({
   const iFrameRef = useRef<HTMLIFrameElement>(null)
   const integrations = lesson?.integrations || []
   const debounceCallback = useDebounceCallback(500)
-  const [previousIframeKey, setPreviousIframeKey] = useState<string | number | undefined>(iframeKey)
+  const [lastDrawn, setLastDrawn] = useState({ fileSetKey: '', iframeKey })
+  const fileSetKey = files.map((file) => `${file.id}:${file.lessonContentId}`).join()
   let validations = lessonContent?.find((lc) => lc.id == currentSlideId)?.validations || []
 
   let document = useMemo(() => {
@@ -115,12 +116,15 @@ export function BrowserViewHTML({
       debounceCallback(() => {
         iFrameRef.current!.srcdoc = generateHtml(document)
       })
-    } else if (iframeKey !== previousIframeKey) {
+    } else if (
+      fileSetKey &&
+      (fileSetKey !== lastDrawn.fileSetKey || iframeKey !== lastDrawn.iframeKey)
+    ) {
       // if autoRun is disabled
       iFrameRef.current.srcdoc = generateHtml(document)
-      setPreviousIframeKey(iframeKey)
+      setLastDrawn({ fileSetKey, iframeKey })
     }
-  }, [document, autoRun, iframeKey, previousIframeKey])
+  }, [document, autoRun, iframeKey, fileSetKey, lastDrawn])
 
   const generateHtml = (doc: CodeDocument) => {
     const {
