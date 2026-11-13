@@ -11,6 +11,11 @@ import { PageDto } from '../../../utils/dtos/page.dto'
 import { CourseProgress } from '../course-progress/course-progress.entity'
 import { Course } from './course.entity'
 
+export interface LessonCoursePlacement {
+  courseId: string
+  unitId: string
+}
+
 @Injectable()
 export class CourseService extends BaseService<Course> {
   constructor(
@@ -525,5 +530,40 @@ export class CourseService extends BaseService<Course> {
     })
 
     return course
+  }
+
+  async findLessonCoursePlacement(
+    lesson_id: string,
+    student_id?: string,
+  ): Promise<LessonCoursePlacement | null> {
+    const query_builder = this.getRepository()
+      .createQueryBuilder('course')
+      .innerJoin('course.units', 'unit')
+      .innerJoin('unit.lessonToUnits', 'lessonToUnits')
+      .innerJoin('lessonToUnits.lesson', 'lesson')
+      .where('lesson.id = :lesson_id', { lesson_id })
+      .andWhere('course.active = true')
+      .andWhere('unit.active = true')
+      .andWhere('lesson.active = true')
+      .select(['course.id AS "courseId"', 'unit.id AS "unitId"'])
+
+    if (student_id)
+      query_builder
+        .leftJoin('course.classes', 'enrolledClass')
+        .leftJoin(
+          'enrolledClass.students',
+          'enrolledStudent',
+          'enrolledStudent.id = :student_id',
+          { student_id },
+        )
+        .orderBy('enrolledStudent.id', 'ASC', 'NULLS LAST')
+
+    const placement = await query_builder
+      .addOrderBy('course.createdAt', 'ASC')
+      .addOrderBy('unit.sort', 'ASC')
+      .limit(1)
+      .getRawOne<LessonCoursePlacement>()
+
+    return placement ?? null
   }
 }

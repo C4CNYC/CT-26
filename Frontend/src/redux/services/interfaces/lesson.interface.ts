@@ -50,6 +50,10 @@ export interface ILesson {
   userId?: string
 }
 
+export interface ILessonWithCoursePlacement extends ILesson {
+  coursePlacement: { courseId: string; unitId: string } | null
+}
+
 export interface IStudentProgress {
   lessonId: string
   numberOfCompletedChallenges: number
