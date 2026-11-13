@@ -132,6 +132,7 @@ export class AuthManagerService {
   async registerWithGoogle(
     dto: AuthGoogleRequestDto,
     tenant_id: string,
+    tenant_name: string,
   ): Promise<LoginedUser> {
     const user = await this.authGoogleManagerService.register(dto)
 
@@ -152,19 +153,11 @@ export class AuthManagerService {
       this.eventEmitter.emit(
         ApplicationEventEnum.CREATE_ORG,
         user.email,
-        tenant_id,
+        tenant_name,
       )
+    } else {
+      this.eventEmitter.emit(ApplicationEventEnum.CREATE_STUDENT, user.email)
     }
-
-    this.eventEmitter.emit(
-      dto.role == Role.Student
-        ? ApplicationEventEnum.CREATE_STUDENT
-        : ApplicationEventEnum.CREATE_ORG,
-      {
-        email: user.email,
-        user_id: user.id,
-      },
-    )
     return this.authService.buildAuthorizedResponse(user)
   }
 
