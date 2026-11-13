@@ -8,7 +8,9 @@ const ALIAS = 'class-student-pending'
 
 @Entity({ name: ALIAS })
 export class ClassStudentPending extends BaseEntity {
-  @ManyToOne(() => Student, (student) => student.pendings)
+  @ManyToOne(() => Student, (student) => student.pendings, {
+    onDelete: 'CASCADE',
+  })
   student: Student
 
   @ManyToOne(() => Class, (school_class) => school_class.pendings)

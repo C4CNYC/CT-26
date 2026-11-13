@@ -19,7 +19,9 @@ export class StudentLessonFile extends BaseEntity {
   @Column({ type: 'varchar', nullable: true })
   body: string
 
-  @ManyToOne(() => Student, (student) => student.lessonContentFiles)
+  @ManyToOne(() => Student, (student) => student.lessonContentFiles, {
+    onDelete: 'CASCADE',
+  })
   student: Student
 
   @ManyToOne(() => Lesson, (lesson) => lesson.studentFiles, {

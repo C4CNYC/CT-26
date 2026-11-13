@@ -21,7 +21,9 @@ export class LessonLastSlide extends BaseEntity {
   @JoinColumn({ name: 'lessonId' })
   public lesson: Lesson
 
-  @ManyToOne(() => Student, (user) => user.last_slides)
+  @ManyToOne(() => Student, (user) => user.last_slides, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'studentId' })
   user: Student
 }

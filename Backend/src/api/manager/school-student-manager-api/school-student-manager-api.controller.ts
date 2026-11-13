@@ -146,12 +146,14 @@ export class SchoolStudentManagerApiController {
 
   @Delete('/:id')
   async deleteStudent(
+    @Param('school_id', new ParseUUIDPipe()) school_id: string,
     @Param('id', new ParseUUIDPipe()) id: string,
     @Req() req: RequestWithMeta,
   ): Promise<MessageDto> {
     return await this.schoolStudentManagerApiService.deleteStudent(
+      school_id,
       id,
-      req.org_name,
+      req.user.id,
     )
   }
 }

@@ -17,8 +17,11 @@ import { CreateStudentDto } from '../../../api/manager/school-student-manager-ap
 import { InviteStudentDto } from '../../../api/manager/school-student-manager-api/dtos/invite-student.dto'
 import { SchoolSearchOptions } from '../../../api/manager/school-student-manager-api/dtos/school-search-options.dto'
 import { UpdateStudentDto } from '../../../api/manager/school-student-manager-api/dtos/update-student.dto'
+import { MessageDto } from '../../../utils/dtos/message.dto'
 import { PageDto } from '../../../utils/dtos/page.dto'
+import { Class } from '../../core/class/class.entity'
 import { ClassService } from '../../core/class/class.service'
+import { School } from '../../core/school/school.entity'
 import { SchoolService } from '../../core/school/school.service'
 import { Student } from '../../core/student/student.entity'
 import { StudentService } from '../../core/student/student.service'
@@ -285,17 +288,85 @@ export class SchoolStudentsManagerService {
     await this.studentService.update(student_id, dto)
   }
 
-  async deleteStudent(student_id: string, tenant_id: string): Promise<void> {
-    const student = await this.studentManagerService.getStudent(student_id)
+  // Removes the student from this school, and deletes the account only when nothing else ties it to the platform
+  async deleteStudent(
+    school_id: string,
+    student_id: string,
+    user_id: string,
+  ): Promise<MessageDto> {
+    await this.ensureUserCanManageSchool(user_id, school_id)
 
-    await this.studentManagerService.deleteStudent(student.id)
+    const student = await this.studentService.findOne({
+      where: { id: student_id, school: { id: school_id } },
+      relations: { account: { organization_owner: true } },
+    })
+    if (!student) throw new NotFoundException("student isn't in this school")
 
-    if (student.account) {
-      this.eventEmitter.emit(
-        ApplicationEventEnum.DELETE_STUDENT,
-        student.account.email,
-        tenant_id,
-      )
+    return await this.studentService.repository.manager.transaction(
+      async (manager) => {
+        const schoolClasses = await manager.find(Class, {
+          where: { school: { id: school_id }, students: { id: student_id } },
+          select: ['id'],
+        })
+        await manager
+          .createQueryBuilder()
+          .relation(Student, 'classes')
+          .of(student_id)
+          .remove(schoolClasses)
+        await manager
+          .createQueryBuilder()
+          .relation(Student, 'school')
+          .of(student_id)
+          .remove(school_id)
+
+        const otherSchools = await manager.count(School, {
+          where: { students: { id: student_id } },
+        })
+        const { account } = student
+        const belongsElsewhere =
+          otherSchools > 0 ||
+          (account &&
+            (account.role !== Role.Student ||
+              Boolean(account.organization_owner)))
+        if (belongsElsewhere) {
+          return new MessageDto('student removed from school')
+        }
+
+        // The account and the student's history go with it (ON DELETE CASCADE)
+        await manager.delete(Student, student_id)
+        return new MessageDto('student deleted')
+      },
+    )
+  }
+
+  // Super admins manage every school, owners and admins their organization's schools, managers the schools they teach
+  private async ensureUserCanManageSchool(
+    user_id: string,
+    school_id: string,
+  ): Promise<void> {
+    const [user, school] = await Promise.all([
+      this.userService.findOne({
+        where: { id: user_id },
+        relations: { organization: true, schools: true },
+      }),
+      this.schoolService.findOne({
+        where: { id: school_id },
+        relations: { organization: true },
+      }),
+    ])
+    const sameOrganization = Boolean(
+      user?.organization &&
+        school?.organization &&
+        user.organization.id === school.organization.id,
+    )
+    const canManage =
+      user?.role === Role.SuperAdmin ||
+      (sameOrganization &&
+        (user.role === Role.Owner ||
+          user.role === Role.Admin ||
+          user.schools.some((teacherSchool) => teacherSchool.id === school_id)))
+    if (!school || !canManage) {
+      throw new NotFoundException("student isn't in this school")
     }
   }
 }
