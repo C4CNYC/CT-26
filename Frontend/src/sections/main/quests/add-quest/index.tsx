@@ -240,7 +240,7 @@ export default function AddQuest(): React.ReactElement {
           schoolId: query.schoolId as string,
           class_id: query.id as string,
         }).unwrap()
-        if (formData.course) {
+        if (formData.course && formData.type === AssignmentTypes.COURSE) {
           await addCourseToAssignment({
             assignmentId: newAssignment.id,
             schoolId: query.schoolId as string,
