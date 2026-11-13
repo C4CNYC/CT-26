@@ -16,6 +16,8 @@ import { SchoolClassStudentsManagerService } from '../school-class-students-mana
 
 import { SchoolMangerService } from './school-manager.service'
 
+const TEACHER_STARTER_LESSON_ID = 'ce657991-8cfd-4481-ad86-c268e8200ed3'
+
 @Injectable()
 export class TeacherSchoolSetupService {
   constructor(
@@ -67,7 +69,7 @@ export class TeacherSchoolSetupService {
     this.deepAssignService.CloneLessonToTeacher(
       {
         user_id: user.id,
-        lesson_id: '328ec3d2-a8e6-4503-b288-92895c402085',
+        lesson_id: TEACHER_STARTER_LESSON_ID,
       },
       school.id,
     ).catch(() => undefined)
