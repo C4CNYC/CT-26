@@ -242,6 +242,16 @@ export function CodePanelLayout(): ReactElement | null {
     }
   }, [courseContent, router.query.courseId, router.query.unitId, router.query.lessonId])
 
+  useEffect(() => {
+    if (router.query.courseId || !isUuid(lessonIdFromRoute)) return
+
+    dispatch(setLessonId(lessonIdFromRoute))
+
+    return () => {
+      dispatch(setLessonId(''))
+    }
+  }, [router.query.courseId, lessonIdFromRoute])
+
   const onSubmitChallenge = async (lessonContentId: string, code?: string): Promise<void> => {
     dispatch(setIsActivateCompeated(false))
 

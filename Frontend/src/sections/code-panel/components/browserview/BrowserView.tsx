@@ -4,7 +4,7 @@ import { BrowserViewProps } from '../body/blocks/view-block/browser-view/types'
 import { BrowserViewEx } from './BroswerViewEx'
 import { BrowserViewHTML } from './BrowserViewHTML'
 
-export function BrowserView({ isOpenHeader }: BrowserViewProps) {
+export function BrowserView({ isOpenHeader, iframeKey }: BrowserViewProps) {
   const { files } = useFileManager()
 
   let fileExtensions = files.map((file) => file.extension.toLowerCase())
@@ -13,7 +13,7 @@ export function BrowserView({ isOpenHeader }: BrowserViewProps) {
   return (
     <BrowserViewHTML
       isOpenHeader={isOpenHeader}
-      iframeKey={2}
+      iframeKey={iframeKey}
     />
   )
 }
