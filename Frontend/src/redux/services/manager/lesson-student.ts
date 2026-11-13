@@ -10,7 +10,7 @@ import {
 import { ContentValidation, setContentValidations } from '@/redux/slices/code-panel-global'
 import { BaseListResponseInterface, BaseResponseInterface } from '@/utils'
 
-import { IStudentProgress } from '../interfaces/lesson.interface'
+import { ILessonWithCoursePlacement, IStudentProgress } from '../interfaces/lesson.interface'
 
 import { managerApi } from '.'
 
@@ -89,15 +89,16 @@ const extendedApi = managerApi.injectEndpoints({
       }),
       keepUnusedDataFor: 0,
     }),
-    getLessonStudentWithoutContents: builder.query<ILesson & BaseResponseInterface, { id: string }>(
-      {
-        query: ({ id }) => ({
-          url: `/student/lesson/without-contents/${id}`,
-          method: 'GET',
-        }),
-        keepUnusedDataFor: 0,
-      }
-    ),
+    getLessonStudentWithoutContents: builder.query<
+      ILessonWithCoursePlacement & BaseResponseInterface,
+      { id: string }
+    >({
+      query: ({ id }) => ({
+        url: `/student/lesson/without-contents/${id}`,
+        method: 'GET',
+      }),
+      keepUnusedDataFor: 0,
+    }),
     getLessonsListStudent: builder.query<
       BaseListResponseInterface<ILesson & BaseResponseInterface>,
       ILessonSearchParams

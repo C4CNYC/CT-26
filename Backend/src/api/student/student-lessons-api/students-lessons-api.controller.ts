@@ -22,7 +22,10 @@ import { Role } from '../../../modules/core/user/enums/role.enum'
 import { MessageDto } from '../../../utils/dtos/message.dto'
 import { RequestWithMeta } from '../../../utils/interfaces/request-with-meta.interface'
 import { LastVisitedUnitAndLessonDto } from '../../manager/school-student-manager-api/dtos/last-visited-unit-and-lesson.dto'
-import { StudentLessonsApiService } from './students-lessons-api.services'
+import {
+  LessonWithCoursePlacement,
+  StudentLessonsApiService,
+} from './students-lessons-api.services'
 
 @ApiTags('Lesson API (STUDENT)')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -55,11 +58,16 @@ export class StudentModulesApiController {
     )
   }
 
+  @UseGuards(OptionalJwtAuthGuard)
   @Get('without-contents/:id')
   async getLessonWithoutContent(
+    @Request() request: RequestWithMeta,
     @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<Lesson> {
-    return await this.studentLessonsApiService.getLessonWithoutContent(id)
+  ): Promise<LessonWithCoursePlacement> {
+    return await this.studentLessonsApiService.getLessonWithoutContent(
+      request.user?.studentID,
+      id,
+    )
   }
 
   @UseGuards(OptionalJwtAuthGuard)

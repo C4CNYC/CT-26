@@ -2,13 +2,20 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 
 import { CourseProgressService } from '../../../modules/core/course-progress/course-progress.service'
 import { CourseUnitService } from '../../../modules/core/course-unit/course-unit.service'
-import { CourseService } from '../../../modules/core/course/course.service'
+import {
+  CourseService,
+  LessonCoursePlacement,
+} from '../../../modules/core/course/course.service'
 import { LessonContent } from '../../../modules/core/lesson-content/lesson-content.entity'
 import { Lesson } from '../../../modules/core/lesson/lesson.entity'
 import { LastVisitedData } from '../../../modules/core/student/interfaces'
 import { StudentService } from '../../../modules/core/student/student.service'
 import { LessonManagerService } from '../../../modules/managers/lesson-manager/lesson-manager.service'
 import { LastVisitedUnitAndLessonDto } from '../../manager/school-student-manager-api/dtos/last-visited-unit-and-lesson.dto'
+
+export type LessonWithCoursePlacement = Lesson & {
+  coursePlacement: LessonCoursePlacement | null
+}
 
 @Injectable()
 export class StudentLessonsApiService {
@@ -33,11 +40,18 @@ export class StudentLessonsApiService {
     return lesson
   }
 
-  async getLessonWithoutContent(id: string): Promise<Lesson> {
-    return await this.lessonManagerService.getLessonWithoutContent(id, {
-      integrations: true,
-      environments: true,
-    })
+  async getLessonWithoutContent(
+    student_id: string | undefined,
+    id: string,
+  ): Promise<LessonWithCoursePlacement> {
+    const [lesson, course_placement] = await Promise.all([
+      this.lessonManagerService.getLessonWithoutContent(id, {
+        integrations: true,
+        environments: true,
+      }),
+      this.courseService.findLessonCoursePlacement(id, student_id),
+    ])
+    return Object.assign(lesson, { coursePlacement: course_placement })
   }
 
   async getLessonContentList(
