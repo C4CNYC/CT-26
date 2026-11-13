@@ -10,13 +10,10 @@ import { InviteSystemService } from '@/modules/core/invite-system/invite-system.
 import { StudentService } from '@/modules/core/student/student.service'
 import { User } from '@/modules/core/user/user.entity'
 
-import { LessonDeepAssignService } from '../lesson-deep-assign/lesson-deep-assign.service'
 import { SchoolClassManagerService } from '../school-class-manager/school-class-manager.service'
 import { SchoolClassStudentsManagerService } from '../school-class-students-manager/school-class-students-manager.service'
 
 import { SchoolMangerService } from './school-manager.service'
-
-const TEACHER_STARTER_LESSON_ID = 'ce657991-8cfd-4481-ad86-c268e8200ed3'
 
 @Injectable()
 export class TeacherSchoolSetupService {
@@ -25,7 +22,6 @@ export class TeacherSchoolSetupService {
     private schoolClassManagerService: SchoolClassManagerService,
     private schoolClassStudentsManagerService: SchoolClassStudentsManagerService,
     private studentService: StudentService,
-    private deepAssignService: LessonDeepAssignService,
     private inviteSystemService: InviteSystemService,
   ) {}
 
@@ -57,7 +53,7 @@ export class TeacherSchoolSetupService {
         dictionaries: [adjectives, colors, animals],
       }),
       description: '',
-      cover: '',
+      cover: '#75CF6D',
     })
 
     await this.schoolManager.addTeacher(school.id, { user_id: user.id })
@@ -65,13 +61,5 @@ export class TeacherSchoolSetupService {
     if (student) {
       await this.schoolClassStudentsManagerService.addStudentToClass(schoolClass.id, { student_id: student.id })
     }
-
-    this.deepAssignService.CloneLessonToTeacher(
-      {
-        user_id: user.id,
-        lesson_id: TEACHER_STARTER_LESSON_ID,
-      },
-      school.id,
-    ).catch(() => undefined)
   }
 }
