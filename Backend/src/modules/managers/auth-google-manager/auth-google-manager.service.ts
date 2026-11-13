@@ -34,7 +34,11 @@ export class AuthGoogleManagerService {
     private teacherSchoolSetup: TeacherSchoolSetupService,
   ) {}
 
-  async login(dto: AuthGoogleRequestDto, tenant_id: string): Promise<LoginedUser> {
+  async login(
+    dto: AuthGoogleRequestDto,
+    tenant_id: string,
+    tenant_name: string,
+  ): Promise<LoginedUser> {
     const { email } = await this.googleAuthService.authenticate(dto.code)
 
     const user = await this.userService.findOne({
@@ -53,7 +57,7 @@ export class AuthGoogleManagerService {
       user ? 'user exists' : 'user not exists',
     )
     if (!user) {
-      return this.registerWithGoogle(dto, tenant_id)
+      return this.registerWithGoogle(dto, tenant_id, tenant_name)
     }
 
     return this.authService.buildAuthorizedResponse(user)
@@ -62,6 +66,7 @@ export class AuthGoogleManagerService {
   private async registerWithGoogle(
     dto: AuthGoogleRequestDto,
     tenant_id: string,
+    tenant_name: string,
   ): Promise<LoginedUser> {
     const user = await this.register(dto, tenant_id)
 
@@ -79,18 +84,14 @@ export class AuthGoogleManagerService {
     if (dto.role !== 'student') {
       await this.teacherSchoolSetup.setupTeacherSchool(user, user.email, tenant_id)
 
-      this.eventEmitter.emit(ApplicationEventEnum.CREATE_ORG, user.email, tenant_id)
+      this.eventEmitter.emit(
+        ApplicationEventEnum.CREATE_ORG,
+        user.email,
+        tenant_name,
+      )
+    } else {
+      this.eventEmitter.emit(ApplicationEventEnum.CREATE_STUDENT, user.email)
     }
-
-    this.eventEmitter.emit(
-      dto.role === 'student'
-        ? ApplicationEventEnum.CREATE_STUDENT
-        : ApplicationEventEnum.CREATE_ORG,
-      {
-        email: user.email,
-        user_id: user.id,
-      },
-    )
     return this.authService.buildAuthorizedResponse(user)
   }
 

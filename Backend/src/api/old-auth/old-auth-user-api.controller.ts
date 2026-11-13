@@ -74,7 +74,11 @@ export class OldAuthUserApiController {
     @Body() dto: AuthGoogleRequestDto,
     @Req() req: RequestWithMeta,
   ): Promise<LoginedUser> {
-    return await this.googleAuthManagerService.login(dto, req.org_id)
+    return await this.googleAuthManagerService.login(
+      dto,
+      req.org_id,
+      req.org_name,
+    )
   }
 
   @Post('google-signup')
@@ -82,7 +86,11 @@ export class OldAuthUserApiController {
     @Body() dto: AuthGoogleRequestDto,
     @Req() req: RequestWithMeta,
   ): Promise<LoginedUser> {
-    return await this.authManagerService.registerWithGoogle(dto, req.org_id)
+    return await this.authManagerService.registerWithGoogle(
+      dto,
+      req.org_id,
+      req.org_name,
+    )
   }
 
   @Post('reset-password')
