@@ -206,33 +206,13 @@
   },
   {
     "type": "general",
-    "setup": "A ham sandwhich walks into a bar and orders a beer. The bartender says...",
-    "punchline": "I'm sorry, we don't serve food here"
-  },
-  {
-    "type": "general",
     "setup": "Why did the Clydesdale give the pony a glass of water?",
     "punchline": "Because he was a little horse"
   },
   {
     "type": "general",
-    "setup": "If you boil a clown...",
-    "punchline": "Do you get a laughing stock?"
-  },
-  {
-    "type": "general",
-    "setup": "Finally realized why my plant sits around doing nothing all day...",
-    "punchline": "He loves his pot."
-  },
-  {
-    "type": "general",
     "setup": "Don't look at the eclipse through a colander.",
     "punchline": "You'll strain your eyes."
-  },
-  {
-    "type": "general",
-    "setup": "I bought some shoes from a drug dealer.",
-    "punchline": "I don't know what he laced them with, but I was tripping all day!"
   },
   {
     "type": "general",
@@ -253,11 +233,6 @@
     "type": "general",
     "setup": "Why did the invisible man turn down the job offer?",
     "punchline": "He couldn't see himself doing it"
-  },
-  {
-    "type": "general",
-    "setup": "How do you make holy water?",
-    "punchline": "You boil the hell out of it"
   },
   {
     "type": "general",
@@ -421,11 +396,6 @@
   },
   {
     "type": "general",
-    "setup": "Did you hear about the chameleon who couldn't change color?",
-    "punchline": "They had a reptile dysfunction."
-  },
-  {
-    "type": "general",
     "setup": "Did you hear about the cheese factory that exploded in France?",
     "punchline": "There was nothing left but de Brie."
   },
@@ -438,21 +408,6 @@
     "type": "general",
     "setup": "Did you hear about the guy who invented Lifesavers?",
     "punchline": "They say he made a mint."
-  },
-  {
-    "type": "general",
-    "setup": "Did you hear about the guy whose whole left side was cut off?",
-    "punchline": "He's all right now."
-  },
-  {
-    "type": "general",
-    "setup": "Did you hear about the kidnapping at school?",
-    "punchline": "It's ok, he woke up."
-  },
-  {
-    "type": "general",
-    "setup": "Did you hear about the Mexican train killer?",
-    "punchline": "He had loco motives"
   },
   {
     "type": "general",
@@ -481,23 +436,8 @@
   },
   {
     "type": "general",
-    "setup": "Did you hear that the police have a warrant out on a midget psychic ripping people off?",
-    "punchline": "It reads \"Small medium at large.\""
-  },
-  {
-    "type": "general",
-    "setup": "Did you hear the joke about the wandering nun?",
-    "punchline": "She was a roman catholic."
-  },
-  {
-    "type": "general",
     "setup": "Did you hear the news?",
     "punchline": "FedEx and UPS are merging. They’re going to go by the name Fed-Up from now on."
-  },
-  {
-    "type": "general",
-    "setup": "Did you hear the one about the guy with the broken hearing aid?",
-    "punchline": "Neither did he."
   },
   {
     "type": "general",
@@ -508,11 +448,6 @@
     "type": "general",
     "setup": "What do ghosts call their true love?",
     "punchline": "Their ghoul-friend"
-  },
-  {
-    "type": "general",
-    "setup": "Did you know that protons have mass?",
-    "punchline": "I didn't even know they were catholic."
   },
   {
     "type": "general",
@@ -656,11 +591,6 @@
   },
   {
     "type": "general",
-    "setup": "How does a dyslexic poet write?",
-    "punchline": "Inverse."
-  },
-  {
-    "type": "general",
     "setup": "How does a French skeleton say hello?",
     "punchline": "Bone-jour."
   },
@@ -693,11 +623,6 @@
     "type": "general",
     "setup": "How many hipsters does it take to change a lightbulb?",
     "punchline": "Oh, it's a really obscure number. You've probably never heard of it."
-  },
-  {
-    "type": "general",
-    "setup": "How many kids with ADD does it take to change a lightbulb?",
-    "punchline": "Let's go ride bikes!"
   },
   {
     "type": "general",
@@ -738,11 +663,6 @@
     "type": "general",
     "setup": "What did the spaghetti say to the other spaghetti?",
     "punchline": "Pasta la vista, baby!"
-  },
-  {
-    "type": "general",
-    "setup": "What’s 50 Cent’s name in Zimbabwe?",
-    "punchline": "200 Dollars."
   },
   {
     "type": "general",
@@ -856,11 +776,6 @@
   },
   {
     "type": "general",
-    "setup": "What did the fish say when it swam into a wall?",
-    "punchline": "Damn!"
-  },
-  {
-    "type": "general",
     "setup": "What did the grape do when he got stepped on?",
     "punchline": "He let out a little wine."
   },
@@ -926,11 +841,6 @@
   },
   {
     "type": "general",
-    "setup": "What did the Zen Buddist say to the hotdog vendor?",
-    "punchline": "Make me one with everything."
-  },
-  {
-    "type": "general",
     "setup": "What do birds give out on Halloween?",
     "punchline": "Tweets."
   },
@@ -986,16 +896,6 @@
   },
   {
     "type": "general",
-    "setup": "What do you call a dad that has fallen through the ice?",
-    "punchline": "A Popsicle."
-  },
-  {
-    "type": "general",
-    "setup": "What do you call a dictionary on drugs?",
-    "punchline": "High definition."
-  },
-  {
-    "type": "general",
     "setup": "what do you call a dog that can do magic tricks?",
     "punchline": "a labracadabrador"
   },
@@ -1021,11 +921,6 @@
   },
   {
     "type": "general",
-    "setup": "What do you call a fat psychic?",
-    "punchline": "A four-chin teller."
-  },
-  {
-    "type": "general",
     "setup": "What do you call a fly without wings?",
     "punchline": "A walk."
   },
@@ -1043,11 +938,6 @@
     "type": "general",
     "setup": "What do you call a group of killer whales playing instruments?",
     "punchline": "An Orca-stra."
-  },
-  {
-    "type": "general",
-    "setup": "What do you call a monkey in a mine field?",
-    "punchline": "A babooooom!"
   },
   {
     "type": "general",
@@ -1221,11 +1111,6 @@
   },
   {
     "type": "general",
-    "setup": "What is the hardest part about sky diving?",
-    "punchline": "The ground."
-  },
-  {
-    "type": "general",
     "setup": "What is the leading cause of dry skin?",
     "punchline": "Towels"
   },
@@ -1358,11 +1243,6 @@
     "type": "general",
     "setup": "What's the difference between a seal and a sea lion?",
     "punchline": "An ion! "
-  },
-  {
-    "type": "general",
-    "setup": "What's the worst part about being a cross-eyed teacher?",
-    "punchline": "They can't control their pupils."
   },
   {
     "type": "general",
@@ -1551,11 +1431,6 @@
   },
   {
     "type": "general",
-    "setup": "Why couldn't the lifeguard save the hippie?",
-    "punchline": "He was too far out, man."
-  },
-  {
-    "type": "general",
     "setup": "Why did Dracula lie in the wrong coffin?",
     "punchline": "He made a grave mistake."
   },
@@ -1606,11 +1481,6 @@
   },
   {
     "type": "general",
-    "setup": "Why did the cowboy have a weiner dog?",
-    "punchline": "Somebody told him to get a long little doggy."
-  },
-  {
-    "type": "general",
     "setup": "Why did the fireman wear red, white, and blue suspenders?",
     "punchline": "To hold his pants up."
   },
@@ -1618,11 +1488,6 @@
     "type": "general",
     "setup": "Why did the girl smear peanut butter on the road?",
     "punchline": "To go with the traffic jam."
-  },
-  {
-    "type": "general",
-    "setup": "Why did the half blind man fall in the well?",
-    "punchline": "Because he couldn't see that well!"
   },
   {
     "type": "general",
@@ -1761,11 +1626,6 @@
   },
   {
     "type": "general",
-    "setup": "Why do valley girls hang out in odd numbered groups?",
-    "punchline": "Because they can't even."
-  },
-  {
-    "type": "general",
     "setup": "Why do wizards clean their teeth three times a day?",
     "punchline": "To prevent bat breath!"
   },
@@ -1836,11 +1696,6 @@
   },
   {
     "type": "programming",
-    "setup": "A DHCP packet walks into a bar and asks for a beer.",
-    "punchline": "Bartender says, \"here, but I’ll need that back in an hour!\""
-  },
-  {
-    "type": "programming",
     "setup": "3 SQL statements walk into a NoSQL bar. Soon, they walk out",
     "punchline": "They couldn't find a table."
   },
@@ -1901,11 +1756,6 @@
   },
   {
     "type": "programming",
-    "setup": "What is the most used language in programming?",
-    "punchline": "Profanity."
-  },
-  {
-    "type": "programming",
     "setup": "Why do programmers always get Christmas and Halloween mixed up?",
     "punchline": "Because DEC 25 = OCT 31"
   },
@@ -1936,11 +1786,6 @@
   },
   {
     "type": "general",
-    "setup": "Why does Waldo only wear stripes?",
-    "punchline": "Because he doesn't want to be spotted."
-  },
-  {
-    "type": "general",
     "setup": "Why did the kid throw the watch out the window?",
     "punchline": "So time would fly."
   },
@@ -1948,11 +1793,6 @@
     "type": "programming",
     "setup": "Where did the API go to eat?",
     "punchline": "To the RESTaurant."
-  },
-  {
-    "type": "general",
-    "setup": "Why did the rooster cross the road?",
-    "punchline": "He heard that the chickens at KFC were pretty hot."
   },
   {
     "type": "general",
@@ -1983,11 +1823,6 @@
     "type": "general",
     "setup": "A grocery store cashier asked if I would like my milk in a bag.",
     "punchline": "I told her 'No, thanks. The carton works fine.'"
-  },
-  {
-    "type": "general",
-    "setup": "99.9% of the people are dumb!",
-    "punchline": "Fortunately I belong to the remaining 1%"
   },
   {
     "type": "programming",
@@ -2041,11 +1876,6 @@
   },
   {
     "type": "programming",
-    "setup": "What's the best thing about a Boolean?",
-    "punchline": "Even if you're wrong, you're only off by a bit."
-  },
-  {
-    "type": "programming",
     "setup": "How many React developers does it take to change a lightbulb?",
     "punchline": "None, they prefer dark mode."
   },
@@ -2068,11 +1898,6 @@
     "type": "programming",
     "setup": "Why did the programmer go to art school?",
     "punchline": "He wanted to learn how to code outside the box."
-  },
-  {
-    "type": "programming",
-    "setup": "Why did the programmer's wife leave him?",
-    "punchline": "He didn't know how to commit."
   },
   {
     "type": "programming",
@@ -2143,16 +1968,6 @@
     "type": "general",
     "setup": "Why don't scientists trust atoms?",
     "punchline": "Because they make up everything."
-  },
-  {
-    "type": "general",
-    "setup": "Why did the scarecrow win an award?",
-    "punchline": "Because he was outstanding in his field."
-  },
-  {
-    "type": "general",
-    "setup": "Why did the coffee file a police report?",
-    "punchline": "It got mugged."
   },
   {
     "type": "general",
