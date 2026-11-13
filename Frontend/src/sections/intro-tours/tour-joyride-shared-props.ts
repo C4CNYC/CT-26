@@ -4,5 +4,6 @@ export const TOUR_JOYRIDE_SHARED_PROPS = {
   options: { showProgress: true, zIndex: 10000 },
   floatingOptions: {
     flipOptions: { fallbackPlacements: undefined, fallbackAxisSideDirection: 'end' },
+    shiftOptions: { crossAxis: true },
   },
 } satisfies Partial<Props>
