@@ -16,6 +16,8 @@ export class StudentGoal extends BaseEntity {
   @Column({ type: 'varchar' })
   color: string
 
-  @ManyToOne(() => Student, (student) => student.goals)
+  @ManyToOne(() => Student, (student) => student.goals, {
+    onDelete: 'CASCADE',
+  })
   student: Student
 }

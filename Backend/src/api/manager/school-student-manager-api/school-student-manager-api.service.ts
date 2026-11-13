@@ -101,11 +101,15 @@ export class SchoolStudentManagerApiService {
   }
 
   async deleteStudent(
+    school_id: string,
     student_id: string,
-    tenant_id: string,
+    user_id: string,
   ): Promise<MessageDto> {
-    await this.schoolStudentManager.deleteStudent(student_id, tenant_id)
-    return new MessageDto('student deleted')
+    return await this.schoolStudentManager.deleteStudent(
+      school_id,
+      student_id,
+      user_id,
+    )
   }
 
   async promoteToTeacher(school_id: string, student_id: string): Promise<MessageDto> {

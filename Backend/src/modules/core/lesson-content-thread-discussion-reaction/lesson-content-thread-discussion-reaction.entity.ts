@@ -14,9 +14,12 @@ export class LessonContentThreadDiscussionReaction extends BaseEntity {
   @ManyToOne(
     () => LessonContentThreadDiscussion,
     (discussion) => discussion.reactions,
+    { onDelete: 'CASCADE' },
   )
   discussion: LessonContentThreadDiscussion
 
-  @ManyToOne(() => Student, (student) => student.reactions)
+  @ManyToOne(() => Student, (student) => student.reactions, {
+    onDelete: 'CASCADE',
+  })
   owner: Student
 }

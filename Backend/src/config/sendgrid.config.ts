@@ -12,7 +12,6 @@ export interface SendgridConfig {
   inviteStudentTemplateId: string
   inviteToStreamTemplateId: string
   resetPasswordStudentTemplateId: string
-  deleteStudentTemplateId: string
   removeMemberTemplateId: string
   emailWhitelist4Students: string
   inviteTeacherToSchoolTemplateId: string
@@ -34,7 +33,6 @@ export default registerAs('sendgridConfig', () => {
       process.env.INVITE_TEACHER_TO_SCHOOL_TEMPLATE_ID,
     resetPasswordStudentTemplateId:
       process.env.RESET_PASSWORD_STUDENT_TEMPLATE_ID,
-    deleteStudentTemplateId: process.env.DELETE_STUDENT_TEMPLATE_ID,
     removeMemberTemplateId: process.env.REMOVE_MEMBER_TEMPLATE_ID,
     emailWhitelist4Students:
       process.env.EMAIL_WHITELIST_FOR_STUDENTS ||
