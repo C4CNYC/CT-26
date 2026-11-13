@@ -135,11 +135,18 @@ export default function AddQuest(): React.ReactElement {
     }
   }, [isAssignmentLoading, assignment])
 
-  // useEffect(() => {
-  //   if (coursesData?.data?.data[0]?.id && !methods.getValues().course) {
-  //     methods.setValue('course', coursesData.data?.data[0]?.id)
-  //   }
-  // }, [coursesData])
+  const firstCourseId = coursesData.data?.data[0]?.id
+
+  useEffect(() => {
+    if (
+      firstCourseId &&
+      !query.assignmentId &&
+      !methods.getValues('course') &&
+      methods.getValues('type') === AssignmentTypes.COURSE
+    ) {
+      methods.setValue('course', firstCourseId)
+    }
+  }, [firstCourseId])
 
   const methods = useForm<FormQuestProps>({
     resolver: yupResolver(CreateQuestSchema),
