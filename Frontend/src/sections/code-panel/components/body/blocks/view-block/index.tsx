@@ -9,8 +9,10 @@ import { type RootState } from '@/redux/store'
 import { useTranslate } from '@/utils/translateHelper'
 import { CodePanelContext } from '@root/src/sections/code-panel/lib/CodePanelContext'
 
-import { BrowserView } from '../../../browserview/BrowserView'
+import { BrowserViewEx } from '../../../browserview/BrowserViewEx'
+import { BrowserViewHTML } from '../../../browserview/BrowserViewHTML'
 import BaseBlock from '../base-block'
+import { useFileManager } from '../code-editor-block/code-editor-collab/hook/file-manager/useFileManager'
 
 import PreviewControls from './browser-view/preview-controls'
 import ConsoleBlock from './console-block'
@@ -20,12 +22,15 @@ export function ViewBlock() {
   const isBrowserHidden = useSelector((state: RootState) => state.codePanelGlobal.isBrowserHidden)
   const translate = useTranslate()
   const codePanelContext = useContext(CodePanelContext)
+  const { files } = useFileManager()
   const [isOpenHeader, setIsOpenHeader] = useState<boolean>(true)
-  const [iframeKey, setIframeKey] = useState<number>(0)
+  const [runCount, setRunCount] = useState<number>(0)
   if (isBrowserHidden) {
     return null
   }
-  console.log('ViewBlock render', codePanelContext.reloadIframeKey, iframeKey) // eslint-disable-line no-console
+  const isPythonOrJavaLesson = files.some((file) =>
+    ['py', 'java'].includes(file.extension.toLowerCase())
+  )
   return (
     <BaseBlock
       closeIcon={<TbArrowBarToRight size={20} />}
@@ -41,14 +46,18 @@ export function ViewBlock() {
       takeHeaderSettings={setIsOpenHeader}
     >
       <PreviewControls
-        reloadIframe={() => setIframeKey((k) => k + 1)}
-        isAutoRun={codePanelContext.autoRun}
+        reloadIframe={() => setRunCount((count) => count + 1)}
+        isAutoRun={codePanelContext.autoRun && !isPythonOrJavaLesson}
       />
 
-      <BrowserView
-        isOpenHeader={isOpenHeader}
-        iframeKey={iframeKey + codePanelContext.reloadIframeKey}
-      />
+      {isPythonOrJavaLesson ? (
+        <BrowserViewEx runCount={runCount} />
+      ) : (
+        <BrowserViewHTML
+          isOpenHeader={isOpenHeader}
+          iframeKey={runCount + codePanelContext.reloadIframeKey}
+        />
+      )}
       <ConsoleBlock />
     </BaseBlock>
   )

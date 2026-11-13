@@ -83,7 +83,9 @@ export class LessonContent extends BaseEntity {
   )
   validations: LessonContentValidator[]
 
-  @ManyToOne(() => User, (user) => user.lesson_contents)
+  @ManyToOne(() => User, (user) => user.lesson_contents, {
+    onDelete: 'SET NULL',
+  })
   creator: User
 
   @ManyToOne(() => Lesson, (lesson) => lesson.contents, {

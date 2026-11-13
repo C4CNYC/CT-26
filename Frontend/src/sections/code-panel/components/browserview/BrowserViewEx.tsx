@@ -17,7 +17,7 @@ import { preparePythonCode } from './prepare/python'
 import { runJavaOnJudge0 } from './run/java'
 import { runPythonInBrowser } from './run/python'
 
-export function BrowserViewEx({ iframeKey }: { iframeKey: number }) {
+export function BrowserViewEx({ runCount }: { runCount: number }) {
   const theme = useTheme()
   const isLight = theme.palette.mode === 'light'
   const isOpenHeader = true
@@ -32,7 +32,7 @@ export function BrowserViewEx({ iframeKey }: { iframeKey: number }) {
   let [contents, contentsSet] = useState<string>('')
   let [stderr, stderrSet] = useState<string>('')
   let [stdout, stdoutSet] = useState<string>('')
-  let iframeRef = useRef<number>(0)
+  let lastRunCountRef = useRef<number | null>(null)
 
   const { files } = useFileManager()
 
@@ -52,8 +52,8 @@ export function BrowserViewEx({ iframeKey }: { iframeKey: number }) {
     let test = getCodeByExtension('test')
 
     runningSet((v) => v + 1)
-    if (processing || iframeRef.current == iframeKey) return
-    iframeRef.current = iframeKey
+    if (processing || lastRunCountRef.current === runCount) return
+    lastRunCountRef.current = runCount
     processingSet(true)
     contentsSet(pys)
     stderrSet('')
@@ -104,13 +104,13 @@ export function BrowserViewEx({ iframeKey }: { iframeKey: number }) {
         contentsSet(`Error occurred while running the code.`)
       })
       .finally(() => setTimeout(() => processingSet((v) => false), 2000))
-  }, [iframeKey, files])
+  }, [runCount, files])
 
   return (
     <>
       <Stack
         sx={parentStackSx}
-        key={iframeKey}
+        key={runCount}
       >
         <Stack sx={HEADER_SKELETON_SX}>
           <Skeleton
