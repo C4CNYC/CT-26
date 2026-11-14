@@ -18,6 +18,9 @@
 # production
 /build
 /public/tinymce/
+/public/llms.txt
+/public/llms-full.txt
+/.docs-build/
 
 # misc
 .DS_Store
