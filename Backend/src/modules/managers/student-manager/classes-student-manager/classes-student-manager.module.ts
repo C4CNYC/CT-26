@@ -4,6 +4,7 @@ import { ClassStudentPendingModule } from '../../../core/class-student-pending/c
 import { ClassModule } from '../../../core/class/class.module'
 import { CourseModule } from '../../../core/course/course.module'
 import { StudentModule } from '../../../core/student/student.module'
+import { SchoolAccessManagerModule } from '../../school-access-manager/school-access-manager.module'
 import { StudentClassesManagerService } from './classes-student-manager.service'
 
 @Module({
@@ -12,6 +13,7 @@ import { StudentClassesManagerService } from './classes-student-manager.service'
     StudentModule,
     CourseModule,
     ClassStudentPendingModule,
+    SchoolAccessManagerModule,
   ],
   providers: [StudentClassesManagerService],
   exports: [StudentClassesManagerService],

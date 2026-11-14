@@ -4,7 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common'
 
-import { PageOptionsDto } from '@/utils/dtos/page-option.dto'
+import { RequestWithMeta } from '@/utils/interfaces/request-with-meta.interface'
 
 import { StudentJoinClassDto } from '../../../../api/admin/school-api/dtos/join-class.dto'
 import { MyClassesSearchOptions } from '../../../../api/student/students-classes-api/dtos/my-class-search-options.dto'
@@ -13,6 +13,9 @@ import { ClassStudentPendingService } from '../../../core/class-student-pending/
 import { Class } from '../../../core/class/class.entity'
 import { ClassService } from '../../../core/class/class.service'
 import { StudentService } from '../../../core/student/student.service'
+import { SchoolAccessManagerService } from '../../school-access-manager/school-access-manager.service'
+
+type ClassViewer = Pick<RequestWithMeta['user'], 'id' | 'studentID'>
 
 @Injectable()
 export class StudentClassesManagerService {
@@ -20,23 +23,42 @@ export class StudentClassesManagerService {
     private classService: ClassService,
     private studentService: StudentService,
     private classStudentPendingService: ClassStudentPendingService,
+    private schoolAccessManagerService: SchoolAccessManagerService,
   ) {}
 
-  async checkClassPermission(
-    student_id: string,
+  async canUserViewClass(
+    user: ClassViewer,
     class_id: string,
   ): Promise<boolean> {
-    const students = await this.studentService.getByClass(
-      class_id,
-      {} as PageOptionsDto,
+    if (!user.id || !class_id) return false
+    if (user.studentID) {
+      const class_of_student = await this.classService.findOne({
+        where: { id: class_id, students: { id: user.studentID } },
+      })
+      if (class_of_student) return true
+    }
+    const class_of_mentor = await this.classService.findOne({
+      where: { id: class_id, mentors: { id: user.id } },
+    })
+    if (class_of_mentor) return true
+    const school_class = await this.classService.findOne({
+      where: { id: class_id },
+      relations: { school: true },
+    })
+    if (!school_class?.school) return false
+    return await this.schoolAccessManagerService.canUserManageSchool(
+      user.id,
+      school_class.school.id,
     )
-    const studentPermission = students?.data?.find(
-      (student) =>
-        student?.account?.id === student_id || student?.id === student_id,
-    )
-    if (studentPermission) return true
+  }
 
-    return false
+  private async ensureUserCanViewClass(
+    user: ClassViewer,
+    class_id: string,
+  ): Promise<void> {
+    if (!(await this.canUserViewClass(user, class_id))) {
+      throw new ForbiddenException('not a member of this class')
+    }
   }
 
   async getClasses(
@@ -46,19 +68,14 @@ export class StudentClassesManagerService {
     return await this.classService.getByStudent(student_id, dto)
   }
 
-  async getClass(student_id: string, class_id: string): Promise<Class> {
-    const permission = await this.checkClassPermission(student_id, class_id)
-    if (!permission) throw new ForbiddenException('studen not member of class')
-    const schoolClass = await this.classService.getClass(class_id)
-    return schoolClass
+  async getClass(user: ClassViewer, class_id: string): Promise<Class> {
+    await this.ensureUserCanViewClass(user, class_id)
+    return await this.classService.getClass(class_id)
   }
 
-  async getClassProgress(student_id: string, class_id: string) {
-    const permission = await this.checkClassPermission(student_id, class_id)
-    if (!permission) throw new ForbiddenException('student not member of class')
-    const classProgress = await this.classService.getClassProgress(class_id)
-
-    return classProgress
+  async getClassProgress(user: ClassViewer, class_id: string) {
+    await this.ensureUserCanViewClass(user, class_id)
+    return await this.classService.getClassProgress(class_id)
   }
 
   async joinClass(

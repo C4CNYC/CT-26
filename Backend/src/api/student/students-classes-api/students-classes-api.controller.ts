@@ -60,7 +60,7 @@ export class StudentClassesApiController {
     @Param('class_id', new ParseUUIDPipe()) class_id: string,
   ): Promise<Class> {
     return await this.studentClasssesApiService.getClass(
-      request.user?.studentID,
+      request.user,
       class_id,
     )
   }
@@ -71,7 +71,7 @@ export class StudentClassesApiController {
     @Param('class_id', new ParseUUIDPipe()) class_id: string,
   ) {
     return await this.studentClasssesApiService.getClassProgress(
-      request.user?.studentID,
+      request.user,
       class_id,
     )
   }

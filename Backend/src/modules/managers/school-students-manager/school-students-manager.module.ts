@@ -8,6 +8,7 @@ import { StudentInvitationModule } from '../../core/student-invitation/student-i
 import { StudentModule } from '../../core/student/student.module'
 import { UserModule } from '../../core/user/user.module'
 import { InvitationsMangerModule } from '../invitations-manager/invitations-manager.module'
+import { SchoolAccessManagerModule } from '../school-access-manager/school-access-manager.module'
 import { StudentManagerModule } from '../student-manager/student-manager.module'
 import { UsersManagerModule } from '../users-manager/users-manager.module'
 import { SchoolStudentsManagerService } from './school-students-manager.service'
@@ -23,6 +24,7 @@ import { SchoolStudentsManagerService } from './school-students-manager.service'
     StudentManagerModule,
     InvitationsMangerModule,
     StudentInvitationModule,
+    SchoolAccessManagerModule,
   ],
   providers: [SchoolStudentsManagerService],
   exports: [SchoolStudentsManagerService],
