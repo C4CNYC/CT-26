@@ -11,7 +11,7 @@ Teachers, students and admins all sign in on the same page, at your platform's a
 
 1. Open [codetribe.ai/auth/signIn](https://codetribe.ai/auth/signIn).
 2. Select **Sign in with Google**.
-3. Choose the Google account you signed up with.
+3. If Google asks, choose the Google account you signed up with. If your browser is already signed in to it, Google skips this step and you're signed in straight away.
 
 ![The sign-in page, with the Email box and the Sign in with Google button](/docs/getting-started/sign-in-and-reset-your-password-1-sign-in-page.png)
 
