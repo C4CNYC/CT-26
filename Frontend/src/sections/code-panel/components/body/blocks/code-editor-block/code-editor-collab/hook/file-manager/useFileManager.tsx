@@ -66,7 +66,6 @@ export const useFileManagerOrj = () => {
     data: authFiles = [],
     isLoading,
     isFetching,
-    refetch,
   } = useGetStudentFilesQuery(
     { lessonId: lessonId!, lessonContentId: slideId || '' },
     { skip: !shouldRunAuthFiles }
@@ -257,7 +256,7 @@ export const useFileManagerOrj = () => {
   }, [filesSet, isAuthenticated, guestFilesList.current.length, files.length])
 
   useEffect(() => {
-    if (!isAuthenticated) return
+    if (!isAuthenticated || !isPageReady) return
     fnIncUse(246, 'auth files', files.length, incVal, guestFilesList.current.length)
 
     let authFilesWithoutHello = authFiles.filter(
@@ -271,13 +270,13 @@ export const useFileManagerOrj = () => {
           (authFile) => authFile.name === file.name && authFile.extension === file.extension
         )
     )
-    let updateNecessary = [...authFilesWithoutHello, ...guestFilesNotSaved]
-      .filter((file) => !files.find((f) => f.body === file.body))
-      .filter((file) => !files.find((f) => f.body === file.body))
+    let updateNecessary = [...authFilesWithoutHello, ...guestFilesNotSaved].filter(
+      (file) => !files.find((f) => f.body === file.body)
+    )
     // console.log('Update necessary files:', files, authFilesWithoutHello, guestFilesNotSaved)
     if (!updateNecessary.length) return
     filesSet(unfreeze([...authFilesWithoutHello, ...guestFilesNotSaved]))
-  }, [files, filesHash, isAuthenticated, authFiles, guestFilesList])
+  }, [files, filesHash, isAuthenticated, isPageReady, authFiles, guestFilesList])
 
   useEffect(() => {
     if (!isAuthenticated || authFiles.length < 2 || !isPageReady) return
@@ -342,16 +341,11 @@ export const useFileManagerOrj = () => {
     )
     // Create files that need to be created
     guestFilesNotSaved.forEach(async (file) => {
-      let updateFile = authFiles.find(
+      const updateFile = authFiles.find(
         (af) => af.name == file.name && af.extension == file.extension
       )
       if (updateFile) {
-        updateFile = { ...updateFile, body: file.body }
-        updateStudentFile(updateFile)
-        _setActiveFile(undefined)
-        setTimeout(() => {
-          _setActiveFile(updateFile)
-        }, 300)
+        onUpdateFile(updateFile.id, { body: file.body })
       } else {
         createStudentFile({ ...file, lessonContentId: slideId, lessonId })
       }
@@ -414,10 +408,7 @@ export const useFileManagerOrj = () => {
   function getFiles() {
     return files
   }
-  const onUpdateFile = async (
-    id: string,
-    body: Partial<Omit<StudentFile, 'lessonId' | 'id'>>
-  ): Promise<void> => {
+  const onUpdateFile = (id: string, body: Partial<Omit<StudentFile, 'lessonId' | 'id'>>): void => {
     const filteredBody = Object.fromEntries(
       Object.entries(body).filter(([_, value]) => value !== undefined)
     )
@@ -432,19 +423,15 @@ export const useFileManagerOrj = () => {
       guestFilesList.current = updatedUnauthFiles
       filesSet(updatedUnauthFiles)
     } else {
-      // Run the API update with the complete file data
-      await updateStudentFile({
+      updateStudentFile({
         id,
         ...filteredBody,
         lessonId,
         lessonContentId: slideId,
       })
-
-      const updatedFile = files.find((file) => file.id === id)
-      if (updatedFile) {
-        const newFile = { ...updatedFile, ...filteredBody }
-        filesSet((prevFiles) => prevFiles.map((file) => (file.id === id ? newFile : file)))
-      }
+      filesSet((prevFiles) =>
+        prevFiles.map((file) => (file.id === id ? { ...file, ...filteredBody } : file))
+      )
     }
   }
 
@@ -488,12 +475,6 @@ export const useFileManagerOrj = () => {
     },
     [barFiles, activeFile]
   )
-
-  useEffect(() => {
-    if (!shouldRunAuthFiles || sandbox) return
-    fnIncUse(442, 'activeFileRefetch', files.length, incVal, guestFilesList.current.length)
-    if (activeFile) refetch()
-  }, [activeFile, searchParams, shouldRunAuthFiles])
 
   useEffect(() => {
     fnIncUse(448, files.length, 'sandbox', incVal, guestFilesList.current.length)
