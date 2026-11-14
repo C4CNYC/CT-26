@@ -29,7 +29,7 @@ function SchoolSwitcher() {
   const { user } = useAuthContext()
   const canSwitch = [Role.SuperAdmin, Role.Admin, Role.Manager, Role.Owner].includes(user?.role as Role)
 
-  const { data, isLoading } = useGetMySchoolsQuery({}, { skip: !canSwitch })
+  const { data, isLoading } = useGetMySchoolsQuery({ take: 1000 }, { skip: !canSwitch })
 
   const [school, setSchool] = useState<ISchool | null>(null)
 

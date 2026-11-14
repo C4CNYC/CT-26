@@ -121,6 +121,8 @@ source config/dokploy.env
 - Super admin tenant switch works by setting `localStorage.tenantName` before reload
 - `_app.tsx` `stableTenant` precedence (2026-07-12, updated): `_app.getInitialProps` REMOVED to restore Automatic Static Optimization. `stableTenant = useTenants() ?? DEFAULT_TENANT` — favicon/meta/Redux `state.tenant` now hydrate client-side from `localStorage.tenant` (returning visitors, no flash) or the tenant API (first visit, ~1 paint of default). Removed `getTenantByDomain`/`serverTenant`/`App.getInitialProps` plumbing; `serverUtils.ts` tenant SSR cache now unused (dead, tree-shaken) but kept. Build went from 0 static / 95 dynamic → 91 static / 4 dynamic (only `api/*` + `gallery-public/[id]` stay ƒ). The 'opted-out of Automatic Static Optimization' warning is gone; static HTML is CDN-cacheable → TTFB ~750 ms → ~50 ms post-deploy
 
+**School picker** (`src/components/school-switcher`): keeps the selected school in `localStorage['x-school-id']` (sent as the `x-school-id` header) and Redux `manager.schoolId`. It asks `GET /manager/school` for up to 1000 schools (2026-11-14): with the default page of 10, admins of an organization with more schools couldn't pick a newer one, and the picker switched them back to the first school on every load.
+
 ---
 
 ## Critical Patterns
