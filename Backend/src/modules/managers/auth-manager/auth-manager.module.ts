@@ -6,7 +6,6 @@ import { AuthModule } from '@/old-auth/auth.module'
 
 import { S3Module } from '../../../providers/s3/s3.module'
 import { UserModule } from '../../core/user/user.module'
-import { AuthGoogleManagerModule } from '../auth-google-manager/auth-google-manager.module'
 import { SchoolMangerModule } from '../school-manager/school-manager.module'
 import { UserResetPasswordManagerModule } from '../user-reset-password-manager/user-reset-password-manager.module'
 import { UsersManagerModule } from '../users-manager/users-manager.module'
@@ -17,7 +16,6 @@ import { AuthManagerService } from './auth-manager.service'
     UserModule,
     AuthModule,
     OrganizationModule,
-    AuthGoogleManagerModule,
     UsersManagerModule,
     S3Module,
     SchoolMangerModule,

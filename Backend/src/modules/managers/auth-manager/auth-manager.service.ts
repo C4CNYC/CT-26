@@ -2,7 +2,6 @@ import { ConflictException, Injectable } from '@nestjs/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 
 import { LogActivityManagerService } from '@/api/manager/logactivity-manager/logactivity.service'
-import { AuthGoogleRequestDto } from '@/api/old-auth/dtos/auth-google.dto'
 import { ResetPasswordDto } from '@/api/old-auth/dtos/reset-password.dto'
 import { SignigRequestDto } from '@/api/old-auth/dtos/signin-request.dto'
 import { SignupRequestDto } from '@/api/old-auth/dtos/signup-request.dto'
@@ -20,7 +19,6 @@ import { MessageDto } from '../../../utils/dtos/message.dto'
 import { Role } from '../../core/user/enums/role.enum'
 import { User } from '../../core/user/user.entity'
 import { UserService } from '../../core/user/user.service'
-import { AuthGoogleManagerService } from '../auth-google-manager/auth-google-manager.service'
 import { TeacherSchoolSetupService } from '../school-manager/teacher-school-setup.service'
 import { UserResetPasswordManagerService } from '../user-reset-password-manager/user-reset-password-manager.service'
 import { ApplicationEventEnum } from '../users-manager/enums/application-event'
@@ -39,7 +37,6 @@ export class AuthManagerService {
     private s3Service: S3Service,
     private userResetPassword: UserResetPasswordManagerService,
     private usersManagerService: UsersManagerService,
-    private authGoogleManagerService: AuthGoogleManagerService,
     private logActivity: LogActivityManagerService,
     private teacherSchoolSetup: TeacherSchoolSetupService,
   ) {}
@@ -128,39 +125,6 @@ export class AuthManagerService {
     }
     return this.authService.buildAuthorizedResponse(user)
   }
-
-  async registerWithGoogle(
-    dto: AuthGoogleRequestDto,
-    tenant_id: string,
-    tenant_name: string,
-  ): Promise<LoginedUser> {
-    const user = await this.authGoogleManagerService.register(dto)
-
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    this.logActivity.logActivity(
-      LogActivityCategory.USER,
-      'AuthManagerService.registerWithGoogle',
-      {
-        tenant: tenant_id,
-        userid: user ? user.id : undefined,
-      },
-      user ? 'email exists' : 'email not exists',
-      { user },
-    )
-    if (dto.role !== Role.Student) {
-      await this.teacherSchoolSetup.setupTeacherSchool(user, user.email, tenant_id)
-
-      this.eventEmitter.emit(
-        ApplicationEventEnum.CREATE_ORG,
-        user.email,
-        tenant_name,
-      )
-    } else {
-      this.eventEmitter.emit(ApplicationEventEnum.CREATE_STUDENT, user.email)
-    }
-    return this.authService.buildAuthorizedResponse(user)
-  }
-
 
   async getProfile(dto: User): Promise<User> {
     if (!dto || !dto.id) {
