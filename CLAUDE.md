@@ -23,3 +23,10 @@ For big
 ## Technical Documentation
 
 For architecture, commands, deployment, and patterns, see [tech.md](tech.md).
+
+Docs are the exception to "Don't create md files or documentation": add or update them in docs/, Frontend/docs or Backend/docs, as [docs/README.md](docs/README.md) explains.
+
+## Repo and Branches
+
+Work only in this repo (C4CNYC/CT-26, Frontend and Backend). Use another repo only when asked.
+Branch from the latest origin/main and open PRs to main.

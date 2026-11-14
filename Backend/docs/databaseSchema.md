@@ -1,3 +1,8 @@
+---
+title: Database Schema
+description: How the main entities relate (organizations, users, schools, students, courses, lessons), their key fields, the join tables and common patterns.
+---
+
 # Database Schema
 
 ## Core Relationships

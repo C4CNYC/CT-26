@@ -1,3 +1,8 @@
+---
+title: TypeORM Migrations (Old)
+description: Old guide to creating, applying and rolling back TypeORM migrations. Check the scripts in Backend/package.json before running anything.
+---
+
 # TypeORM Migration Documentation
 
 ## Introduction

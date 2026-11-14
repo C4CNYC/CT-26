@@ -1,3 +1,8 @@
+---
+title: Heroku Deployment (Old)
+description: Old manual Heroku deploy steps (login, git remote, migrations, pushing a version). The backend no longer deploys to Heroku.
+---
+
 # Heroku Installment
 
 The deployment process based on the manual action. To have it done you should install heroku locally.

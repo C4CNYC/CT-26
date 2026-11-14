@@ -1,3 +1,8 @@
+---
+title: Getting Started (Old)
+description: Old setup guide from when the backend was called CT-Middleware (install, database, environment, dev mode, cloning the staging database). Check tech.md first.
+---
+
 # Getting Started with CT-Middleware
 
 This guide will walk you through the steps to get started with CT-Middleware
