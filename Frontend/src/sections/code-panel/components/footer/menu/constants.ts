@@ -1,5 +1,4 @@
 import { type FabProps, type SxProps } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
 
 export const SPEED_DIAL_SX = {
   position: 'absolute',
@@ -59,9 +58,11 @@ export const getSpeedDialFabProps = (
   },
 })
 
-export const tooltipRewrite = makeStyles(() => ({
-  tooltip: {
+export const FOOTER_ACTION_TOOLTIP_CLASS = 'code-panel-footer-action-tooltip'
+
+export const FOOTER_ACTION_TOOLTIP_GLOBAL_STYLES = {
+  [`.MuiTooltip-tooltip.${FOOTER_ACTION_TOOLTIP_CLASS}`]: {
     color: '#364954',
     background: '#fff',
   },
-}))
+}

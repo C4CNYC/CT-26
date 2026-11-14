@@ -9,7 +9,7 @@ interface LoaderDelayProps {
 
 const LoaderDelay: FC<LoaderDelayProps> = ({ delay, isLoading }) => {
   const [isExist, setIsExist] = useState(true)
-  const timeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   useEffect(() => {
     setIsExist(true)

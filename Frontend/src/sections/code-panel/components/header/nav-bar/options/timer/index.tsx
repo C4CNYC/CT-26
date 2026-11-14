@@ -21,7 +21,12 @@ import {
   RX_CROSS_SIZE,
 } from './constants'
 import { CircularProgressWithLabel } from './progress'
-import { useStyles } from './styles'
+import {
+  TIMER_CLOSE_BUTTON_SX,
+  TIMER_FINISH_TEXT_SX,
+  TIMER_INPUT_NUMBER_SX,
+  TIMER_TEXT_HINT_SX,
+} from './styles'
 import { DEFAULT_MINUTES, useTimer } from './useTimer.hook'
 
 interface TimerProps {
@@ -29,7 +34,6 @@ interface TimerProps {
 }
 
 const Timer: FC<TimerProps> = ({ mobile = false }) => {
-  const classes = useStyles({ mobile })
   const translate = useTranslate()
 
   const {
@@ -92,10 +96,9 @@ const Timer: FC<TimerProps> = ({ mobile = false }) => {
       >
         <Stack
           direction='column'
-          classes={{ root: classes.container }}
           alignItems='center'
           justifyContent='space-around'
-          sx={{ p: 3 }}
+          sx={{ height: '100%', p: 3 }}
         >
           {!start && !finish ? (
             <Stack
@@ -107,11 +110,11 @@ const Timer: FC<TimerProps> = ({ mobile = false }) => {
                 type='number'
                 value={minutes}
                 onChange={onTimeInputChange}
-                classes={{ root: classes.inputNumber }}
+                sx={TIMER_INPUT_NUMBER_SX}
               />
               <Typography
                 variant='body1'
-                classes={{ root: classes.textHint }}
+                sx={TIMER_TEXT_HINT_SX}
               >
                 {minuteTitle}
               </Typography>
@@ -132,7 +135,7 @@ const Timer: FC<TimerProps> = ({ mobile = false }) => {
               />
               <Typography
                 variant='body1'
-                classes={{ root: classes.textHint }}
+                sx={TIMER_TEXT_HINT_SX}
               >
                 {minuteTitle}
               </Typography>
@@ -145,7 +148,7 @@ const Timer: FC<TimerProps> = ({ mobile = false }) => {
             >
               <Typography
                 variant='body1'
-                classes={{ root: classes.finishText }}
+                sx={TIMER_FINISH_TEXT_SX}
               >
                 {translate('timer_finish')}
               </Typography>
@@ -232,7 +235,7 @@ const Timer: FC<TimerProps> = ({ mobile = false }) => {
           )}
         </Stack>
         <IconButton
-          className={classes.closeButton}
+          sx={TIMER_CLOSE_BUTTON_SX}
           onClick={start ? onKeepCodingClick : onCloseClick}
         >
           <RxCross2 size={RX_CROSS_SIZE} />

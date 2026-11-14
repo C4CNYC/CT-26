@@ -1,6 +1,6 @@
 import { type FC, useMemo, useState } from 'react'
 
-import { Chip, SpeedDial, SpeedDialAction, Typography, useTheme } from '@mui/material'
+import { Chip, GlobalStyles, SpeedDial, SpeedDialAction, Typography, useTheme } from '@mui/material'
 import { Box } from '@mui/system'
 import { IoShareOutline } from '@react-icons/all-files/io5/IoShareOutline'
 
@@ -12,11 +12,12 @@ import { useTranslate } from '@/utils/translateHelper'
 import { getActions } from './config'
 import {
   BOX_SX,
+  FOOTER_ACTION_TOOLTIP_CLASS,
+  FOOTER_ACTION_TOOLTIP_GLOBAL_STYLES,
   SPEED_DIAL_SX,
   getActionFabPropsSx,
   getChipSx,
   getSpeedDialFabProps,
-  tooltipRewrite,
 } from './constants'
 import ShareAction from './ShareAction'
 export interface MenuProps {
@@ -25,7 +26,6 @@ export interface MenuProps {
 }
 
 const Menu: FC<MenuProps> = ({ language, publicPage }) => {
-  const classes = tooltipRewrite()
   const translate = useTranslate()
   const code = useSelector((state) => state.codePanelGlobal.code)
 
@@ -67,6 +67,7 @@ const Menu: FC<MenuProps> = ({ language, publicPage }) => {
         height: 36,
       }}
     >
+      <GlobalStyles styles={FOOTER_ACTION_TOOLTIP_GLOBAL_STYLES} />
       {isContentExist && (
         <SpeedDial
           aria-describedby='popper'
@@ -95,7 +96,7 @@ const Menu: FC<MenuProps> = ({ language, publicPage }) => {
             <SpeedDialAction
               key={action.name}
               icon={action.icon}
-              TooltipClasses={{ tooltip: classes.tooltip }}
+              TooltipClasses={{ tooltip: FOOTER_ACTION_TOOLTIP_CLASS }}
               tooltipTitle={
                 <Box sx={BOX_SX}>
                   <Chip

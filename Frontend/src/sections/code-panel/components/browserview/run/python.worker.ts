@@ -13,7 +13,9 @@ let stderr = ''
 
 function loadMicroPythonOnce(): Promise<MicroPython> {
   if (!micropython) {
-    micropython = import(/* webpackIgnore: true */ MICROPYTHON_URL).then(({ loadMicroPython }) =>
+    micropython = import(
+      /* webpackIgnore: true */ /* turbopackIgnore: true */ MICROPYTHON_URL
+    ).then(({ loadMicroPython }) =>
       loadMicroPython({
         stdout: (line: string) => (stdout += line + '\n'),
         stderr: (line: string) => (stderr += line + '\n'),

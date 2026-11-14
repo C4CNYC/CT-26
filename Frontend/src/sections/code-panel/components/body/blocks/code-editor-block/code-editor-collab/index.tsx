@@ -1,5 +1,6 @@
 import { type FC, memo, useContext, useEffect, useMemo, useState } from 'react'
 
+import { Box } from '@mui/material'
 import CodeMirror from '@uiw/react-codemirror'
 
 import { useDispatch } from '@/redux/store'
@@ -13,7 +14,7 @@ import { useCodeEditorCollab } from './hook'
 import { BASIC_SETUP } from './hook/constants'
 import { useFileManager } from './hook/file-manager/useFileManager'
 import { docBuilder } from './hook/utils/doc-builder'
-import { useStyles } from './styles'
+import { COLLAB_EDITOR_WRAPPER_SX } from './styles'
 
 interface CodeEditorCollabProps {
   className?: string
@@ -30,7 +31,6 @@ const CodeEditorCollab: FC<CodeEditorCollabProps> = ({
   isMultipleExtensionFiles = false,
   ...collabProps
 }) => {
-  const styles = useStyles()
   const dispatch = useDispatch()
   const codePanelContext = useContext(CodePanelContext)
   const [codeValue, setCodeValue] = useState<string | undefined>('')
@@ -87,9 +87,10 @@ const CodeEditorCollab: FC<CodeEditorCollabProps> = ({
   }, [preloadedCode, streamingDoc])
 
   return (
-    <div
-      className={`${styles.wrapper} code-editor-wrapper`}
+    <Box
+      className='code-editor-wrapper'
       ref={editorRef}
+      sx={COLLAB_EDITOR_WRAPPER_SX}
     >
       {withFileManager && (
         <>
@@ -117,7 +118,7 @@ const CodeEditorCollab: FC<CodeEditorCollabProps> = ({
         onCreateEditor={onCreateEditor}
         onChange={onChangeCodemirrorValue}
       />
-    </div>
+    </Box>
   )
 }
 

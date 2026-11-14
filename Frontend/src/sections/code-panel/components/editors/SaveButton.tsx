@@ -8,7 +8,7 @@ interface Props {
   iconColor?: string
 }
 
-export function SaveButton({ onClick, iconColor = '#637381', sx }: Props): JSX.Element {
+export function SaveButton({ onClick, iconColor = '#637381', sx }: Props): React.JSX.Element {
   return (
     <Button
       key='left'

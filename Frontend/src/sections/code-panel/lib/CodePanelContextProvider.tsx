@@ -10,7 +10,7 @@ type Props = {
   children: React.ReactNode
 }
 
-export function CodePanelContextProvider({ children }: Props): JSX.Element {
+export function CodePanelContextProvider({ children }: Props): React.JSX.Element {
   const lessonId = useSelector((state) => state.codePanelGlobal.lessonId)
   const [studentCode, setStudentCode] = useState<string>('')
   const [iframeKey, setIframeKey] = useState<number>(0)
