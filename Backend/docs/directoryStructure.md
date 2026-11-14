@@ -1,3 +1,8 @@
+---
+title: Backend Directory Structure
+description: What lives where in Backend/src (API endpoints, core modules, manager services, config, providers, utils), plus the layers and file patterns.
+---
+
 # Directory Structure
 
 ### Application Core  (`src/`)

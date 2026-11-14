@@ -1,3 +1,8 @@
+---
+title: Caching for the Tenant API
+description: The in-memory cache for the tenant info endpoint (getTenantInfo), with its keys, invalidation and statistics, and how to add caching to other endpoints.
+---
+
 # Caching Implementation for Tenant API
 
 ## Overview

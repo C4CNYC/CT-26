@@ -1,3 +1,8 @@
+---
+title: Authentication & Authorization
+description: Frontend sign-in and roles, with the JWT context, auth and role guards, auth forms and session handling.
+---
+
 # Authentication & Authorization
 
 ## Auth System
@@ -19,6 +24,7 @@ JWT-based authentication with role-based access control
 ## Authentication Methods
 - Email/password login
 - Google OAuth (`loginWithGoogle`, `registerWithGoogle`)
+  - Uses `@react-oauth/google`, not Firebase. The OAuth client lives in Google Cloud.
 - Tenant registration
 
 ## User Roles

@@ -1,3 +1,8 @@
+---
+title: Database Helper Functions
+description: The base entity and service classes, the utility functions (passwords, slugs, file schema) and the shared DTOs such as pagination.
+---
+
 # Database Helper Functions
 
 This document outlines the key database helper functions and utilities used throughout the CT-Middleware application.
