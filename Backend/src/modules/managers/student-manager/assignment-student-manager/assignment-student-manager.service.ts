@@ -67,28 +67,30 @@ export class StudentAssignmentManagerService {
   }
 
   async getAssignments(
-    student_id: string,
+    user_id: string,
     dto: MyAssignmentsSearchOptions,
   ): Promise<PageDto<Assigment>> {
     const user = await this.userService.findOne({
       where: {
-        id: student_id,
+        id: user_id,
       },
+      relations: { student_profile: true },
     })
-    const permission = await this.classManagerService.checkClassPermission(
-      student_id,
-      dto.class_id,
-    )
 
     if (!user) {
       throw new ForbiddenException('No such user')
     }
 
+    const permission = await this.classManagerService.canUserViewClass(
+      { id: user.id, studentID: user.student_profile?.id },
+      dto.class_id,
+    )
+
     if (!permission && user.role === Role.Student) {
       throw new ForbiddenException("you don't have access to class")
     }
 
-    return await this.assignmentService.getByClass(student_id, dto)
+    return await this.assignmentService.getByClass(user_id, dto)
   }
 
   async getAssignmentsPublic(dto: MyAssignmentsSearchOptions) {

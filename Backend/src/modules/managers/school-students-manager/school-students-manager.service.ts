@@ -28,6 +28,7 @@ import { StudentService } from '../../core/student/student.service'
 import { Role } from '../../core/user/enums/role.enum'
 import { UserService } from '../../core/user/user.service'
 import { InvitationsManagerService } from '../invitations-manager/invitations-manager.service'
+import { SchoolAccessManagerService } from '../school-access-manager/school-access-manager.service'
 import { StudentManagerService } from '../student-manager/student-manager.service'
 import { ApplicationEventEnum as Event } from '../users-manager/enums/application-event'
 import { ApplicationEventEnum } from '../users-manager/enums/application-event'
@@ -50,6 +51,7 @@ export class SchoolStudentsManagerService {
     private authPasswordService: AuthPasswordsService,
     private studentManagerService: StudentManagerService,
     private inviteManagerService: InvitationsManagerService,
+    private schoolAccessManagerService: SchoolAccessManagerService,
     @Inject(invitesConfig.KEY)
     iConfig: ConfigType<typeof invitesConfig>,
   ) {
@@ -294,7 +296,14 @@ export class SchoolStudentsManagerService {
     student_id: string,
     user_id: string,
   ): Promise<MessageDto> {
-    await this.ensureUserCanManageSchool(user_id, school_id)
+    if (
+      !(await this.schoolAccessManagerService.canUserManageSchool(
+        user_id,
+        school_id,
+      ))
+    ) {
+      throw new NotFoundException("student isn't in this school")
+    }
 
     const student = await this.studentService.findOne({
       where: { id: student_id, school: { id: school_id } },
@@ -337,36 +346,5 @@ export class SchoolStudentsManagerService {
         return new MessageDto('student deleted')
       },
     )
-  }
-
-  // Super admins manage every school, owners and admins their organization's schools, managers the schools they teach
-  private async ensureUserCanManageSchool(
-    user_id: string,
-    school_id: string,
-  ): Promise<void> {
-    const [user, school] = await Promise.all([
-      this.userService.findOne({
-        where: { id: user_id },
-        relations: { organization: true, schools: true },
-      }),
-      this.schoolService.findOne({
-        where: { id: school_id },
-        relations: { organization: true },
-      }),
-    ])
-    const sameOrganization = Boolean(
-      user?.organization &&
-        school?.organization &&
-        user.organization.id === school.organization.id,
-    )
-    const canManage =
-      user?.role === Role.SuperAdmin ||
-      (sameOrganization &&
-        (user.role === Role.Owner ||
-          user.role === Role.Admin ||
-          user.schools.some((teacherSchool) => teacherSchool.id === school_id)))
-    if (!school || !canManage) {
-      throw new NotFoundException("student isn't in this school")
-    }
   }
 }
