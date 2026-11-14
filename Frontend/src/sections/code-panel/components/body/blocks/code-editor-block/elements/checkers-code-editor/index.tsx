@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { Box, ClickAwayListener, useTheme } from '@mui/material'
 import { Stack } from '@mui/system'
@@ -48,6 +48,19 @@ export function Checkers() {
       dispatch(setIsVisible(false))
     }
   }
+
+  useEffect(() => {
+    if (!isVisible) return
+
+    const closeOnEscape = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        dispatch(setIsVisible(false))
+      }
+    }
+
+    document.addEventListener('keyup', closeOnEscape)
+    return () => document.removeEventListener('keyup', closeOnEscape)
+  }, [isVisible, dispatch])
 
   const handleIconColor = (checkers: IValidationMap[]): string => {
     const hasValid = checkers.some((c) => c.valid)
