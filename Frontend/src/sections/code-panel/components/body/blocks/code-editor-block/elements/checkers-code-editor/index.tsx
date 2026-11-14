@@ -1,10 +1,9 @@
 import { useMemo } from 'react'
 
-import { Box, useTheme } from '@mui/material'
+import { Box, ClickAwayListener, useTheme } from '@mui/material'
 import { Stack } from '@mui/system'
 import { AnimatePresence, m } from 'framer-motion'
 import dynamic from 'next/dynamic'
-import { useDetectClickOutside } from 'react-detect-click-outside'
 import { useDispatch } from 'react-redux'
 
 import { setIsVisible } from '@/redux/slices/checkers-animation'
@@ -50,8 +49,6 @@ export function Checkers() {
     }
   }
 
-  const ref = useDetectClickOutside({ onTriggered: handleClose })
-
   const handleIconColor = (checkers: IValidationMap[]): string => {
     const hasValid = checkers.some((c) => c.valid)
     const hasInvalid = checkers.some((c) => !c.valid)
@@ -65,53 +62,52 @@ export function Checkers() {
     return null
   }
   return (
-    <Box
-      sx={{ position: 'relative' }}
-      ref={ref}
-    >
-      {isActivateCompleted ? <CheckersCompleated /> : null}
-      <Box sx={OPEN_BOX_SX}>
-        <AnimatePresence>
-          <m.div
-            initial='visible'
-            animate={isVisible ? 'closed' : 'open'}
-            variants={OPEN_HANDLER_ANIMATION}
-          >
-            <Box sx={OPEN_BTN_WRAPPER_SX}>
-              <Box
-                sx={getBoxStyle}
-                onClick={handleCollapse}
-              >
-                <CheckerIcon
-                  width={14}
-                  height={15}
-                  color={handleIconColor(checkers)}
-                />
-              </Box>
-              <Box sx={INDICATORS_WRAPPER_SX}>
-                {checkers.map((checker, i) => (
-                  <Box
-                    key={i}
-                    sx={{ ...getIndicatorSx(checker.valid) }}
+    <ClickAwayListener onClickAway={handleClose}>
+      <Box sx={{ position: 'relative' }}>
+        {isActivateCompleted ? <CheckersCompleated /> : null}
+        <Box sx={OPEN_BOX_SX}>
+          <AnimatePresence>
+            <m.div
+              initial='visible'
+              animate={isVisible ? 'closed' : 'open'}
+              variants={OPEN_HANDLER_ANIMATION}
+            >
+              <Box sx={OPEN_BTN_WRAPPER_SX}>
+                <Box
+                  sx={getBoxStyle}
+                  onClick={handleCollapse}
+                >
+                  <CheckerIcon
+                    width={14}
+                    height={15}
+                    color={handleIconColor(checkers)}
                   />
-                ))}
+                </Box>
+                <Box sx={INDICATORS_WRAPPER_SX}>
+                  {checkers.map((checker, i) => (
+                    <Box
+                      key={i}
+                      sx={{ ...getIndicatorSx(checker.valid) }}
+                    />
+                  ))}
+                </Box>
               </Box>
-            </Box>
-          </m.div>
-        </AnimatePresence>
+            </m.div>
+          </AnimatePresence>
+        </Box>
+        <Stack sx={getStackSx()}>
+          <AnimatePresence>
+            <m.div
+              initial={false}
+              animate={isVisible ? 'open' : 'closed'}
+              variants={CHECKERS_ANIMATION}
+              style={mDivStyle}
+            >
+              <CheckersMenu checkers={checkers} />
+            </m.div>
+          </AnimatePresence>
+        </Stack>
       </Box>
-      <Stack sx={getStackSx()}>
-        <AnimatePresence>
-          <m.div
-            initial={false}
-            animate={isVisible ? 'open' : 'closed'}
-            variants={CHECKERS_ANIMATION}
-            style={mDivStyle}
-          >
-            <CheckersMenu checkers={checkers} />
-          </m.div>
-        </AnimatePresence>
-      </Stack>
-    </Box>
+    </ClickAwayListener>
   )
 }

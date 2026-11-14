@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
-import type ConfettiType from 'react-confetti/dist/types/Confetti'
+import type { IConfettiOptions } from 'react-confetti'
 import { useDispatch } from 'react-redux'
 
 import { useAuthContext } from '@/auth/useAuthContext'
@@ -163,7 +163,7 @@ export function CodePanelLayout(): ReactElement | null {
     skip: !fulfilledTimeStamp || !profile,
   })
 
-  const onConfettiComplete = (confetti?: ConfettiType) => {
+  const onConfettiComplete: IConfettiOptions['onConfettiComplete'] = (confetti) => {
     setShowConfetti(false)
     confetti?.reset()
   }

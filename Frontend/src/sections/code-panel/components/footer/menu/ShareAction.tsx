@@ -7,10 +7,9 @@ import { useSnackbar } from '@root/src/components'
 import { useCopyToClipboard } from '@root/src/hooks'
 import { useTranslate } from '@root/src/utils/translateHelper'
 
-import { BOX_SX, getActionFabPropsSx, getChipSx, tooltipRewrite } from './constants'
+import { BOX_SX, FOOTER_ACTION_TOOLTIP_CLASS, getActionFabPropsSx, getChipSx } from './constants'
 
 const ShareAction = forwardRef((props, ref) => {
-  const classes = tooltipRewrite()
   const { enqueueSnackbar } = useSnackbar()
   const { copy } = useCopyToClipboard()
   const translate = useTranslate()
@@ -31,7 +30,7 @@ const ShareAction = forwardRef((props, ref) => {
           variant: 'success',
         })
       }}
-      TooltipClasses={{ tooltip: classes.tooltip }}
+      TooltipClasses={{ tooltip: FOOTER_ACTION_TOOLTIP_CLASS }}
       tooltipTitle={
         <Box sx={BOX_SX}>
           <Chip
