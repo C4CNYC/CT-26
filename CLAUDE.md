@@ -3,7 +3,7 @@
 High Effort mode! make searches detailed, make plans detailed but report me briefly.
 Communicate briefly
 Don't write code in responses
-Don't create md files or documentation
+Don't create md files or documentation, except user guides in Frontend/public/docs (see tech.md)
 Dont barrel export for less than 5 elements
 Dont comment in code
 Dont install packages, you cant install packages
