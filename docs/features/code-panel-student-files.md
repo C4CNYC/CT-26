@@ -31,7 +31,8 @@ Checked against C4CNYC/CT-26 `main` (`ce0e99a`, Nov 14, 2026), which serves app.
 - `GET /student/workspace` returns the student's own rows in `student-lesson-files`.
 - The first open copies the starter files: one set per slide for EXERCISE lessons, and one per lesson for every other type.
 - Edits save to those rows.
-- If `localStorage` holds guest code for the lesson that differs from the saved copy, it replaces the saved file with the same name and extension (or is added as a new file) and is removed from `localStorage`.
+- When a guest creates an account (the sign-up form, Google sign-up or a class invite), guest code in `localStorage` that differs from the saved copy replaces the saved file with the same name and extension, or is added as a new file. It's then removed from `localStorage`.
+- Signing in to an existing account clears `localStorage` first (`localStorageClear()` in `login` and `loginWithGoogle`, `Frontend/src/auth/JwtContext.tsx`), so guest code isn't carried over then.
 
 ### 3. Carry-over
 - Finishing a lesson copies its files into the next one when that lesson is PRACTICAL or PART_PROJECT and not independent.
