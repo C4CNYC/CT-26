@@ -1,0 +1,181 @@
+.docsShell {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #1c2530;
+}
+
+.docsHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  border-bottom: 1px solid #e3e8ef;
+}
+
+.docsHeaderHome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.docsHeaderLabel {
+  color: #5b6573;
+  font-weight: 500;
+}
+
+.docsHeaderAppLink {
+  margin-left: auto;
+  color: #1565c0;
+}
+
+.docsLayout {
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr);
+  gap: 48px;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.docsSidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100vh;
+  overflow-y: auto;
+  font-size: 0.95rem;
+}
+
+.docsSidebar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.docsSidebar a[aria-current='page'] {
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.docsSidebar ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docsSidebar li {
+  margin: 6px 0;
+}
+
+.docsSidebarFold summary {
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.docsSidebarSectionTitle {
+  margin: 20px 0 6px;
+  color: #5b6573;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.docsSidebar .docsSidebarHeadings {
+  margin: 6px 0 0 12px;
+  padding-left: 10px;
+  border-left: 2px solid #e3e8ef;
+  font-size: 0.88rem;
+}
+
+.docsArticle {
+  max-width: 760px;
+  line-height: 1.65;
+}
+
+.docsArticle h1 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  line-height: 1.25;
+}
+
+.docsLead {
+  margin: 0 0 32px;
+  color: #4a5563;
+  font-size: 1.15rem;
+}
+
+.docsBody h2 {
+  margin: 40px 0 12px;
+  font-size: 1.4rem;
+}
+
+.docsBody h3 {
+  margin: 28px 0 8px;
+  font-size: 1.15rem;
+}
+
+.docsBody a {
+  color: #1565c0;
+}
+
+.docsBody ul,
+.docsBody ol {
+  padding-left: 1.5em;
+}
+
+.docsBody li {
+  margin: 4px 0;
+}
+
+.docsBody img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 16px 0 24px;
+  border: 1px solid #e3e8ef;
+  border-radius: 8px;
+}
+
+.docsBody table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.docsBody th,
+.docsBody td {
+  padding: 8px 12px;
+  border: 1px solid #e3e8ef;
+  text-align: left;
+}
+
+.docsBody code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: #f3f5f8;
+  font-size: 0.9em;
+}
+
+.docsSourceLinks {
+  margin-top: 48px;
+  color: #5b6573;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 899px) {
+  .docsLayout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 20px 16px 48px;
+  }
+
+  .docsSidebar {
+    position: static;
+    max-height: none;
+  }
+}

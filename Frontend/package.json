@@ -3,10 +3,10 @@
   "version": "0.26.0",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "next dev -p 8080",
-    "dev:turbo": "next dev -p 8080 --turbo",
+    "dev": "node scripts/build-docs.mjs && next dev -p 8080",
+    "dev:turbo": "node scripts/build-docs.mjs && next dev -p 8080 --turbo",
     "start": "next start",
-    "build": "cp -r ./node_modules/tinymce ./public && next build",
+    "build": "node scripts/build-docs.mjs && cp -r ./node_modules/tinymce ./public && next build",
     "build-and-start": "yarn build && yarn start",
     "analyze": "ANALYZE=true yarn build",
     "export": "yarn build && next export -o _static",
