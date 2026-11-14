@@ -74,11 +74,7 @@ export class OldAuthUserApiController {
     @Body() dto: AuthGoogleRequestDto,
     @Req() req: RequestWithMeta,
   ): Promise<LoginedUser> {
-    return await this.googleAuthManagerService.login(
-      dto,
-      req.org_id,
-      req.org_name,
-    )
+    return await this.googleAuthManagerService.login(dto, req.org_id)
   }
 
   @Post('google-signup')

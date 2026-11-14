@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 
 import { LogActivityManagerService } from '@/api/manager/logactivity-manager/logactivity.service'
@@ -37,7 +41,6 @@ export class AuthGoogleManagerService {
   async login(
     dto: AuthGoogleRequestDto,
     tenant_id: string,
-    tenant_name: string,
   ): Promise<LoginedUser> {
     const { email } = await this.googleAuthService.authenticate(dto.code)
 
@@ -57,7 +60,9 @@ export class AuthGoogleManagerService {
       user ? 'user exists' : 'user not exists',
     )
     if (!user) {
-      return this.registerWithGoogle(dto, tenant_id, tenant_name)
+      throw new NotFoundException(
+        'No account for this email yet. Please register first.',
+      )
     }
 
     return this.authService.buildAuthorizedResponse(user)
