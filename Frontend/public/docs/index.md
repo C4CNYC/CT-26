@@ -8,3 +8,4 @@ Each guide walks through one task on CodeTribe, with numbered steps and a screen
 ## Start here
 
 - [Sign in and reset your password](/docs/getting-started/sign-in-and-reset-your-password)
+- Teachers: [create a class](/docs/teaching/create-a-class), then [invite your students](/docs/teaching/invite-students-to-your-class)
