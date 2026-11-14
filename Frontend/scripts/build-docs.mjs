@@ -243,8 +243,8 @@ const { home, sections } = readDocsSources()
 const docsPages = renderDocsPages(createDocsMarkdownRenderer(), home, sections)
 
 if (problems.length) {
-  console.error(
-    `build-docs: ${problems.length} problem(s)\n${problems.map((problem) => `- ${problem}`).join('\n')}`
+  process.stderr.write(
+    `build-docs: ${problems.length} problem(s)\n${problems.map((problem) => `- ${problem}`).join('\n')}\n`
   )
   process.exit(1)
 }
@@ -255,6 +255,6 @@ fs.writeFileSync(path.join(PUBLIC_DIR, 'llms.txt'), buildLlmsTxt(home, sections)
 fs.writeFileSync(path.join(PUBLIC_DIR, 'llms-full.txt'), buildLlmsFullTxt(home, sections))
 
 const guideCount = sections.reduce((count, section) => count + section.guides.length, 0)
-console.log(
-  `build-docs: ${guideCount} guide(s) written to .docs-build/docs-pages.json, public/llms.txt and public/llms-full.txt`
+process.stdout.write(
+  `build-docs: ${guideCount} guide(s) written to .docs-build/docs-pages.json, public/llms.txt and public/llms-full.txt\n`
 )
