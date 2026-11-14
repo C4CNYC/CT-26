@@ -86,7 +86,7 @@ export class OldAuthUserApiController {
     @Body() dto: AuthGoogleRequestDto,
     @Req() req: RequestWithMeta,
   ): Promise<LoginedUser> {
-    return await this.authManagerService.registerWithGoogle(
+    return await this.googleAuthManagerService.registerWithGoogle(
       dto,
       req.org_id,
       req.org_name,

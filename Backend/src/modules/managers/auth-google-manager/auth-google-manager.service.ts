@@ -63,12 +63,12 @@ export class AuthGoogleManagerService {
     return this.authService.buildAuthorizedResponse(user)
   }
 
-  private async registerWithGoogle(
+  async registerWithGoogle(
     dto: AuthGoogleRequestDto,
     tenant_id: string,
     tenant_name: string,
   ): Promise<LoginedUser> {
-    const user = await this.register(dto, tenant_id)
+    const user = await this.createGoogleAccount(dto, tenant_id)
 
     await this.logActivity.logActivity(
       LogActivityCategory.USER,
@@ -95,7 +95,10 @@ export class AuthGoogleManagerService {
     return this.authService.buildAuthorizedResponse(user)
   }
 
-  async register(dto: AuthGoogleRequestDto, tenant_id?: string): Promise<User> {
+  private async createGoogleAccount(
+    dto: AuthGoogleRequestDto,
+    tenant_id: string,
+  ): Promise<User> {
     const userInfo = await this.googleAuthService.authenticate(dto.code)
 
     const user = await this.userService.findOne({
@@ -104,7 +107,7 @@ export class AuthGoogleManagerService {
 
     await this.logActivity.logActivity(
       LogActivityCategory.USER,
-      'AuthGoogleManagerService.register',
+      'AuthGoogleManagerService.createGoogleAccount',
       {
         tenant: user?.organization?.id || tenant_id,
         userid: user?.id,
@@ -116,10 +119,9 @@ export class AuthGoogleManagerService {
       throw new ConflictException('This email is already registered.')
     }
 
-    let organization
-    if (tenant_id) {
-      organization = await this.organizationService.findOne({ where: { id: tenant_id } })
-    }
+    const organization = await this.organizationService.findOne({
+      where: { id: tenant_id },
+    })
 
     const studentProfile = await this.studentService.create({
       username: userInfo.name,
