@@ -80,10 +80,26 @@ function createDocsMarkdownRenderer() {
   })
   const renderImage = markdown.renderer.rules.image
   markdown.renderer.rules.image = (tokens, index, options, env, renderer) => {
-    tokens[index].attrSet('loading', 'lazy')
+    const token = tokens[index]
+    token.attrSet('loading', 'lazy')
+    const displaySize = readScreenshotDisplaySize(token.attrGet('src'))
+    if (displaySize) {
+      token.attrSet('width', String(displaySize.width))
+      token.attrSet('height', String(displaySize.height))
+    }
     return renderImage(tokens, index, options, env, renderer)
   }
   return markdown
+}
+
+function readScreenshotDisplaySize(src) {
+  const filePath = path.join(PUBLIC_DIR, src)
+  if (!src.startsWith('/') || !src.endsWith('.png') || !fs.existsSync(filePath)) return null
+  const pngHeader = fs.readFileSync(filePath).subarray(16, 24)
+  return {
+    width: Math.round(pngHeader.readUInt32BE(0) / 2),
+    height: Math.round(pngHeader.readUInt32BE(4) / 2),
+  }
 }
 
 function collectReferences(markdown, body) {
@@ -108,6 +124,8 @@ function checkReferences(filePath, references, docsRoutes) {
       GENERATED_PUBLIC_FILES.has(targetPath) || fs.existsSync(path.join(PUBLIC_DIR, targetPath))
     if (kind === 'image' && !isPublicFile)
       problems.push(`${relativeToFrontend(filePath)}: image not found: ${target}`)
+    if (kind === 'image' && !targetPath.endsWith('.png'))
+      problems.push(`${relativeToFrontend(filePath)}: screenshots must be PNG: ${target}`)
     if (
       kind === 'link' &&
       targetPath.startsWith('/docs') &&

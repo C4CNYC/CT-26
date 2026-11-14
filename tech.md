@@ -113,7 +113,7 @@ source config/dokploy.env
 **Routing**: Next.js file-based routing in `src/pages/`
 
 **Public docs** (`/docs`, live at codetribe.ai/docs, 2026-11-13): step-by-step user guides with screenshots.
-- One Markdown file per task: `Frontend/public/docs/<section>/<task>.md`, front matter `title`, `description`, `order`, `verified` (date last checked on the live app). Screenshots sit beside it as `<task>-<step>-<what>.png`, showing demo data only. `public/docs/index.md` is the docs home.
+- One Markdown file per task: `Frontend/public/docs/<section>/<task>.md`, front matter `title`, `description`, `order`, `verified` (date last checked on the live app). Screenshots sit beside it as `<task>-<step>-<what>.png`, showing demo data only. They're captured at 2× and shown at half their pixel size. `public/docs/index.md` is the docs home.
 - `scripts/build-docs.mjs` runs before `next build` and `next dev`. It fails the build on a missing key, a folder outside `DOCS_SECTIONS`, a missing image or a broken `/docs` link. It renders with markdown-it into `.docs-build/docs-pages.json`, which `src/pages/docs/[[...slug]].tsx` lays out as static pages (`src/sections/docs/`), and writes `public/llms.txt` and `public/llms-full.txt` (all three gitignored).
 - Agents read a guide's Markdown at its address plus `.md`. Change a guide in the same PR as the screen it shows.
 
