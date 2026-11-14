@@ -17,7 +17,7 @@ export function useUpdateStudentFileMutation() {
   const debouncedTrigger = useCallback(
     debounce((data: StudentFile) => {
       trigger(data) // actual mutation
-    }, 8_000),
+    }, 5_000),
     [trigger]
   )
 

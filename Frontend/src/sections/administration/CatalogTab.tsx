@@ -31,7 +31,7 @@ export const CatalogTab = ({ org }: ICatalogTabProps): React.ReactElement => {
     useUpdateAdminGlobalCourseInCatalogByOrgMutation()
   const translate = useTranslate()
   const { enqueueSnackbar } = useSnackbar()
-  const prevCoursesDataRef = useRef<any>()
+  const prevCoursesDataRef = useRef<any>(undefined)
 
   const [courseStates, setCourseStates] = useState<CourseToggleState>({})
   const [updatingCourseId, setUpdatingCourseId] = useState<string | null>(null)

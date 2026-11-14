@@ -3,7 +3,12 @@ import React, { useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 
-import { useStyles } from './styles'
+import {
+  getTimerCircleCountdownSx,
+  getTimerMinutesNumberSx,
+  getTimerProgressBoxSx,
+  TIMER_CIRCLE_TRACK_SX,
+} from './styles'
 
 interface Props {
   min: number
@@ -32,33 +37,26 @@ export const CircularProgressWithLabel = ({
     setDelayAnim(delay - performance.now())
   }, [])
 
-  const classes = useStyles({
-    min,
-    pause,
-    width,
-    height,
-    delay: delayAnim,
-    fontSize,
-  })
-
   return (
     <Box
       position='relative'
       display='inline-flex'
     >
-      <div className={classes.box}>
+      <Box sx={getTimerProgressBoxSx(width, height)}>
         <svg viewBox='22 22 44 44'>
-          <circle
-            className={classes.circleAfter}
+          <Box
+            component='circle'
+            sx={TIMER_CIRCLE_TRACK_SX}
             cx='44'
             cy='44'
             r='20.2'
             fill='none'
             strokeWidth='4'
           />
-          <circle
+          <Box
+            component='circle'
             onAnimationEnd={setFinish}
-            className={classes.circleBefore}
+            sx={getTimerCircleCountdownSx(min, delayAnim, pause)}
             cx='44'
             cy='44'
             r='20.2'
@@ -66,7 +64,7 @@ export const CircularProgressWithLabel = ({
             strokeWidth='3.6'
           />
         </svg>
-      </div>
+      </Box>
       {time ? (
         <Box
           top={0}
@@ -80,7 +78,7 @@ export const CircularProgressWithLabel = ({
         >
           <Typography
             variant='body1'
-            classes={{ root: classes.minutesNumber }}
+            sx={getTimerMinutesNumberSx(fontSize)}
           >
             {time}
           </Typography>

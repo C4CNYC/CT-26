@@ -43,7 +43,7 @@ export const useTimer = (): UseTimerReturn => {
   const [time, setTime] = useState(0)
 
   const pauseRef = useRef(false)
-  const timerIdRef = useRef<NodeJS.Timeout>()
+  const timerIdRef = useRef<NodeJS.Timeout | undefined>(undefined)
   const timeRef = useRef(0)
 
   useEffect(() => {

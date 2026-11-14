@@ -11,7 +11,7 @@ export function useDoubleClick({
   doubleClick,
   timeout = 250,
 }: Props): React.ReactElement | null {
-  const clickTimeout = useRef<any>()
+  const clickTimeout = useRef<any>(undefined)
 
   const clearClickTimeout = (): void => {
     if (clickTimeout) {

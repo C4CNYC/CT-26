@@ -1,20 +1,10 @@
-import makeStyles from '@mui/styles/makeStyles'
+import { type SxProps, type Theme } from '@mui/material'
 
-export const useStyles = makeStyles({
-  wrapper: {
+export const COLLAB_EDITOR_WRAPPER_SX: SxProps<Theme> = {
+  position: 'relative',
+  background: '#282c34',
+  minHeight: '100%',
+  '& .cm-line': {
     position: 'relative',
-    background: '#282c34',
-    minHeight: '100%',
-
-    '& .cm-line': {
-      position: 'relative',
-    },
   },
-  popover: {
-    position: 'static',
-    '& .MuiPaper-root': {
-      background: '#282c34',
-      borderRadius: '8px',
-    },
-  },
-})
+}

@@ -14,7 +14,6 @@ import { InviteSystemModule } from '@/modules/core/invite-system/invite-system.m
 import { StudentModule } from '@/modules/core/student/student.module'
 import { SchoolClassManagerModule } from '../school-class-manager/school-class-manager.module'
 import { SchoolClassStudentsManagerModule } from '../school-class-students-manager/school-class-students-manager.module'
-import { LessonDeepAssignModule } from '../lesson-deep-assign/lesson-deep-assign.module'
 
 @Module({
   imports: [
@@ -28,7 +27,6 @@ import { LessonDeepAssignModule } from '../lesson-deep-assign/lesson-deep-assign
     StudentModule,
     SchoolClassManagerModule,
     SchoolClassStudentsManagerModule,
-    LessonDeepAssignModule,
     forwardRef(() => InviteSystemModule),
   ],
   exports: [SchoolMangerService, TeacherSchoolSetupService],
